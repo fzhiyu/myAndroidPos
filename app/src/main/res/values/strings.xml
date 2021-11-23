@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">myAndroidPos</string>
+    <string name="fzy">fzy</string>
+    <string name="pos">POS</string>
+    <string name="name_station">OIL</string>
+    <string name="icon">Icon</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_hint">Search Some</string>
+    <string name="hi">HI</string>
+    <string name="enter_text">Enter Text</string>
+    <string name="dialog_title">RawBT printer driver is missed</string>
+    <string name="dialog_message">To implement the functions of printing on a thermal printer, a driver is required. Press the button to open Google Play app and read more.</string>
+    <string name="btn_install">Open</string>
+    <string name="title_activity_item_detail_host">ItemDetailHostActivity</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="all_oil">今日加油总额：</string>
+    <string name="num_trac">笔数</string>
+</resources>

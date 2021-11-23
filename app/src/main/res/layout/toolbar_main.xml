@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+
+        android:id="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:titleTextColor="@color/white"
+        android:fitsSystemWindows="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name_station"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/setting"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="10dp"
+                android:onClick="setting"
+                android:src="@drawable/ic_setting" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/search"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:onClick="search"
+                android:src="@drawable/ic_search" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/refresh"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="2dp"
+            android:onClick="refresh"
+            android:src="@drawable/ic_refresh" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hi"
+            android:id="@+id/SpeechButton"/>
+
+<!--        <EditText-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/editTxt"-->
+<!--            android:hint="@string/enter_text"/>-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/test1"
+            android:text="print"/>
+
+    </androidx.appcompat.widget.Toolbar>
+</merge>

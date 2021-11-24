@@ -18,8 +18,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.cuse.myandroidpos.placeholder.PlaceholderContent;
+
 import com.cuse.myandroidpos.databinding.FragmentItemDetailBinding;
+
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.Locale;
 
@@ -44,15 +46,6 @@ public class ItemDetailFragment extends Fragment {
     private Toolbar mToolbarLayout;
     private TextView mTextView;
     private TextToSpeech textToSpeech;
-
-    //    private final View.OnDragListener dragListener = (v, event) -> {
-//        if (event.getAction() == DragEvent.ACTION_DROP) {
-//            ClipData.Item clipDataItem = event.getClipData().getItemAt(0);
-//            mItem = MyData.CreatData().get(clipDataItem.getText().toString());
-//            updateContent();
-//        }
-//        return true;
-//    };
     private FragmentItemDetailBinding binding;
 
     /**
@@ -136,6 +129,4 @@ public class ItemDetailFragment extends Fragment {
             }
         }
     }
-
-
 }

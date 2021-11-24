@@ -10,14 +10,7 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="Search"
         app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.widget.Button"
-        android:onClick="ItemSearch">
+        app:actionViewClass="android.widget.Button">
 
     </item>
-<!--    <item-->
-<!--        android:id="@+id/action_Setting"-->
-<!--        android:icon="@drawable/ic_setting"-->
-<!--        android:title="Setting"-->
-<!--        app:showAsAction="ifRoom|withText"-->
-<!--        android:onClick="setting"/>-->
 </menu>

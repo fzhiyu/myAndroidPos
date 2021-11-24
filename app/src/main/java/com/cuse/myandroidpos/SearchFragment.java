@@ -44,6 +44,8 @@ public class SearchFragment extends Fragment {
             Navigation.findNavController(itemView).navigate(R.id.show_search, argument);
         };
 
+
+
         setupRecyclerView(recyclerView, onClickListener);
     }
 

@@ -66,12 +66,6 @@ public class ItemListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.blue)));
-
-//        binding.toolbar.inflateMenu(R.menu.navigation_menu);
-
         RecyclerView recyclerView = binding.itemList;
 
         // Leaving this not using view binding as it relies on if the view is visible the current

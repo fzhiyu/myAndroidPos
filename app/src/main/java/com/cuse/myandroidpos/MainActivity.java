@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         //binding.getRoot() -> app:id/container -> activity_item_detail
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment_item_detail);
+                .findFragmentById(R.id.nav_host_fragment_item);
         NavController navController = navHostFragment.getNavController();
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.
                 Builder(navController.getGraph())
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_item_detail);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_item);
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 }

@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/date_picker"
-        android:id="@+id/search_button">
+        android:id="@+id/search_bar">
 
         <Button
             android:id="@+id/search_btn"
@@ -52,7 +52,7 @@
         android:name="com.cuse.myandroidpos.ItemListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search_button"
+        android:layout_below="@+id/search_bar"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         tools:context="com.cuse.myandroidpos.ItemDetailHostActivity"

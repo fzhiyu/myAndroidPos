@@ -28,6 +28,9 @@
             android:name="item_id"
             android:defaultValue=""
             app:argType="string" />
+        <action
+            android:id="@+id/search_to_detail"
+            app:destination="@id/item_detail_fragment" />
     </fragment>
 
     <fragment

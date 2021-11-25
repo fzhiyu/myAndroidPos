@@ -1,5 +1,7 @@
 package com.cuse.myandroidpos;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,16 +14,29 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
 import com.cuse.myandroidpos.databinding.ItemListContentBinding;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
 public class SearchFragment extends Fragment {
     private FragmentSearchBinding binding;
+    private Button start_date;
+    private Button end_date;
+    private Button search_btn;
+    private DatePickerDialog datePickerDialog;
+    private myDate current_start_date;
+    private myDate current_end_date;
+    private myDate select_Date;
+    private ArrayList<MyListData> search_ListData;
 
     @Nullable
     @Override
@@ -41,12 +56,114 @@ public class SearchFragment extends Fragment {
             MyListData item = (MyListData) itemView.getTag();
             Bundle argument = new Bundle();
             argument.putString(ItemDetailFragment.ARG_ITEM_ID, item.getOilOrderId());
-            Navigation.findNavController(itemView).navigate(R.id.show_search, argument);
+            Navigation.findNavController(itemView).navigate(R.id.search_to_detail, argument);
         };
 
+        searchDate(view);
 
+        search_btn = view.findViewById(R.id.search_btn);
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchRes();
+                setupRecyclerView(recyclerView, onClickListener);
+            }
+        });
+    }
 
-        setupRecyclerView(recyclerView, onClickListener);
+    private void searchDate(View view) {
+        start_date = (Button) view.findViewById(R.id.start_date);
+        end_date = (Button) view.findViewById(R.id.end_date);
+        current_start_date = new myDate();
+        current_end_date = new myDate();
+        // perform click event on edit text
+        start_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // calender class's instance and get current date , month and year from calender
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+                // date picker dialog
+                datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                start_date.setText(year + "." + (monthOfYear + 1) + "." + dayOfMonth);
+                                current_start_date.setYear(year);
+                                current_start_date.setMonth(monthOfYear + 1);
+                                current_start_date.setDay(dayOfMonth);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+        end_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // calender class's instance and get current date , month and year from calender
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
+                System.out.println(current_end_date.getYear());
+                // date picker dialog
+                datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                end_date.setText(year + "." + (monthOfYear + 1) + "." + dayOfMonth);
+                                current_end_date.setYear(year);
+                                current_end_date.setMonth(monthOfYear + 1);
+                                current_end_date.setDay(dayOfMonth);
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
+        System.out.println(current_start_date.getYear());
+    }
+
+    private void searchRes() {
+        search_ListData = new ArrayList<>();
+        ArrayList<MyListData> myListData = MyData.CreatData();
+        Date start_date = new Date(current_start_date.getYear(), current_start_date.getMonth()
+                                    , current_start_date.getDay());
+        Date end_date = new Date(current_end_date.getYear(), current_end_date.getMonth(),
+                current_end_date.getDay());
+
+        for (MyListData m : myListData) {
+            select_Date = new myDate();
+            splitDate(m.getOilOrderTime());
+            Date sel = new Date(select_Date.getYear(), select_Date.getMonth(),
+                            select_Date.getDay());
+            int comparison1 = sel.compareTo(start_date);
+            int comparison2 = end_date.compareTo(sel);
+            if (comparison1 != -1 && comparison2 != -1) {
+                search_ListData.add(m);
+            }
+        }
+
+    }
+
+    private void splitDate(String s) {
+        String[] str = s.split("\\.");
+
+        select_Date.setYear(Integer.parseInt(str[0]));
+        select_Date.setMonth(Integer.parseInt(str[1]));
+        select_Date.setDay(Integer.parseInt(str[2]));
     }
 
     private void setupRecyclerView(
@@ -54,8 +171,8 @@ public class SearchFragment extends Fragment {
             View.OnClickListener onClickListener
     ) {
 
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                MyData.CreatData(),
+        recyclerView.setAdapter(new ItemListFragment.SimpleItemRecyclerViewAdapter(
+                search_ListData,
                 onClickListener
         ));
     }
@@ -66,56 +183,42 @@ public class SearchFragment extends Fragment {
         binding = null;
     }
 
-    public static class SimpleItemRecyclerViewAdapter
-        extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    public static class myDate {
+        private int day;
+        private int month;
+        private int year;
 
-        private final List<MyListData> mValues;
-        private final View.OnClickListener mOnClickListener;
-
-        SimpleItemRecyclerViewAdapter(List<MyListData> items,
-                                      View.OnClickListener onClickListener) {
-            mValues = items;
-            mOnClickListener = onClickListener;
+        public myDate(int day, int month, int year) {
+            this.day = day;
+            this.month = month;
+            this.year = year;
         }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            ItemListContentBinding binding =
-                    ItemListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new ViewHolder(binding);
+        public myDate() {
         }
 
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).getOilOrderId());
-            holder.mContentView.setText(mValues.get(position).getOilOrderTime());
-            holder.moneyView.setText(String.valueOf(mValues.get(position).getMoney()));
-            holder.oilView.setText(mValues.get(position).getOil());
-
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+        public int getDay() {
+            return day;
         }
 
-        @Override
-        public int getItemCount() {
-            return mValues.size();
+        public void setDay(int day) {
+            this.day = day;
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
-            TextView mIdView;
-            final TextView mContentView;
-            final TextView oilView;
-            final TextView moneyView;
+        public int getMonth() {
+            return month;
+        }
 
-            ViewHolder(ItemListContentBinding binding) {
-                super(binding.getRoot());
-                mIdView = binding.oilOrderId;
-                mContentView = binding.oilOrderTime;
-                oilView = binding.oil;
-                moneyView = binding.money;
-            }
+        public void setMonth(int month) {
+            this.month = month;
+        }
+
+        public int getYear() {
+            return year;
+        }
+
+        public void setYear(int year) {
+            this.year = year;
         }
     }
 }

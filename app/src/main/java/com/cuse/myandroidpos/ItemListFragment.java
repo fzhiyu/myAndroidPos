@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import java.util.zip.Inflater;
 public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
+    private Button search_btn;
 
 
     @Override
@@ -82,6 +84,13 @@ public class ItemListFragment extends Fragment {
             Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
         };
 
+        search_btn = view.findViewById(R.id.search_button);
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(getView()).navigate(R.id.show_search, null);
+            }
+        });
 
         setupRecyclerView(recyclerView, onClickListener);
     }
@@ -121,16 +130,15 @@ public class ItemListFragment extends Fragment {
             ItemListContentBinding binding =
                     ItemListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ViewHolder(binding);
-
         }
 
         @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText("id: " + mValues.get(position).getOilOrderId());
-            holder.mContentView.setText(mValues.get(position).getOilOrderTime());
-            holder.moneyView.setText(String.valueOf(mValues.get(position).getMoney()));
-            holder.oilView.setText(mValues.get(position).getOil());
+            holder.mIdView.setText("id: " + mValues.get(position).getOilOrderId() + " ");
+            holder.mContentView.setText("time: " + mValues.get(position).getOilOrderTime() + " ");
+            holder.moneyView.setText("money: " + String.valueOf(mValues.get(position).getMoney())+ " ");
+            holder.oilView.setText("oil: " + mValues.get(position).getOil());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -156,8 +164,5 @@ public class ItemListFragment extends Fragment {
             }
 
         }
-        //ViewHolder end
     }
-    //SimpleItemRecyclerViewAdapter end
 }
-//ItemListFragment end

@@ -125,7 +125,7 @@ public class ItemDetailFragment extends Fragment {
             mTextView.setText("id: " + mItem.getOilOrderId() + " time: " + mItem.getOilOrderTime()
                     + " oil: " + mItem.getOil() + " money: " + mItem.getMoney());
             if (mToolbarLayout != null) {
-                mToolbarLayout.setTitle(mItem.getMoney());
+                mToolbarLayout.setTitle("订单id: " + mItem.getOilOrderId());
             }
         }
     }

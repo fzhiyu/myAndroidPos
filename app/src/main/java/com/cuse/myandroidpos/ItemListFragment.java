@@ -35,7 +35,7 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
     private Button search_btn;
-
+    private Button count_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +89,14 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getView()).navigate(R.id.show_search, null);
+            }
+        });
+
+        count_btn = view.findViewById(R.id.count_button);
+        count_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(getView()).navigate(R.id.show_count, null);
             }
         });
 

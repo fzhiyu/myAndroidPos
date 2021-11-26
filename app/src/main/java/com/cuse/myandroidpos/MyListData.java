@@ -58,6 +58,7 @@ public class MyListData {
         return  money;
     }
 
+
     public void setMoney(Float money) {
         this.money = money;
     }

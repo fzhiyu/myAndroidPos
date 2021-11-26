@@ -17,4 +17,7 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="all_oil">今日加油总额：</string>
     <string name="num_trac">笔数</string>
+    <string name="single_search">查询</string>
+    <string name="sum_query">统计</string>
+    <string name="print">打印</string>
 </resources>

@@ -16,6 +16,18 @@
         <action
             android:id="@+id/show_search"
             app:destination="@+id/item_search_fragment"/>
+        <action
+            android:id="@+id/show_count"
+            app:destination="@+id/item_count_fragment"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/item_count_fragment"
+        tools:layout="@layout/fragment_count"
+        android:name="com.cuse.myandroidpos.CountFragment"
+        android:label="items_count">
+
 
     </fragment>
 

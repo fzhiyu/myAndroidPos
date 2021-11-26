@@ -18,30 +18,42 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.cuse.myandroidpos.databinding.FragmentCountBinding;
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
 import com.cuse.myandroidpos.databinding.ItemListContentBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 
-public class SearchFragment extends Fragment {
-    private FragmentSearchBinding binding;
+public class CountFragment extends Fragment {
+    private FragmentCountBinding binding;
+    private DatePickerDialog datePickerDialog;
     private Button start_date;
     private Button end_date;
     private Button search_btn;
-    private DatePickerDialog datePickerDialog;
-    private myDate current_start_date;
-    private myDate current_end_date;
-    private myDate select_Date;
+    private SearchFragment.myDate current_start_date;
+    private SearchFragment.myDate current_end_date;
+    private SearchFragment.myDate select_Date;
     private ArrayList<MyListData> search_ListData;
+    private float all_money;
+    private int order;
+    private Map<String, Float[]> map;
+    private TextView sum_trac;
+    private TextView sum_money;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        binding = FragmentCountBinding.inflate(inflater, container, false);
 //        System.out.println("binding.getRoot() Search: " + binding.getRoot())
         return binding.getRoot();
     }
@@ -50,32 +62,64 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = binding.itemList2;
-
-        View.OnClickListener onClickListener = itemView -> {
-            MyListData item = (MyListData) itemView.getTag();
-            Bundle argument = new Bundle();
-            argument.putString(ItemDetailFragment.ARG_ITEM_ID, item.getOilOrderId());
-            Navigation.findNavController(itemView).navigate(R.id.search_to_detail, argument);
-        };
-
         searchDate(view);
 
-        search_btn = view.findViewById(R.id.search_btn);
+        search_btn = view.findViewById(R.id.count_search_btn);
+
+
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchRes();
-                setupRecyclerView(recyclerView, onClickListener);
+                CountRes();
+                setRes();
             }
         });
     }
 
+    @SuppressLint("SetTextI18n")
+    public void setRes() {
+        all_money = 0;
+        order = 0;
+        sum_trac = binding.getRoot().findViewById(R.id.sum_trac);
+        sum_money = binding.getRoot().findViewById(R.id.sum_money_value);
+
+        for (Float[] m : map.values()) {
+            all_money += m[0];
+            order += m[1];
+        }
+        sum_money.setText(String.valueOf(all_money));
+        sum_trac.setText(String.valueOf(order));
+    }
+
+    public void  CountRes() {
+        order = 0;
+        map = new HashMap<>();
+        Float[] fl = new Float[2];
+
+        for (MyListData m : search_ListData) {
+
+            if (map.isEmpty()) {
+                fl[0] = m.getFloatMoney();
+                fl[1] = 1f;
+                map.put(m.getOil(), fl);
+            } else if (map.containsKey(m.getOil())) {
+                fl[0] = map.get(m.getOil())[0] + m.getFloatMoney();
+                fl[1]++;
+                map.put(m.getOil(), fl);
+            } else {
+                fl[0] = m.getFloatMoney();
+                fl[1] = 1f;
+                map.put(m.getOil(), fl);
+            }
+        }
+    }
+
     private void searchDate(View view) {
-        start_date = (Button) view.findViewById(R.id.start_date);
-        end_date = (Button) view.findViewById(R.id.end_date);
-        current_start_date = new myDate();
-        current_end_date = new myDate();
+        start_date = (Button) view.findViewById(R.id.start_date2);
+        end_date = (Button) view.findViewById(R.id.end_date2);
+        current_start_date = new SearchFragment.myDate();
+        current_end_date = new SearchFragment.myDate();
         // perform click event on edit text
         start_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,22 +181,21 @@ public class SearchFragment extends Fragment {
         search_ListData = new ArrayList<>();
         ArrayList<MyListData> myListData = MyData.CreatData();
         Date start_date = new Date(current_start_date.getYear(), current_start_date.getMonth()
-                                    , current_start_date.getDay());
+                , current_start_date.getDay());
         Date end_date = new Date(current_end_date.getYear(), current_end_date.getMonth(),
                 current_end_date.getDay());
 
         for (MyListData m : myListData) {
-            select_Date = new myDate();
+            select_Date = new SearchFragment.myDate();
             splitDate(m.getOilOrderTime());
             Date sel = new Date(select_Date.getYear(), select_Date.getMonth(),
-                            select_Date.getDay());
+                    select_Date.getDay());
             int comparison1 = sel.compareTo(start_date);
             int comparison2 = end_date.compareTo(sel);
             if (comparison1 != -1 && comparison2 != -1) {
                 search_ListData.add(m);
             }
         }
-
     }
 
     private void splitDate(String s) {
@@ -163,59 +206,10 @@ public class SearchFragment extends Fragment {
         select_Date.setDay(Integer.parseInt(str[2]));
     }
 
-    private void setupRecyclerView(
-            RecyclerView recyclerView,
-            View.OnClickListener onClickListener
-    ) {
-
-        recyclerView.setAdapter(new ItemListFragment.SimpleItemRecyclerViewAdapter(
-                search_ListData,
-                onClickListener
-        ));
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    public static class myDate {
-        private int day;
-        private int month;
-        private int year;
-
-        public myDate(int day, int month, int year) {
-            this.day = day;
-            this.month = month;
-            this.year = year;
-        }
-
-        public myDate() {
-        }
-
-        public int getDay() {
-            return day;
-        }
-
-        public void setDay(int day) {
-            this.day = day;
-        }
-
-        public int getMonth() {
-            return month;
-        }
-
-        public void setMonth(int month) {
-            this.month = month;
-        }
-
-        public int getYear() {
-            return year;
-        }
-
-        public void setYear(int year) {
-            this.year = year;
-        }
     }
 }

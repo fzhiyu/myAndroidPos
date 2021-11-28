@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.cuse.myandroidpos.databinding.CountItemContentBinding;
 import com.cuse.myandroidpos.databinding.FragmentCountBinding;
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
 import com.cuse.myandroidpos.databinding.ItemListContentBinding;
@@ -46,9 +47,10 @@ public class CountFragment extends Fragment {
     private ArrayList<MyListData> search_ListData;
     private float all_money;
     private int order;
-    private Map<String, Float[]> map;
     private TextView sum_trac;
     private TextView sum_money;
+    private ArrayList<MyCountData> CountDataList;
+    private MyCountData count_data;
 
     @Nullable
     @Override
@@ -62,10 +64,9 @@ public class CountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        RecyclerView recyclerView = binding.sumOil;
         searchDate(view);
-
         search_btn = view.findViewById(R.id.count_search_btn);
-
 
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,8 +74,13 @@ public class CountFragment extends Fragment {
                 searchRes();
                 CountRes();
                 setRes();
+                setRecyclerView(recyclerView);
             }
         });
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        recyclerView.setAdapter(new ItemRecyclerViewAdapter(CountDataList));
     }
 
     @SuppressLint("SetTextI18n")
@@ -84,35 +90,41 @@ public class CountFragment extends Fragment {
         sum_trac = binding.getRoot().findViewById(R.id.sum_trac);
         sum_money = binding.getRoot().findViewById(R.id.sum_money_value);
 
-        for (Float[] m : map.values()) {
-            all_money += m[0];
-            order += m[1];
+        for (MyCountData m : CountDataList) {
+            all_money += m.getMoney();
+            order += m.getOrder();
         }
+
         sum_money.setText(String.valueOf(all_money));
         sum_trac.setText(String.valueOf(order));
     }
 
-    public void  CountRes() {
-        order = 0;
-        map = new HashMap<>();
-        Float[] fl = new Float[2];
+    public void CountRes() {
+        CountDataList = new ArrayList<>();
 
         for (MyListData m : search_ListData) {
+             if (CountDataList.size() == 0 || contains(m.getOil()) == -1) {
+                 count_data = new MyCountData();
+                 count_data.oil = m.getOil();
+                 count_data.money = m.getFloatMoney();
+                 count_data.order = 1;
+                 CountDataList.add(count_data);
+             } else {
+                 float t = CountDataList.get(contains(m.getOil())).money;
+                 int k = CountDataList.get(contains(m.getOil())).order;
+                 CountDataList.get(contains(m.getOil())).setMoney(t + m.getFloatMoney());
+                 CountDataList.get(contains(m.getOil())).setOrder(k + 1);
+             }
+        }
+    }
 
-            if (map.isEmpty()) {
-                fl[0] = m.getFloatMoney();
-                fl[1] = 1f;
-                map.put(m.getOil(), fl);
-            } else if (map.containsKey(m.getOil())) {
-                fl[0] = map.get(m.getOil())[0] + m.getFloatMoney();
-                fl[1]++;
-                map.put(m.getOil(), fl);
-            } else {
-                fl[0] = m.getFloatMoney();
-                fl[1] = 1f;
-                map.put(m.getOil(), fl);
+    public int contains(String oil) {
+        for (int i = 0; i < CountDataList.size(); i++) {
+            if (oil.equals(CountDataList.get(i).getOil())) {
+                return i;
             }
         }
+        return -1;
     }
 
     private void searchDate(View view) {
@@ -212,4 +224,95 @@ public class CountFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    public static class ItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<ItemRecyclerViewAdapter.ViewHolder> {
+        private final ArrayList<MyCountData> mValues;
+
+        ItemRecyclerViewAdapter(ArrayList<MyCountData> items) {
+            mValues = items;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            CountItemContentBinding binding =
+                    CountItemContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new ViewHolder(binding);
+        }
+
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.mOil.setText("oil: " + mValues.get(position).getOil() + " ");
+            holder.mMoney.setText("money: " + mValues.get(position).getStringMoney() + " ");
+            holder.mOrder.setText("order_num: " + mValues.get(position).getStringOrder());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            private final TextView mOil;
+            private final TextView mMoney;
+            private final TextView mOrder;
+
+            ViewHolder(CountItemContentBinding binding) {
+                super(binding.getRoot());
+                mOil = binding.oilType;
+                mMoney = binding.oilMoney;
+                mOrder = binding.oilOrder;
+            }
+        }
+    }
+
+    public static class MyCountData {
+        private String oil;
+        private float money;
+        private int order;
+
+        public MyCountData(String oil, float money, int order) {
+            this.oil = oil;
+            this.money = money;
+            this.order = order;
+        }
+
+        public MyCountData() {
+        }
+
+        public String getOil() {
+            return oil;
+        }
+
+        public void setOil(String oil) {
+            this.oil = oil;
+        }
+
+        public Float getMoney() {
+            return money;
+        }
+
+        public String getStringMoney() {
+            return String.valueOf(money);
+        }
+
+        public void setMoney(float money) {
+            this.money = money;
+        }
+
+        public int getOrder() {
+            return order;
+        }
+
+        public String getStringOrder() {
+            return String.valueOf(order);
+        }
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
+    }
+
 }

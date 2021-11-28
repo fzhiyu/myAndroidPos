@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:context="com.cuse.myandroidpos.ItemDetailHostActivity"
+        tools:context="com.cuse.myandroidpos.MainActivity"
         tools:listitem="@layout/item_list_content"
         app:layout_constraintTop_toBottomOf="@+id/search_button_bar"/>
 

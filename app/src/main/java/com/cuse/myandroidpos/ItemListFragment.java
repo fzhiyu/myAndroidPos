@@ -34,8 +34,6 @@ import java.util.zip.Inflater;
 public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
-    private Button search_btn;
-    private Button count_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,7 +82,7 @@ public class ItemListFragment extends Fragment {
             Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
         };
 
-        search_btn = view.findViewById(R.id.search_button);
+        Button search_btn = view.findViewById(R.id.search_button);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,11 +90,27 @@ public class ItemListFragment extends Fragment {
             }
         });
 
-        count_btn = view.findViewById(R.id.count_button);
+        Button count_btn = view.findViewById(R.id.count_button);
         count_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getView()).navigate(R.id.show_count, null);
+            }
+        });
+
+        Button backing_btn = view.findViewById(R.id.back_button);
+        backing_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(getView()).navigate(R.id.show_back, null);
+            }
+        });
+
+        Button setting_btn = view.findViewById(R.id.setting_button);
+        setting_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
             }
         });
 

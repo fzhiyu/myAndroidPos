@@ -18,7 +18,6 @@ public class MyData {
         myListData.add(new MyListData("4", "2021.10.1", "1234", 780, 10.0f));
         myListData.add(new MyListData("5", "2021.11.1", "1234", 770, 10.0f));
 
-
         return myListData;
     }
 }

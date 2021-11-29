@@ -97,6 +97,10 @@ public class SearchFragment extends Fragment {
         int mYear = c.get(Calendar.YEAR); // current year
         int mMonth = c.get(Calendar.MONTH); // current month
         int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+        int mHour = c.get(Calendar.HOUR);
+        int Minute = c.get(Calendar.MINUTE);
+        int Second = c.get(Calendar.SECOND);
+        System.out.println(c.getTime());
 
         // date picker dialog
         datePickerDialog = new DatePickerDialog(getContext(),

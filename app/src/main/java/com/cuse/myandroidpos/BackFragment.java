@@ -32,8 +32,8 @@ public class BackFragment extends Fragment implements View.OnTouchListener {
 //    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
+                             @NonNull Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_back, container, false);
         binding = FragmentBackBinding.inflate(inflater,container,false);
@@ -54,8 +54,8 @@ public class BackFragment extends Fragment implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == event.ACTION_DOWN){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());//建立对话框
-
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());//建立对话框
+            //尝试使用DialogFragment
         }
         return false;
     }

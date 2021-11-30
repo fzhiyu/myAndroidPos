@@ -76,13 +76,11 @@ public class ItemDetailFragment extends Fragment {
 
         mToolbarLayout = rootView.findViewById(R.id.detail_toolbar);
         mTextView = binding.itemDetail;
-        Button button = rootView.findViewById(R.id.fab);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button print_btn = rootView.findViewById(R.id.fab);
+        print_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String textToPrint = String.format(Locale.ROOT, "test print", 1);
-
-                // 1) UTF-8 text .  Not available send esc command with chr 128-255 :(
 
                 String url = "rawbt:" + textToPrint;
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -98,11 +96,10 @@ public class ItemDetailFragment extends Fragment {
             }
         });
 
-        Button btn = (Button) rootView.findViewById(R.id.SpeechButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button speech_btn = (Button) rootView.findViewById(R.id.SpeechButton);
+        speech_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String data = "hi";
                 textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
             }

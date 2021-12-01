@@ -43,17 +43,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_past_hour"
+            android:onClick="OnPastHourClick"
             android:text="过去一小时"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_today"
             android:text="今天"
+            android:onClick="OnTodayClick"
             android:layout_marginStart="10dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/back_weekend"
+            android:id="@+id/back_week"
+            android:onClick="OnWeekClick"
             android:text="今周"
             android:layout_marginStart="10dp"/>
     </LinearLayout>

@@ -26,7 +26,6 @@ public class SignFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         Button search_btn = view.findViewById(R.id.sign_button);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override

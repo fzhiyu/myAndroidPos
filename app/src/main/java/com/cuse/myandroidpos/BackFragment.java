@@ -179,7 +179,8 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     public long TimeToStamp(StringBuffer sb){
         long unixTimestamp = 0l;
         try {
-            SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            //https://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date date1 = df.parse(sb.toString());
             Log.i(TAG, "onC4: " + date1.toString());
             unixTimestamp = date1.getTime();

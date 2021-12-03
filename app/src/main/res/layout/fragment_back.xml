@@ -43,20 +43,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_past_hour"
-            android:onClick="OnPastHourClick"
             android:text="过去一小时"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_today"
             android:text="今天"
-            android:onClick="OnTodayClick"
             android:layout_marginStart="10dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_week"
-            android:onClick="OnWeekClick"
             android:text="今周"
             android:layout_marginStart="10dp"/>
     </LinearLayout>
@@ -69,9 +66,20 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/back_btn"
+            android:id="@+id/back_search"
             android:text="查询"/>
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/back_list"
+        android:name="com.cuse.myAndroidPos.BackFragmbaent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/back_button"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.cuse.myandroidpos.BackFragment"
+        tools:listitem="@layout/fragment_back_list" />
 
 </RelativeLayout>
 

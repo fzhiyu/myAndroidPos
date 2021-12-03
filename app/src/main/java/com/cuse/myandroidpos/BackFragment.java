@@ -2,6 +2,9 @@ package com.cuse.myandroidpos;
 
 import static android.content.ContentValues.TAG;
 
+import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
+import static com.cuse.myandroidpos.TimeKey.getWeekTimestamp;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,25 +13,40 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
+import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
+import com.cuse.myandroidpos.Post.RefundAllJson.RefundRequest;
 import com.cuse.myandroidpos.databinding.FragmentBackBinding;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class BackFragment extends Fragment implements View.OnTouchListener{
@@ -36,18 +54,26 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private FragmentBackBinding binding;
     private EditText searStartTime;
     private EditText searEndTime;
+    private Button btnPastHour;
+    private Button btnToday;
+    private Button btnWeek;
+    private Button btnSearch;
+
     private long currentTimeStamp;//当前时间戳
     private long startTimeStamp;
     private long endTimeStamp;
+    private String stationId;
+    private int start;
+    private String signature;
+    private int count;
+    private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
+    private RefundAllJson refundAllJson;
+    private HttpBinService httpBinService;
+    private Retrofit retrofit;
+
+    private String result;//储存传来的json字符串
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
@@ -62,11 +88,182 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //retrofit 和 httpBinService 对象
+
+
+
+        //文字框
         searStartTime = view.findViewById(R.id.sear_startTime);
         searEndTime = view.findViewById(R.id.sear_endTime);
         searStartTime.setOnTouchListener(this);
         searEndTime.setOnTouchListener(this);
 
+        //功能按钮
+        btnPastHour = view.findViewById(R.id.back_past_hour);
+        btnToday = view.findViewById(R.id.back_today);
+        btnWeek = view.findViewById(R.id.back_week);
+        btnSearch = view.findViewById(R.id.back_search);
+
+        //功能按钮的点击事件
+        btnPastHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                endTimeStamp = new Date().getTime();
+                startTimeStamp = endTimeStamp - 3600 * 1000;
+
+                setEdit(startTimeStamp,endTimeStamp);
+            }
+        });
+
+        btnToday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTimeStamp = getTodayTimestamp();
+                endTimeStamp = new Date().getTime();
+
+                setEdit(startTimeStamp,endTimeStamp);
+            }
+        });
+
+        btnWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTimeStamp = getWeekTimestamp();
+                endTimeStamp = new Date().getTime();
+
+                setEdit(startTimeStamp,endTimeStamp);
+            }
+        });
+
+        //得到字符串并加密编码
+        currentTimeStamp = new Date().getTime();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("count");
+        stringBuffer.append(count);
+        stringBuffer.append("endTime");
+        stringBuffer.append(endTimeStamp / 1000);
+        stringBuffer.append("start");
+        stringBuffer.append(start);
+        stringBuffer.append("startTime");
+        stringBuffer.append(startTimeStamp / 1000);
+        stringBuffer.append("stationId");
+        stringBuffer.append(stationId);
+        stringBuffer.append(interferenceCode);
+        stringBuffer.append("timestamp");
+        stringBuffer.append(currentTimeStamp / 1000);
+        signature = MD5AndBase64.md5(stringBuffer.toString());
+
+        //得到提交的json数据
+        RefundRequest refundRequest = new RefundRequest();
+        refundRequest.setStationId(stationId);
+        refundRequest.setStartTime(startTimeStamp / 1000 + "");
+        refundRequest.setEndTime(endTimeStamp / 1000 + "");
+        refundRequest.setStart(start + "");
+        refundRequest.setCount(count + "");
+        refundRequest.setTimestamp(currentTimeStamp / 1000 + "");
+        refundRequest.setSignature(signature);
+
+        Gson gson = new Gson();
+        String route = gson.toJson(refundRequest);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                        .addConverterFactory(GsonConverterFactory.create()).build();//创建Retrofit并添加json转换器
+                httpBinService = retrofit.create(HttpBinService.class);
+
+                RequestBody body = RequestBody.create(MediaType.parse("application/json"),route);//创建responseBody对象
+                Call<RefundAllJson> call = httpBinService.refundAll(body);
+                call.enqueue(new Callback<RefundAllJson>() {
+                    @Override
+                    public void onResponse(Call<RefundAllJson> call, Response<RefundAllJson> response) {
+                        refundAllJson = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<RefundAllJson> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        //测试数据
+        String sJson = "{\n" +
+                "  \"code\": 0,\n" +
+                "  \"message\": \"\",\n" +
+                "  \"data\": {\n" +
+                "    \"totalCount\": 2,\n" +
+                "    \"current\": 1,\n" +
+                "    \"oilOrder\": [\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+
+        refundAllJson = new Gson().fromJson(sJson,RefundAllJson.class);
+
+        //recyclerView
+        RecyclerView recyclerView = binding.backList;
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);//列表竖向
+
+        BackAdapter backAdapter = new BackAdapter(refundAllJson.getData().getOilOrder(),getActivity());
+        recyclerView.setAdapter(backAdapter);//填入数据
+
+        backAdapter.setBackRecyclerItemClickListener(new BackAdapter.OnBackRecyclerItemClickListener() {
+            @Override
+            public void OnBackRecyclerItemClick(int position) {
+                Navigation.findNavController(getView()).navigate(R.id.back_to_backDetail,null);
+            }
+        });//点击Item
+
+    }
+
+    //传入开始，结束时间戳，在editView上显示
+    public void setEdit(long startTimeStamp, long endTimeStamp){
+        String sStart = StampToTime(startTimeStamp);
+        String sEnd = StampToTime(endTimeStamp);
+
+        searStartTime.setText(sStart);//开始时间显示
+        searEndTime.requestFocus();//输入焦点放在下一行
+
+        searEndTime.setText(sEnd);//开始时间显示
+        searEndTime.requestFocus();//输入焦点
+        searEndTime.setSelection(searEndTime.getText().length());//输入焦点放在文字后
     }
 
     @Override
@@ -179,35 +376,23 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     public long TimeToStamp(StringBuffer sb){
         long unixTimestamp = 0l;
         try {
-            SimpleDateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date1 = df.parse(sb.toString());
-            Log.i(TAG, "onC4: " + date1.toString());
             unixTimestamp = date1.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return unixTimestamp;
     }
-    //unix秒转化为"YYYY-MM-dd HH:mm:ss"格式字符串
+    //unix秒转化为"yyyy-MM-dd HH:mm:ss"格式字符串
     public String StampToTime(long stamp){
         String s;
 
-        SimpleDateFormat df =new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        SimpleDateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         s = df.format(new Date(stamp));
 
         return s;
     }
 
-    public void OnPastHourClick(View view){
-
-    }
-
-    public void OnTodayClick(View view){
-
-    }
-
-    public void OnWeekClick(View view){
-
-    }
 
 }

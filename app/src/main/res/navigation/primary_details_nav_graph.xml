@@ -43,6 +43,9 @@
         tools:layout="@layout/fragment_setting"
         android:name="com.cuse.myandroidpos.BackFragment"
         android:label="backing">
+        <action
+            android:id="@+id/back_to_backDetail"
+            app:destination="@+id/back_detail_fragment"/>
 
     </fragment>
 
@@ -87,5 +90,12 @@
             android:name="item_id"
             android:defaultValue=""
             app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/back_detail_fragment"
+        android:name="com.cuse.myandroidpos.BackDetailFragment"
+        android:label="退单详情"
+        tools:layout="@layout/fragment_back_detail">
     </fragment>
 </navigation>

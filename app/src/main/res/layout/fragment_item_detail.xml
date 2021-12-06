@@ -2,60 +2,121 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame">
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/detail_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_collapseMode="pin"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/item_detail_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_below="@+id/detail_toolbar">
-
-        <TextView
-            android:id="@+id/item_detail"
-            style="?android:attr/textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/container_horizontal_margin"
-            android:paddingTop="16dp"
-            android:paddingEnd="@dimen/container_horizontal_margin"
-            android:paddingBottom="16dp"
-            android:textIsSelectable="true"
-            tools:context="com.cuse.myandroidpos.ItemDetailFragment" />
-
-    </androidx.core.widget.NestedScrollView>
-
-    <Button
-        android:id="@+id/fab"
-        android:text="Print"
+    <TextView
+        android:id="@+id/tv_detail_oilOrderId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|start"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        app:layout_anchor="@+id/item_detail_scroll_view"
-        app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat"
-        android:layout_below="@+id/item_detail_scroll_view"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="@string/oilOrderId"
+        android:textSize="20sp"/>
 
-    <Button
+    <TextView
+        android:id="@+id/tv_detail_oilOrderTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="speech"
-        android:layout_toRightOf="@+id/fab"
-        android:layout_below="@+id/item_detail_scroll_view"
-        android:id="@+id/SpeechButton"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/tv_detail_oilOrderId"
+        android:text="@string/oilOrderTime"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/tv_detail_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_oilOrderTime"
+        android:text="@string/user" />
+
+    <TextView
+        android:id="@+id/tv_detail_oilName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_user"
+        android:text="@string/oilName" />
+
+    <TextView
+        android:id="@+id/tv_detail_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_oilName"
+        android:text="@string/money"/>
+
+    <TextView
+        android:id="@+id/tv_detail_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_money"
+        android:text="@string/discount" />
+
+    <TextView
+        android:id="@+id/tv_detail_coupon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_discount"
+        android:text="@string/coupon" />
+
+    <TextView
+        android:id="@+id/tv_detail_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_coupon"
+        android:text="@string/balance" />
+
+    <TextView
+        android:id="@+id/tv_detail_cash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:layout_below="@id/tv_detail_balance"
+        android:text="@string/cash" />
+
+
+    <Button
+        android:id="@+id/btn_detail_print"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/btn_detail_refund"
+        android:text="@string/print"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/btn_detail_refund"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:text="@string/refund"
+        android:textSize="20sp"/>
+
 
 </RelativeLayout>
+

@@ -81,7 +81,7 @@
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         tools:context="com.cuse.myandroidpos.ItemDetailHostActivity"
-        tools:listitem="@layout/item_list_content" />
+        tools:listitem="@layout/fragment_home_item" />
 
 
 </RelativeLayout>

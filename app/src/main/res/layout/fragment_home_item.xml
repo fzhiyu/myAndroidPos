@@ -19,7 +19,7 @@
         android:background="#fafafa">
 
         <TextView
-            android:id="@+id/oilOrderId"
+            android:id="@+id/tv_homeItem_oilOrderId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -28,10 +28,10 @@
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/oil"
+            android:id="@+id/tv_homeItem_oil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/oilOrderId"
+            android:layout_below="@+id/tv_homeItem_oilOrderId"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
@@ -40,10 +40,10 @@
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/money"
+            android:id="@+id/tv_homeItem_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/oil"
+            android:layout_alignBaseline="@+id/tv_homeItem_oil"
             android:layout_marginLeft="170dp"
             android:gravity="center_vertical"
             android:padding="3dp"
@@ -51,10 +51,10 @@
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/oilOrderTime"
+            android:id="@+id/tv_homeItem_oilOrderTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/oil"
+            android:layout_below="@+id/tv_homeItem_oil"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
@@ -63,10 +63,10 @@
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/user"
+            android:id="@+id/tv_homeItem_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/oilOrderTime"
+            android:layout_alignBaseline="@+id/tv_homeItem_oilOrderTime"
             android:layout_marginLeft="170dp"
             android:gravity="center_vertical"
             android:padding="3dp"

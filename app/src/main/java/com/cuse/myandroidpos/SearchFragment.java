@@ -3,28 +3,23 @@ package com.cuse.myandroidpos;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.navigation.Navigation;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TextView;
 
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
-import com.cuse.myandroidpos.databinding.ItemListContentBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
 public class SearchFragment extends Fragment {
@@ -55,7 +50,7 @@ public class SearchFragment extends Fragment {
         View.OnClickListener onClickListener = itemView -> {
             MyListData item = (MyListData) itemView.getTag();
             Bundle argument = new Bundle();
-            argument.putString(ItemDetailFragment.ARG_ITEM_ID, item.getOilOrderId());
+            argument.putString("", item.getOilOrderId());
             Navigation.findNavController(itemView).navigate(R.id.search_to_detail, argument);
         };
 

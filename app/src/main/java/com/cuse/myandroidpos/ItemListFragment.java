@@ -10,10 +10,13 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
-import com.cuse.myandroidpos.databinding.ItemListContentBinding;
+import com.cuse.myandroidpos.databinding.FragmentHomeItemBinding;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,98 +25,212 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
 
+    private TextView tvOilOrderId;
+    private TextView tvOil;
+    private TextView tvMoney;
+    private TextView tvOilOrderTime;
+    private TextView tvUser;
+
+    private TextView tvTotalMoney;
+    private TextView tvTotalOrder;
+
+    private Button btnSearch;
+    private Button btnAll;
+    private Button btnRefund;
+    private Button btnSet;
+
+    private OrderLastJson orderLastJson;
+
+    private String sJson;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentItemListBinding.inflate(inflater, container, false);
         //binding -> app:id/item_list_container -> fragment_item_list
 //        System.out.println("binding.getRoot(): " + binding.getRoot());
-        setNum();
-
         return binding.getRoot();
     }
 
-    public void setNum() {
-        ArrayList<MyListData> myListData = MyData.CreatData();
-        float all_oil_money = 0;
-        int all_trac_num = 0;
-        for (MyListData m : myListData) {
-            all_oil_money += m.getFloatMoney();
-            all_trac_num += 1;
-        }
-
-        TextView oil_all_num = binding.getRoot().findViewById(R.id.tv_home_TodayTotalMoney);
-
-        oil_all_num.setText(String.valueOf(all_oil_money));
-        TextView oil_trac_num = binding.getRoot().findViewById(R.id.tv_home_TodayTotalOrder);
-        oil_trac_num.setText(String.valueOf(all_trac_num));
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = binding.itemList;
+        //设置显示总金钱和总订单
+        tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
+        tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() +"");
+        tvTotalOrder = view.findViewById(R.id.tv_home_TodayTotalOrder);
+        tvTotalOrder.setText(orderLastJson.getData().getTodayCount());
 
-        // Leaving this not using view binding as it relies on if the view is visible the current
-        // layout configuration (layout, layout-sw600dp)
+        //找到按钮实例
+        btnSearch = view.findViewById(R.id.btn_home_search);
+        btnAll = view.findViewById(R.id.btn_home_all);
+        btnRefund = view.findViewById(R.id.btn_home_refund);
+        btnSet = view.findViewById(R.id.btn_home_set);
 
-        /* Click Listener to trigger navigation based on if you have
-         * a single pane layout or two pane layout
-         */
-        View.OnClickListener onClickListener = itemView -> {
-            MyListData item =
-                    (MyListData) itemView.getTag();
-            Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.getOilOrderId());
-            Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
-        };
-
-        Button search_btn = view.findViewById(R.id.btn_home_search);
-        search_btn.setOnClickListener(new View.OnClickListener() {
+        btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getView()).navigate(R.id.show_search, null);
             }
         });
 
-        Button count_btn = view.findViewById(R.id.btn_home_all);
-        count_btn.setOnClickListener(new View.OnClickListener() {
+        btnAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getView()).navigate(R.id.show_count, null);
             }
         });
 
-        Button backing_btn = view.findViewById(R.id.btn_home_refund);
-        backing_btn.setOnClickListener(new View.OnClickListener() {
+        btnRefund.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getView()).navigate(R.id.show_back, null);
             }
         });
 
-        Button setting_btn = view.findViewById(R.id.btn_home_set);
-        setting_btn.setOnClickListener(new View.OnClickListener() {
+        btnSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
             }
         });
 
-        setupRecyclerView(recyclerView, onClickListener);
+        RecyclerView recyclerView = binding.itemList;
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        HomeAdapter homeAdapter = new HomeAdapter(orderLastJson.getData().getOilOrderList(),getActivity());
+        recyclerView.setAdapter(homeAdapter);
+
+
+        orderLastJson = new Gson().fromJson(sJson,OrderLastJson.class);
+
+        sJson = "{\n" +
+                "  \"code\": 0,\n" +
+                "  \"message\": \"\",\n" +
+                "  \"data\": {\n" +
+                "    \"stationName\": \"XXXX\",\n" +
+                "    \"todayMoney\": 300.00,\n" +
+                "    \"todayCount\": 2,\n" +
+                "    \"oilOrderList\": [\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },{\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
     }
 
-    private void setupRecyclerView(
-            RecyclerView recyclerView,
-            View.OnClickListener onClickListener
-    ) {
 
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(
-                MyData.CreatData(),
-                onClickListener
-        ));
-    }
 
     @Override
     public void onDestroyView() {
@@ -121,57 +238,10 @@ public class ItemListFragment extends Fragment {
         binding = null;
     }
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<MyListData> mValues;
-        private final View.OnClickListener mOnClickListener;
 
-        SimpleItemRecyclerViewAdapter(List<MyListData> items,
-                                      View.OnClickListener onClickListener) {
-            mValues = items;
-            mOnClickListener = onClickListener;
-        }
 
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            ItemListContentBinding binding =
-                    ItemListContentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new ViewHolder(binding);
-        }
 
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText("id: " + mValues.get(position).getOilOrderId() + " ");
-            holder.mContentView.setText("time: " + mValues.get(position).getOilOrderTime() + " ");
-            holder.moneyView.setText("money: " + String.valueOf(mValues.get(position).getMoney())+ " ");
-            holder.oilView.setText("oil: " + mValues.get(position).getOil());
 
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView mIdView;
-            final TextView mContentView;
-            final TextView oilView;
-            final TextView moneyView;
-
-            ViewHolder(ItemListContentBinding binding) {
-                super(binding.getRoot());
-                mIdView = binding.oilOrderId;
-                mContentView = binding.oilOrderTime;
-                oilView = binding.oil;
-                moneyView = binding.money;
-            }
-
-        }
-    }
 }

@@ -125,13 +125,13 @@ public class ItemListFragment extends Fragment {
 
         setupRecyclerView(recyclerView, onClickListener);
 
-        Button test_ws = (Button) view.findViewById(R.id.test_ws);
-        test_ws.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createWebSocketClient(view);
-            }
-        });
+//        Button test_ws = (Button) view.findViewById(R.id.test_ws);
+//        test_ws.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                createWebSocketClient(view);
+//            }
+//        });
     }
 
     private void createWebSocketClient(View view) {

@@ -76,17 +76,17 @@ public class ItemDetailFragment extends Fragment {
 
         mToolbarLayout = rootView.findViewById(R.id.detail_toolbar);
         mTextView = binding.itemDetail;
-        Button print_btn = rootView.findViewById(R.id.fab);
-        print_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String textToPrint = String.format(Locale.ROOT, "test print", 1);
-
-                String url = "rawbt:" + textToPrint;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
-            }
-        });
+//        Button print_btn = rootView.findViewById(R.id.fab);
+//        print_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String textToPrint = String.format(Locale.ROOT, "test print", 1);
+//
+//                String url = "rawbt:" + textToPrint;
+//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                startActivity(intent);
+//            }
+//        });
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {

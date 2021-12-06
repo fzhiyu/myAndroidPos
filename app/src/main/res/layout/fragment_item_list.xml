@@ -64,26 +64,34 @@
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/single_search" />
+            android:text="@string/single_search"
+            app:icon="@drawable/ic_search"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
         <Button
             android:id="@+id/count_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sum_query"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            app:icon="@drawable/ic_statistic"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_button"
             android:text="退单"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            app:icon="@drawable/ic_statistic"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/setting_button"
             android:text="设置"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            app:icon="@drawable/ic_setting"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
 
     </LinearLayout>
 
@@ -96,7 +104,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_list_content"
         app:layout_constraintTop_toBottomOf="@+id/search_button_bar"/>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

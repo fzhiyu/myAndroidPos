@@ -1,83 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Adding the same root's ID for view binding as other layout configurations -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_list_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/container_horizontal_margin"
-    android:layout_marginEnd="@dimen/container_horizontal_margin">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
 
     <LinearLayout
-        android:id="@+id/show_all_oil"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="100"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:id="@+id/tv_home_TodayTotalMoney"
+                android:text="1000000.00元"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:textSize="30sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:text="今日总金额"
+                android:gravity="center"
+                android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <View
+                android:layout_width="3px"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:background="@color/black"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="100"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:id="@+id/tv_home_TodayTotalOrder"
+                android:text="1000000.00元"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:textSize="30sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:text="今日总订单数"
+                android:gravity="center"
+                android:textSize="10sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="3px"
+        android:background="@color/black" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/search_button_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginTop="5dp">
 
-        <TextView
-            android:id="@+id/oil_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="今日加油总额" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_home_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="查询" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/oil_all_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_home_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="汇总"
+                android:orientation="vertical"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/oil_trac"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="笔数" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_home_refund"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="退单"
+                android:orientation="vertical"/>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/oil_trac_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBottom_toTopOf="@+id/item_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_all_oil"
-        android:id="@+id/search_button_bar"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/single_search" />
-        <Button
-            android:id="@+id/count_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sum_query"
-            android:layout_marginStart="10dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back_button"
-            android:text="退单"
-            android:layout_marginStart="10dp"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/setting_button"
-            android:text="设置"
-            android:layout_marginStart="10dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_home_set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="设置"/>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -89,9 +147,8 @@
         app:layoutManager="LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         tools:context="com.cuse.myandroidpos.MainActivity"
-        tools:listitem="@layout/item_list_content"
-        app:layout_constraintTop_toBottomOf="@+id/search_button_bar"/>
+        tools:listitem="@layout/item_list_content" />
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

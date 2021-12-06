@@ -11,6 +11,10 @@ public class RefundRequest {
     private String timestamp;
     private String signature;
 
+    public RefundRequest(){
+
+    }
+
     public String getStationId() {
         return stationId;
     }

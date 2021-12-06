@@ -43,7 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_past_hour"
-            android:text="过去一小时"/>
+            android:text="过去一小时"
+            android:textSize="10sp"
+            android:background="@color/gray"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_week"
-            android:text="今周"
+            android:text="本周"
             android:layout_marginStart="10dp"/>
     </LinearLayout>
 
@@ -79,7 +81,7 @@
         android:layout_below="@id/back_button"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.cuse.myandroidpos.BackFragment"
-        tools:listitem="@layout/fragment_back_list" />
+        tools:listitem="@layout/fragment_back_item" />
 
 </RelativeLayout>
 

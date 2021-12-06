@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/cardView_home"
+    android:id="@+id/careView_refund"
     android:orientation="horizontal"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
@@ -19,7 +19,7 @@
         android:background="#fafafa">
 
         <TextView
-            android:id="@+id/oilOrderId"
+            android:id="@+id/phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -28,23 +28,12 @@
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/oil"
+            android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/oilOrderId"
+            android:layout_below="@+id/phoneNumber"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:padding="3dp"
-            android:textSize="12dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
-
-        <TextView
-            android:id="@+id/money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/oil"
-            android:layout_marginLeft="170dp"
             android:gravity="center_vertical"
             android:padding="3dp"
             android:textSize="12dp"
@@ -54,19 +43,20 @@
             android:id="@+id/oilOrderTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/oil"
+            android:layout_below="@+id/state"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:padding="3dp"
             android:textSize="12dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem" />
 
         <TextView
-            android:id="@+id/user"
+            android:id="@+id/refundTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/oilOrderTime"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="170dp"
             android:gravity="center_vertical"
             android:padding="3dp"
@@ -77,5 +67,8 @@
 
 
     </RelativeLayout>
+
+
+
 
 </androidx.cardview.widget.CardView>

@@ -69,10 +69,11 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
 
     private RefundAllJson refundAllJson;
+    private RefundRequest refundRequest;
     private HttpBinService httpBinService;
     private Retrofit retrofit;
 
-    private String result;//储存传来的json字符串
+
 
 
     @Override
@@ -87,9 +88,6 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //retrofit 和 httpBinService 对象
-
 
 
         //文字框
@@ -151,10 +149,11 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         stringBuffer.append(interferenceCode);
         stringBuffer.append("timestamp");
         stringBuffer.append(currentTimeStamp / 1000);
+        stringBuffer.append(interferenceCode);
         signature = MD5AndBase64.md5(stringBuffer.toString());
 
-        //得到提交的json数据
-        RefundRequest refundRequest = new RefundRequest();
+        //得到提交的json数据 route
+        refundRequest = new RefundRequest();
         refundRequest.setStationId(stationId);
         refundRequest.setStartTime(startTimeStamp / 1000 + "");
         refundRequest.setEndTime(endTimeStamp / 1000 + "");
@@ -164,7 +163,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         refundRequest.setSignature(signature);
 
         Gson gson = new Gson();
-        String route = gson.toJson(refundRequest);
+        String route = gson.toJson(refundRequest);//传出去的数据
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,6 +227,134 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 "        \"coupon\": 3.00,\n" +
                 "        \"balance\": 0,\n" +
                 "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"refundId\": \"xxxxx\",\n" +
+                "        \"refundRequestTime\": \"xxxxx\",\n" +
+                "        \"refundStatus\": 0,\n" +
+                "        \"refundReason\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
@@ -247,7 +374,11 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         backAdapter.setBackRecyclerItemClickListener(new BackAdapter.OnBackRecyclerItemClickListener() {
             @Override
             public void OnBackRecyclerItemClick(int position) {
-                Navigation.findNavController(getView()).navigate(R.id.back_to_backDetail,null);
+                Bundle  bundle = new Bundle();
+                //使用Serializable来传递对象，传递的对象需要继承Serializable
+                bundle.putSerializable("RefundOilOrder",refundAllJson.getData().getOilOrder().get(position));
+                //bundle.putString("RefundOilOrder", refundAllJson.getData().getOilOrder().get(position).toString());
+                Navigation.findNavController(getView()).navigate(R.id.back_to_backDetail,bundle);
             }
         });//点击Item
 

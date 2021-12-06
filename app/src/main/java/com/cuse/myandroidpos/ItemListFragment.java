@@ -42,10 +42,10 @@ public class ItemListFragment extends Fragment {
             all_trac_num += 1;
         }
 
-        TextView oil_all_num = binding.getRoot().findViewById(R.id.oil_all_num);
+        TextView oil_all_num = binding.getRoot().findViewById(R.id.tv_home_TodayTotalMoney);
 
         oil_all_num.setText(String.valueOf(all_oil_money));
-        TextView oil_trac_num = binding.getRoot().findViewById(R.id.oil_trac_num);
+        TextView oil_trac_num = binding.getRoot().findViewById(R.id.tv_home_TodayTotalOrder);
         oil_trac_num.setText(String.valueOf(all_trac_num));
     }
 
@@ -69,7 +69,7 @@ public class ItemListFragment extends Fragment {
             Navigation.findNavController(itemView).navigate(R.id.show_item_detail, arguments);
         };
 
-        Button search_btn = view.findViewById(R.id.search_button);
+        Button search_btn = view.findViewById(R.id.btn_home_search);
         search_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,7 +77,7 @@ public class ItemListFragment extends Fragment {
             }
         });
 
-        Button count_btn = view.findViewById(R.id.count_button);
+        Button count_btn = view.findViewById(R.id.btn_home_all);
         count_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +85,7 @@ public class ItemListFragment extends Fragment {
             }
         });
 
-        Button backing_btn = view.findViewById(R.id.back_button);
+        Button backing_btn = view.findViewById(R.id.btn_home_refund);
         backing_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +93,7 @@ public class ItemListFragment extends Fragment {
             }
         });
 
-        Button setting_btn = view.findViewById(R.id.setting_button);
+        Button setting_btn = view.findViewById(R.id.btn_home_set);
         setting_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

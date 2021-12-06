@@ -6,13 +6,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewTreeViewModelKt;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
 
 import java.util.List;
-import java.util.logging.LoggingMXBean;
 
 public class BackAdapter extends RecyclerView.Adapter<BackAdapter.MyViewHolder> {
     private List<OilOrder> refundOilOrderList;
@@ -25,7 +23,7 @@ public class BackAdapter extends RecyclerView.Adapter<BackAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context,R.layout.fragment_back_list,null);
+        View view = View.inflate(context,R.layout.fragment_back_item,null);
 
         return new MyViewHolder(view);
     }

@@ -3,62 +3,143 @@ package com.cuse.myandroidpos;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
+import com.cuse.myandroidpos.Post.LoginJson.LoginRequest;
+import com.cuse.myandroidpos.databinding.FragmentSignBinding;
+import com.google.gson.Gson;
+
+import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class SignFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentSignBinding binding;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText editStaionId;
+    private EditText editPassWord;
+    private Button btnLogin;
+
+    private long currentTimeStamp;
+    private String signature;
+    private String staionId;
+    private String passWord;
+    private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
+
+    private LoginRequest loginRequest;
+    private LoginJson loginJson;
+    private HttpBinService httpBinService;
+    private Retrofit retrofit;
 
     public SignFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SignFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SignFragment newInstance(String param1, String param2) {
-        SignFragment fragment = new SignFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign, container, false);
+        binding = FragmentSignBinding.inflate(inflater,container,false);
+        View rootView = binding.getRoot();
+
+        //找到对应的ID
+        editStaionId = rootView.findViewById(R.id.editText_sign_staionID);
+        editPassWord = rootView.findViewById(R.id.editText_sign_passWord);
+        btnLogin = rootView.findViewById(R.id.btn_sign_login);
+
+        //得到输入的值
+        staionId = editStaionId.getText().toString();
+        passWord = editPassWord.getText().toString();
+
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentTimeStamp = new Date().getTime();//得到当前的时间戳，ms
+
+                //得到字符串并加密编码
+                StringBuffer stringBuffer = new StringBuffer();
+                stringBuffer.append("passWord");
+                stringBuffer.append(passWord);
+                stringBuffer.append("staionId");
+                stringBuffer.append(staionId);
+                stringBuffer.append("timestamp");
+                stringBuffer.append(currentTimeStamp / 1000);
+                stringBuffer.append(interferenceCode);
+                signature = MD5AndBase64.md5(stringBuffer.toString());
+
+                //得到提交的json数据 route
+                loginRequest = new LoginRequest();
+                loginRequest.setStationId(staionId);
+                loginRequest.setPassWord(passWord);
+                loginRequest.setTimestamp(currentTimeStamp / 1000 + "");
+                loginRequest.setSignature(signature);
+
+                Gson gson = new Gson();
+                String route = gson.toJson(loginRequest);
+
+//                //post
+//                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+//                        .addConverterFactory(GsonConverterFactory.create()).build();
+//                httpBinService = retrofit.create(HttpBinService.class);
+//
+//                RequestBody body = RequestBody.create(MediaType.parse("application/json"),route);
+//                Call<LoginJson> call = httpBinService.login(body);
+//                call.enqueue(new Callback<LoginJson>() {
+//                    @Override
+//                    public void onResponse(Call<LoginJson> call, Response<LoginJson> response) {
+//                        loginJson = response.body();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<LoginJson> call, Throwable t) {
+//
+//                    }
+//                });
+
+                //测试数据
+                String s = "{\n" +
+                        "\t\"code\": 0,\n" +
+                        "\t\"message\": \"\",\n" +
+                        "\t\"data\": {\n" +
+                        "\t\t\t\"result\": 0,\n" +
+                        "\"message\": \"\"\n" +
+                        "}\n" +
+                        "}\n";
+
+                loginJson = new Gson().fromJson(s,LoginJson.class);
+
+                if (loginJson.getData().getResult() == 0){
+                    Navigation.findNavController(getView()).navigate(R.id.sign_to_list);
+                }else {
+                    Toast.makeText(getActivity(),loginJson.getData().getMessage(),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        return rootView;
     }
 }

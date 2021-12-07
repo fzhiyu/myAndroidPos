@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment">
+    tools:context=".SearchFragment"
+    android:background="@color/gray">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,9 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/back_past_hour"
-            android:text="过去一小时"
-            android:textSize="10sp"
-            android:background="@color/gray"/>
+            android:layout_marginLeft="10dp"
+            android:text="过去一小时" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,8 +66,10 @@
         android:layout_below="@+id/back_key"
         android:id="@+id/back_button">
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:id="@+id/back_search"
             android:text="查询"/>
     </LinearLayout>

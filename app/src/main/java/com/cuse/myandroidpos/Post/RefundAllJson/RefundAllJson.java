@@ -1,14 +1,6 @@
-/**
-  * Copyright 2021 bejson.com 
-  */
+
 package com.cuse.myandroidpos.Post.RefundAllJson;
 
-/**
- * Auto-generated: 2021-11-29 16:49:35
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
 public class RefundAllJson {
 
     private int code;

@@ -18,6 +18,7 @@
             android:id="@+id/btn_home_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/single_search"
             app:icon="@drawable/ic_search"
             style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
@@ -25,6 +26,7 @@
             android:id="@+id/btn_home_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/sum_query"
             android:layout_marginStart="10dp"
             app:icon="@drawable/ic_statistic"
@@ -32,6 +34,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:id="@+id/btn_home_refund"
             android:text="退单"
             android:layout_marginStart="10dp"
@@ -41,6 +44,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:id="@+id/btn_home_set"
             android:text="设置"
             android:layout_marginStart="10dp"

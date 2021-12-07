@@ -1,20 +1,14 @@
-/**
-  * Copyright 2021 bejson.com 
-  */
+
 package com.cuse.myandroidpos.Post.OrderAllJson;
+import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
+
 import java.util.List;
 
-/**
- * Auto-generated: 2021-11-29 16:29:22
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
 public class Data {
 
     private int totalCount;
     private int current;
-    private List<OilOrder> oilOrder;
+    private List<OilOrderList> oilOrder;
     public void setTotalCount(int totalCount) {
          this.totalCount = totalCount;
      }
@@ -29,11 +23,10 @@ public class Data {
          return current;
      }
 
-    public void setOilOrder(List<OilOrder> oilOrder) {
+    public void setOilOrder(List<OilOrderList> oilOrder) {
          this.oilOrder = oilOrder;
      }
-     public List<OilOrder> getOilOrder() {
+     public List<OilOrderList> getOilOrder() {
          return oilOrder;
      }
-
 }

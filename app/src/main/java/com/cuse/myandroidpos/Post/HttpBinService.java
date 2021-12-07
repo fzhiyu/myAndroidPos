@@ -5,6 +5,7 @@ import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
+import com.cuse.myandroidpos.Post.Push.Push;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
 
 import okhttp3.RequestBody;
@@ -44,7 +45,7 @@ public interface HttpBinService {
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/push/rquest")
-    Call<OrderLastJson>push(@Body RequestBody requestBody);
+    Call<Push>push(@Body RequestBody requestBody);
 
 
 }

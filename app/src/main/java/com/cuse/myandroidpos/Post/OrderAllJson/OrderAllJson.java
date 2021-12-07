@@ -1,14 +1,7 @@
-/**
-  * Copyright 2021 bejson.com 
-  */
+
 package com.cuse.myandroidpos.Post.OrderAllJson;
 
-/**
- * Auto-generated: 2021-11-29 16:29:22
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
+
 public class OrderAllJson {
 
     private int code;

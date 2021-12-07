@@ -1,14 +1,6 @@
-/**
-  * Copyright 2021 bejson.com 
-  */
+
 package com.cuse.myandroidpos.Post.OrderSummaryJson;
 
-/**
- * Auto-generated: 2021-11-29 16:42:57
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
 public class OrderSummaryJson {
 
     private int code;

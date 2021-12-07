@@ -1,14 +1,7 @@
-/**
-  * Copyright 2021 bejson.com 
-  */
+
 package com.cuse.myandroidpos.Post.Push;
 
-/**
- * Auto-generated: 2021-11-29 16:51:53
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
+
 public class Data {
 
     private int result;

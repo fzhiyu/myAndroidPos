@@ -1,15 +1,8 @@
-/**
-  * Copyright 2021 bejson.com 
-  */
+
 package com.cuse.myandroidpos.Post.RefundAllJson;
 import java.util.List;
 
-/**
- * Auto-generated: 2021-11-29 16:49:35
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
+
 public class Data {
 
     private int totalCount;

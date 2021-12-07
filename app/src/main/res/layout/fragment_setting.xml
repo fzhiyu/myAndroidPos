@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SettingFragment">
-
-    <Button
+    android:layout_height="match_parent" >
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="退出"/>
-
+        android:text="Hello World"/>
 </LinearLayout>
+<!--<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">-->
+
+<!--    <Preference-->
+<!--        app:key="sync"-->
+<!--        app:title="推送设置"-->
+<!--        app:summary="进行终端推送功能测试"/>-->
+<!--    <SwitchPreferenceCompat-->
+<!--        app:key="voice"-->
+<!--        app:title="语音播报"-->
+<!--        app:summary="点击关闭自动语音播报"-->
+<!--        app:defaultValue="true"/>-->
+<!--    <SwitchPreference-->
+<!--        app:key="print"-->
+<!--        app:title="自动打印"-->
+<!--        app:summary="点击关闭自动打印小票"-->
+<!--        app:defaultValue="true"/>-->
+
+
+
+<!--</PreferenceScreen>-->

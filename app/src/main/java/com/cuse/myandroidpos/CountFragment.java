@@ -284,7 +284,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                 "  \"data\": {\n" +
                 "    \"todayMoney\": 300.00,\n" +
                 "    \"todayCount\": 2,\n" +
-                "    \"size\": 2\n" +
+                "    \"size\": 2,\n" +
                 "    \"oilOrderList\": [\n" +
                 "      {\n" +
                 "        \"oilId\": \"xxxxx\",\n" +
@@ -349,7 +349,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                 "  }\n" +
                 "}";
 
-//        orderSummaryJson = new Gson().fromJson(sJson,OrderSummaryJson.class);
+        orderSummaryJson = new Gson().fromJson(sJson,OrderSummaryJson.class);
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
@@ -364,7 +364,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         list1.setOilId("1");
         list1.setOilName("ds");
         oilOrderList.add(list1);
-        CountAdapter countAdapter = new CountAdapter(oilOrderList,getActivity());
+        CountAdapter countAdapter = new CountAdapter(orderSummaryJson.getData().getOilOrderList(),getActivity());
         recyclerView.setAdapter(countAdapter);
     }
 

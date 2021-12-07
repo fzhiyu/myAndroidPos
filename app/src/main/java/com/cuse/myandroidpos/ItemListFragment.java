@@ -43,6 +43,7 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
     private WebSocketClient webSocketClient;
+    private Thread wsThread;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

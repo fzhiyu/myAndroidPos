@@ -61,7 +61,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 searchRes();
-                setupRecyclerView(recyclerView, onClickListener);
+//                setupRecyclerView(recyclerView, onClickListener);
             }
         });
     }
@@ -141,16 +141,16 @@ public class SearchFragment extends Fragment {
         select_Date.setDay(Integer.parseInt(str[2]));
     }
 
-    private void setupRecyclerView(
-            RecyclerView recyclerView,
-            View.OnClickListener onClickListener
-    ) {
-
-        recyclerView.setAdapter(new ItemListFragment.SimpleItemRecyclerViewAdapter(
-                search_ListData,
-                onClickListener
-        ));
-    }
+//    private void setupRecyclerView(
+//            RecyclerView recyclerView,
+//            View.OnClickListener onClickListener
+//    ) {
+//
+//        recyclerView.setAdapter(new ItemListFragment.SimpleItemRecyclerViewAdapter(
+//                search_ListData,
+//                onClickListener
+//        ));
+//    }
 
     @Override
     public void onDestroyView() {

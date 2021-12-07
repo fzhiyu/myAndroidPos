@@ -74,13 +74,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/back_list"
-        android:name="com.cuse.myAndroidPos.BackFragmbaent"
+        android:name="com.cuse.myAndroidPos.BackFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@id/back_button"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.cuse.myandroidpos.BackFragment"
+        tools:context="com.cuse.myAndroidpos.BackFragment"
         tools:listitem="@layout/fragment_back_item" />
 
 </RelativeLayout>

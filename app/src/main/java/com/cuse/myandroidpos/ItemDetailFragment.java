@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,12 @@ public class ItemDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle bundle = getArguments();
+        if (bundle.containsKey("LastOilOrder")){
+            oilOrder = new OilOrderList();
+            oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");
+        }
+
     }
 
     @Override
@@ -64,33 +71,35 @@ public class ItemDetailFragment extends Fragment {
         binding = FragmentItemDetailBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
 
+        //找到对象，设置文字
         oilOrderId = rootView.findViewById(R.id.tv_detail_oilOrderId);
         oilOrderId.setText("加油ID：" + oilOrder.getOilOrderId());
 
-        oilOrderTime = rootView.findViewById(R.id.tv_refund_detail_oilOrderTime);
+        oilOrderTime = rootView.findViewById(R.id.tv_detail_oilOrderTime);
         oilOrderTime.setText("加油时间：" + oilOrder.getOilOrderTime());
 
-        user = rootView.findViewById(R.id.tv_refund_detail_user);
+        user = rootView.findViewById(R.id.tv_detail_user);
         user.setText("用户手机号：" + oilOrder.getUser());
 
-        oilName = rootView.findViewById(R.id.tv_refund_detail_oilName);
+        oilName = rootView.findViewById(R.id.tv_detail_oilName);
         oilName.setText("油品名称：" + oilOrder.getOilName());
 
-        money = rootView.findViewById(R.id.tv_refund_detail_money);
+        money = rootView.findViewById(R.id.tv_detail_money);
         money.setText("加油总额：" + oilOrder.getMoney());
 
-        discount = rootView.findViewById(R.id.tv_refund_detail_discount);
+        discount = rootView.findViewById(R.id.tv_detail_discount);
         discount.setText("折扣金额：" + oilOrder.getDiscount());
 
-        coupon = rootView.findViewById(R.id.tv_refund_detail_coupon);
+        coupon = rootView.findViewById(R.id.tv_detail_coupon);
         coupon.setText("优惠券金额：" + oilOrder.getCoupon());
 
-        balance = rootView.findViewById(R.id.tv_refund_detail_balance);
+        balance = rootView.findViewById(R.id.tv_detail_balance);
         balance.setText("会员账户支付金额：" + oilOrder.getBalance());
 
-        cash = rootView.findViewById(R.id.tv_refund_detail_cash);
+        cash = rootView.findViewById(R.id.tv_detail_cash);
         cash.setText("微信支付金额：" + oilOrder.getCash());
 
+        //打印按钮功能
         print = rootView.findViewById(R.id.btn_detail_print);
         print.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +122,7 @@ public class ItemDetailFragment extends Fragment {
 //            }
 //        });
 
+        //退单按钮功能
         refund = (Button) rootView.findViewById(R.id.btn_detail_refund);
         refund.setOnClickListener(new View.OnClickListener() {
             @Override

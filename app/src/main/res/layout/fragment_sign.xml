@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"/>
             <EditText
-                android:id="@+id/editText_sign_stationId"
+                android:id="@+id/editText_sign_stationID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="油站ID"
@@ -76,7 +76,7 @@
         android:orientation="horizontal"
         android:gravity="center">
         <Button
-            android:id="@+id/sign_button"
+            android:id="@+id/btn_sign_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="登录"

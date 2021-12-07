@@ -16,6 +16,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     private List<OilOrderList> homeOilOrderList;
     private Context context;
+    private OnHomeRecyclerItemClickListener mHomeRecyclerItemClickListener;
 
     public HomeAdapter(List<OilOrderList> homeOilOrderList, Context context) {
         this.homeOilOrderList = homeOilOrderList;
@@ -24,8 +25,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     @NonNull
     @Override
-
-
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = View.inflate(context,R.layout.fragment_home_item,null);
 
@@ -43,10 +42,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return 0;
-    }
+        return homeOilOrderList == null ? 0 : homeOilOrderList.size(); }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public  class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView oilOrderId;
         private TextView oil;
@@ -66,20 +64,22 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mHomeRecyclerItemClickListener != null)
-                        mHomeRecyclerItemClickListener.OnHomeRecyclerItemClickListener(getAdapterPosition());
+                    if (mHomeRecyclerItemClickListener != null){
+                        mHomeRecyclerItemClickListener.OnHomeRecyclerItemClick(getPosition());
+                    }
                 }
             });
         }
 
-        private OnHomeRecyclerItemClickListener mHomeRecyclerItemClickListener;
+    }
 
-        public void setHomeRecyclerItemClickListener(OnHomeRecyclerItemClickListener mHomeRecyclerItemClickListener) {
-            this.mHomeRecyclerItemClickListener = mHomeRecyclerItemClickListener;
-        }
 
-        public interface OnHomeRecyclerItemClickListener{
-            void OnHomeRecyclerItemClickListener(int position);
-        }
+
+    public void setHomeRecyclerItemClickListener(OnHomeRecyclerItemClickListener mHomeRecyclerItemClickListener) {
+        this.mHomeRecyclerItemClickListener = mHomeRecyclerItemClickListener;
+    }
+
+    public interface OnHomeRecyclerItemClickListener{
+        void OnHomeRecyclerItemClick(int position);
     }
 }

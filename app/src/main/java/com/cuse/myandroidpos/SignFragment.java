@@ -65,7 +65,7 @@ public class SignFragment extends Fragment {
         View rootView = binding.getRoot();
 
         //找到对应的ID
-        editStaionId = rootView.findViewById(R.id.editText_sign_staionID);
+        editStaionId = rootView.findViewById(R.id.editText_sign_stationID);
         editPassWord = rootView.findViewById(R.id.editText_sign_passWord);
         btnLogin = rootView.findViewById(R.id.btn_sign_login);
 

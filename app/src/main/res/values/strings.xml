@@ -19,20 +19,7 @@
     <string name="num_trac">笔数</string>
     <string name="single_search">查询</string>
     <string name="sum_query">统计</string>
-
-
     <string name="print">打印</string>
-    <string name="refund">退单</string>
-
-    <string name="oilOrderId">订单ID</string>
-    <string name="oilOrderTime">加油时间</string>
-    <string name="user">用户手机号</string>
-    <string name="oilName">油品名称</string>
-    <string name="money">加油金额</string>
-    <string name="discount">折扣金额</string>
-    <string name="coupon">优惠券金额</string>
-    <string name="balance">账户余额支付金额</string>
-    <string name="cash">微信支付金额</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
@@ -47,4 +34,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>

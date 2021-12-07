@@ -22,7 +22,6 @@
         <action
             android:id="@+id/show_setting"
             app:destination="@+id/setting_fragment"/>
-
         <action
             android:id="@+id/show_back"
             app:destination="@+id/backing_fragment"/>

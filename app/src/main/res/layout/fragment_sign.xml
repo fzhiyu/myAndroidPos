@@ -27,13 +27,13 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"/>
             <EditText
-                android:id="@+id/editText_sign_stationID"
+                android:id="@+id/editText_userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="油站ID"
+                android:hint="用户名"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-            android:background="@null"/>
+                android:background="@null"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -60,7 +60,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"/>
             <EditText
-                android:id="@+id/editText_sign_passWord"
+                android:id="@+id/editText_passWord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="密码"
@@ -71,15 +71,15 @@
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
         <Button
-            android:id="@+id/btn_sign_login"
+            android:id="@+id/sign_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="登录"
-            android:layout_gravity="center_horizontal"/>
+            android:gravity="center"/>
     </LinearLayout>
 </LinearLayout>

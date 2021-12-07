@@ -72,10 +72,6 @@
             android:padding="3dp"
             android:textSize="12dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
-
-
-
-
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

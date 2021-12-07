@@ -73,9 +73,6 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private HttpBinService httpBinService;
     private Retrofit retrofit;
 
-
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                              @NonNull Bundle savedInstanceState) {
@@ -89,7 +86,99 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setBackButton(view);
 
+        setData();
+
+        Gson gson = new Gson();
+        String route = gson.toJson(refundRequest);//传出去的数据
+
+        BackSearch(route);
+
+        setBackJsonData();
+
+        setBackRecyclerView();
+    }
+
+    public void setData() {
+        //得到字符串并加密编码
+        currentTimeStamp = new Date().getTime();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("count");
+        stringBuffer.append(count);
+        stringBuffer.append("endTime");
+        stringBuffer.append(endTimeStamp / 1000);
+        stringBuffer.append("start");
+        stringBuffer.append(start);
+        stringBuffer.append("startTime");
+        stringBuffer.append(startTimeStamp / 1000);
+        stringBuffer.append("stationId");
+        stringBuffer.append(stationId);
+        stringBuffer.append(interferenceCode);
+        stringBuffer.append("timestamp");
+        stringBuffer.append(currentTimeStamp / 1000);
+        stringBuffer.append(interferenceCode);
+        signature = MD5AndBase64.md5(stringBuffer.toString());
+
+        //得到提交的json数据 route
+        refundRequest = new RefundRequest();
+        refundRequest.setStationId(stationId);
+        refundRequest.setStartTime(startTimeStamp / 1000 + "");
+        refundRequest.setEndTime(endTimeStamp / 1000 + "");
+        refundRequest.setStart(start + "");
+        refundRequest.setCount(count + "");
+        refundRequest.setTimestamp(currentTimeStamp / 1000 + "");
+        refundRequest.setSignature(signature);
+    }
+
+    public void setBackRecyclerView () {
+        //recyclerView
+        RecyclerView recyclerView = binding.backList;
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);//列表竖向
+
+        BackAdapter backAdapter = new BackAdapter(refundAllJson.getData().getOilOrder(),getActivity());
+        recyclerView.setAdapter(backAdapter);//填入数据
+
+        backAdapter.setBackRecyclerItemClickListener(new BackAdapter.OnBackRecyclerItemClickListener() {
+            @Override
+            public void OnBackRecyclerItemClick(int position) {
+                Bundle  bundle = new Bundle();
+                //使用Serializable来传递对象，传递的对象需要继承Serializable
+                bundle.putSerializable("RefundOilOrder",refundAllJson.getData().getOilOrder().get(position));
+                //bundle.putString("RefundOilOrder", refundAllJson.getData().getOilOrder().get(position).toString());
+                Navigation.findNavController(getView()).navigate(R.id.back_to_backDetail,bundle);
+            }
+        });//点击Item
+    }
+
+    public void BackSearch (String route) {
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                        .addConverterFactory(GsonConverterFactory.create()).build();//创建Retrofit并添加json转换器
+                httpBinService = retrofit.create(HttpBinService.class);
+
+                RequestBody body = RequestBody.create(MediaType.parse("application/json"),route);//创建responseBody对象
+                Call<RefundAllJson> call = httpBinService.refundAll(body);
+                call.enqueue(new Callback<RefundAllJson>() {
+                    @Override
+                    public void onResponse(Call<RefundAllJson> call, Response<RefundAllJson> response) {
+                        refundAllJson = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<RefundAllJson> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    public void setBackButton (View view) {
         //文字框
         searStartTime = view.findViewById(R.id.sear_startTime);
         searEndTime = view.findViewById(R.id.sear_endTime);
@@ -132,62 +221,9 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 setEdit(startTimeStamp,endTimeStamp);
             }
         });
+    }
 
-        //得到字符串并加密编码
-        currentTimeStamp = new Date().getTime();
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("count");
-        stringBuffer.append(count);
-        stringBuffer.append("endTime");
-        stringBuffer.append(endTimeStamp / 1000);
-        stringBuffer.append("start");
-        stringBuffer.append(start);
-        stringBuffer.append("startTime");
-        stringBuffer.append(startTimeStamp / 1000);
-        stringBuffer.append("stationId");
-        stringBuffer.append(stationId);
-        stringBuffer.append(interferenceCode);
-        stringBuffer.append("timestamp");
-        stringBuffer.append(currentTimeStamp / 1000);
-        stringBuffer.append(interferenceCode);
-        signature = MD5AndBase64.md5(stringBuffer.toString());
-
-        //得到提交的json数据 route
-        refundRequest = new RefundRequest();
-        refundRequest.setStationId(stationId);
-        refundRequest.setStartTime(startTimeStamp / 1000 + "");
-        refundRequest.setEndTime(endTimeStamp / 1000 + "");
-        refundRequest.setStart(start + "");
-        refundRequest.setCount(count + "");
-        refundRequest.setTimestamp(currentTimeStamp / 1000 + "");
-        refundRequest.setSignature(signature);
-
-        Gson gson = new Gson();
-        String route = gson.toJson(refundRequest);//传出去的数据
-
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                        .addConverterFactory(GsonConverterFactory.create()).build();//创建Retrofit并添加json转换器
-                httpBinService = retrofit.create(HttpBinService.class);
-
-                RequestBody body = RequestBody.create(MediaType.parse("application/json"),route);//创建responseBody对象
-                Call<RefundAllJson> call = httpBinService.refundAll(body);
-                call.enqueue(new Callback<RefundAllJson>() {
-                    @Override
-                    public void onResponse(Call<RefundAllJson> call, Response<RefundAllJson> response) {
-                        refundAllJson = response.body();
-                    }
-
-                    @Override
-                    public void onFailure(Call<RefundAllJson> call, Throwable t) {
-
-                    }
-                });
-            }
-        });
-
+    public void setBackJsonData () {
         //测试数据
         String sJson = "{\n" +
                 "  \"code\": 0,\n" +
@@ -361,27 +397,6 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 "}";
 
         refundAllJson = new Gson().fromJson(sJson,RefundAllJson.class);
-
-        //recyclerView
-        RecyclerView recyclerView = binding.backList;
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);//列表竖向
-
-        BackAdapter backAdapter = new BackAdapter(refundAllJson.getData().getOilOrder(),getActivity());
-        recyclerView.setAdapter(backAdapter);//填入数据
-
-        backAdapter.setBackRecyclerItemClickListener(new BackAdapter.OnBackRecyclerItemClickListener() {
-            @Override
-            public void OnBackRecyclerItemClick(int position) {
-                Bundle  bundle = new Bundle();
-                //使用Serializable来传递对象，传递的对象需要继承Serializable
-                bundle.putSerializable("RefundOilOrder",refundAllJson.getData().getOilOrder().get(position));
-                //bundle.putString("RefundOilOrder", refundAllJson.getData().getOilOrder().get(position).toString());
-                Navigation.findNavController(getView()).navigate(R.id.back_to_backDetail,bundle);
-            }
-        });//点击Item
-
     }
 
     //传入开始，结束时间戳，在editView上显示
@@ -524,6 +539,4 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
 
         return s;
     }
-
-
 }

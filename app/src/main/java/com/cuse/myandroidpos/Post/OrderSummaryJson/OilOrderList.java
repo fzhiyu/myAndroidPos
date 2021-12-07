@@ -29,11 +29,19 @@ public class OilOrderList {
          return oilCount;
      }
 
+    public String getStringOilCount() {
+        return String.valueOf(oilCount);
+    }
+
     public void setOilMoney(float oilMoney) {
-         this.oilMoney = oilMoney;
-     }
-     public float getOilMoney() {
+        this.oilMoney = oilMoney;
+    }
+    public float getOilMoney() {
          return oilMoney;
-     }
+    }
+
+    public String getStringOilMoney() {
+        return String.valueOf(oilMoney);
+    }
 
 }

@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
-import com.cuse.myandroidpos.databinding.FragmentHomeItemBinding;
-import com.google.gson.Gson;
+import com.cuse.myandroidpos.databinding.FragmentHomeItemContentBinding;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,11 +53,20 @@ public class ItemListFragment extends Fragment {
         return binding.getRoot();
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setBackJson();
+
+        setBackButton(view);
+
+        //recycleView,适配器单独写在了HomeAdapter
+        RecyclerView recyclerView = binding.itemList;
+        setRecyclerView(recyclerView);
+    }
+
+    public void setBackJson() {
         //测试的数据，不用管，但是需要写在前面，不然会出现bug
         orderLastJson = new OrderLastJson();
         sJson = "{\n" +
@@ -69,7 +78,7 @@ public class ItemListFragment extends Fragment {
                 "    \"todayCount\": 2,\n" +
                 "    \"oilOrderList\": [\n" +
                 "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"1\",\n" +
                 "        \"oilOrderTime\": \"xxxxx\",\n" +
                 "        \"oilName\": \"xxx\",\n" +
                 "        \"user\": \"xxxxxxx\",\n" +
@@ -80,17 +89,17 @@ public class ItemListFragment extends Fragment {
                 "        \"cash\": 95.00\n" +
                 "      },\n" +
                 "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"2\",\n" +
                 "        \"oilOrderTime\": \"xxxxx\",\n" +
                 "        \"oilName\": \"xxx\",\n" +
                 "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
+                "        \"money\": 200.00,\n" +
                 "        \"discount\": 2.00,\n" +
                 "        \"coupon\": 3.00,\n" +
                 "        \"balance\": 0,\n" +
                 "        \"cash\": 95.00\n" +
                 "      },{\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderId\": \"3\",\n" +
                 "        \"oilOrderTime\": \"xxxxx\",\n" +
                 "        \"oilName\": \"xxx\",\n" +
                 "        \"user\": \"xxxxxxx\",\n" +
@@ -182,7 +191,9 @@ public class ItemListFragment extends Fragment {
                 "}";
 
         orderLastJson = new Gson().fromJson(sJson,OrderLastJson.class);
+    }
 
+    public void setBackButton (View view) {
         //设置显示总金钱和总订单
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
         tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
@@ -226,8 +237,10 @@ public class ItemListFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
             }
         });
-//recycleView,适配器单独写在了HomeAdapter
-        RecyclerView recyclerView = binding.itemList;
+    }
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+
         //设置竖直
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -248,22 +261,11 @@ public class ItemListFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.show_item_detail,bundle);
             }
         });
-
-
     }
-
-
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
-
-
-
-
-
-
 }

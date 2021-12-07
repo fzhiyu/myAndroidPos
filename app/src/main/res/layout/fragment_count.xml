@@ -8,49 +8,84 @@
     android:background="@color/gray">
 
     <LinearLayout
-        android:id="@+id/date_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:id="@+id/back_picker">
 
-        <Button
-            android:id="@+id/start_date2"
-            android:layout_width="0dp"
+        <EditText
+            android:id="@+id/sear_startTime"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="40dp"
-            android:layout_weight="1"
-            android:text="起始时间" />
-        <Button
-            android:id="@+id/end_date2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:text="终止时间" />
+            android:gravity="center"
+            android:hint="开始时间" />
+
+        <EditText
+            android:id="@+id/sear_endTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:hint="结束时间" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/count_search_btn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_below="@+id/date_picker"
-        android:text="查询" />
+        android:id="@+id/back_key"
+        android:layout_below="@+id/back_picker"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_past_hour"
+            android:layout_marginLeft="10dp"
+            android:text="过去一小时" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_today"
+            android:text="今天"
+            android:layout_marginStart="10dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_week"
+            android:text="本周"
+            android:layout_marginStart="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/back_key"
+        android:id="@+id/back_button">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/back_search"
+            android:text="查询"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/sum_oil_money"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/count_search_btn"
+        android:layout_below="@+id/back_button"
         android:text="加油总额" />
     <TextView
         android:id="@+id/sum_money_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/sum_oil_money"
-        android:layout_below="@id/count_search_btn"
+        android:layout_below="@id/back_button"
         android:text="100"/>
     <TextView
         android:id="@+id/sum_oil_trac"
@@ -68,7 +103,7 @@
         android:text="10"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sum_oil"
+        android:id="@+id/sum_oil_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sum_oil_trac"

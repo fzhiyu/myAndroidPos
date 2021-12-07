@@ -49,17 +49,6 @@
 
     </fragment>
 
-<!--    <fragment-->
-<!--        android:id="@+id/setting_fragment"-->
-<!--        tools:layout="@layout/fragment_setting"-->
-<!--        android:name="com.cuse.myandroidpos.SettingFragment"-->
-<!--        android:label="setting">-->
-
-<!--        <action-->
-<!--            android:id="@+id/setting_to_sign"-->
-<!--            app:destination="@+id/sign_fragment"/>-->
-<!--    </fragment>-->
-
     <fragment
         android:id="@+id/setting_fragment"
         android:name="com.cuse.myandroidpos.SettingsFragment_test"

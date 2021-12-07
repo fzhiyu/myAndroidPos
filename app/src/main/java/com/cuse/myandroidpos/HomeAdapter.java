@@ -26,7 +26,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context,R.layout.fragment_home_item,null);
+        View view = View.inflate(context,R.layout.fragment_home_item_content,null);
 
         return new MyViewHolder(view);
     }
@@ -72,8 +72,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         }
 
     }
-
-
 
     public void setHomeRecyclerItemClickListener(OnHomeRecyclerItemClickListener mHomeRecyclerItemClickListener) {
         this.mHomeRecyclerItemClickListener = mHomeRecyclerItemClickListener;

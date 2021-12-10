@@ -1,5 +1,7 @@
 package com.cuse.myandroidpos;
 
+import static android.view.WindowManager.*;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +32,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(LayoutParams.FLAG_KEEP_SCREEN_ON, LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ActivityItemDetailBinding binding = ActivityItemDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -80,5 +85,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_item);
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            HideNavBarUtil.hideBottomUIMenu(getWindow().getDecorView());
+        }
     }
 }

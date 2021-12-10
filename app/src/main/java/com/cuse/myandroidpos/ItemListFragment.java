@@ -2,6 +2,7 @@ package com.cuse.myandroidpos;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
@@ -26,12 +28,13 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
 
+    private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新控件
+
     private TextView tvOilOrderId;
     private TextView tvOil;
     private TextView tvMoney;
     private TextView tvOilOrderTime;
     private TextView tvUser;
-
     private TextView tvTotalMoney;
     private TextView tvTotalOrder;
 
@@ -57,6 +60,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         //测试的数据，不用管，但是需要写在前面，不然会出现bug
         orderLastJson = new OrderLastJson();
@@ -226,6 +230,11 @@ public class ItemListFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
             }
         });
+
+        swipeRefreshLayout = view.findViewById(R.id.swipe_home);
+        Log.i("hejun", "onViewCreated: " + swipeRefreshLayout);
+        handleDownPullUpdate();
+
 //recycleView,适配器单独写在了HomeAdapter
         RecyclerView recyclerView = binding.itemList;
         //设置竖直
@@ -249,20 +258,31 @@ public class ItemListFragment extends Fragment {
             }
         });
 
-
     }
 
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void handleDownPullUpdate(){
+        swipeRefreshLayout.setEnabled(true);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //下拉刷新操作
+                tvTotalOrder.setText("正在刷新");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvTotalOrder.setText("刷新成功");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },3000);
+            }
+        });
     }
 
-
-
-
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        binding = null;
+//    }
 
 
 

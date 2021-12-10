@@ -1,13 +1,12 @@
 package com.cuse.myandroidpos;
 
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,22 +14,13 @@ import android.widget.Toast;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
 import com.cuse.myandroidpos.Post.LoginJson.LoginRequest;
-import com.cuse.myandroidpos.databinding.FragmentSignBinding;
 import com.google.gson.Gson;
 
 import java.util.Date;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SignFragment extends Fragment {
-
-    private FragmentSignBinding binding;
+public class LoginActivity extends AppCompatActivity {
 
     private EditText editStaionId;
     private EditText editPassWord;
@@ -47,32 +37,22 @@ public class SignFragment extends Fragment {
     private HttpBinService httpBinService;
     private Retrofit retrofit;
 
-    public SignFragment() {
-        // Required empty public constructor
-    }
-
-
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        //长亮
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentSignBinding.inflate(inflater,container,false);
-        View rootView = binding.getRoot();
+        setContentView(R.layout.activity_login);
 
         //找到对应的ID
-        editStaionId = rootView.findViewById(R.id.editText_sign_stationID);
-        editPassWord = rootView.findViewById(R.id.editText_sign_passWord);
-        btnLogin = rootView.findViewById(R.id.btn_sign_login);
+        editStaionId = findViewById(R.id.editText_sign_stationID);
+        editPassWord = findViewById(R.id.editText_sign_passWord);
+        btnLogin = findViewById(R.id.btn_sign_login);
 
         //得到输入的值
         staionId = editStaionId.getText().toString();
         passWord = editPassWord.getText().toString();
-
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +80,7 @@ public class SignFragment extends Fragment {
                 Gson gson = new Gson();
                 String route = gson.toJson(loginRequest);
 
-//                //post
+                //post
 //                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
 //                        .addConverterFactory(GsonConverterFactory.create()).build();
 //                httpBinService = retrofit.create(HttpBinService.class);
@@ -132,14 +112,16 @@ public class SignFragment extends Fragment {
                 loginJson = new Gson().fromJson(s,LoginJson.class);
 
                 if (loginJson.getData().getResult() == 0){
-                    Navigation.findNavController(getView()).navigate(R.id.sign_to_list);
+                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    intent.putExtra("staionId",staionId);
+                    intent.putExtra("currentTimeStamp",currentTimeStamp);
+                    startActivity(intent);
+                    finish();
                 }else {
-                    Toast.makeText(getActivity(),loginJson.getData().getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,loginJson.getData().getMessage(),Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-
-        return rootView;
     }
 }

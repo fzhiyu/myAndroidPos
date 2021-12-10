@@ -54,4 +54,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     //CardView
     implementation 'androidx.cardview:cardview:1.0.0'
+    //下拉刷新依赖
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 }

@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
-import com.cuse.myandroidpos.databinding.FragmentHomeItemContentBinding;
-
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;

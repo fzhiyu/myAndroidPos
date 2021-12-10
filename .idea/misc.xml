@@ -4,28 +4,24 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable-anydpi/ic_refresh.xml" value="0.275" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable-anydpi/ic_user.xml" value="0.24814814814814815" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable/border.xml" value="0.275" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable/single_line.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout-sw600dp/fragment_item_detail.xml" value="0.17265625" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout-sw600dp/fragment_item_list.xml" value="0.21015625" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_main.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_search.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_setting.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/count_item_content.xml" value="0.264" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_back.xml" value="0.28020833333333334" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/count_item_content.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_count.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_first.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_home_item.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_home_item_content.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_item_detail.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.2886297376093295" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.264" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_setting.xml" value="0.23020833333333332" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_sign.xml" value="0.152" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_setting.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_sign.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/item_list_content.xml" value="0.176" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/layout_items.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/layout_navigation.xml" value="0.25" />
@@ -33,10 +29,37 @@
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/layout_setting.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/list_item.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/search_item.xml" value="0.28020833333333334" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/settings_activity.xml" value="0.15729166666666666" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/toolbar_main.xml" value="0.176" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/nav_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/xml/root_preferences.xml" value="0.28020833333333334" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/xml/searchable.xml" value="0.30885416666666665" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/xml/set_preference.xml" value="0.264" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/drawable/shape.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/drawable/shape_capsule_bg.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.17037037037037037" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/activity_search.xml" value="0.17037037037037037" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/activity_text.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/content_main.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/count_item_content.xml" value="0.1361111111111111" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/data_time_picker.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_back.xml" value="0.3333333333333333" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_back_detail.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_back_item.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_back_list.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_count.xml" value="0.3333333333333333" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_home_item.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_item_detail.xml" value="0.3333333333333333" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.4466666666666667" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_setting.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/fragment_sign.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/layout/item_list_content.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.19537037037037036" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/xml/root_preferences.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/myAndroidPos/app/src/main/res/xml/setting_preference.xml" value="0.2859375" />
       </map>
     </option>
   </component>

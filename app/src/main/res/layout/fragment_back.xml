@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment"
-    android:background="@color/gray">
+    android:background="@color/gray"
+    tools:context=".SearchFragment">
 
     <LinearLayout
+        android:id="@+id/back_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/back_picker">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/sear_startTime"
@@ -35,55 +35,63 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/back_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/back_key"
         android:layout_below="@+id/back_picker"
         android:orientation="horizontal">
+
         <Button
+            android:id="@+id/back_past_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/back_past_hour"
             android:layout_marginLeft="10dp"
             android:text="过去一小时" />
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/back_today"
-            android:text="今天"
-            android:layout_marginStart="10dp"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="今天" />
+
+        <Button
             android:id="@+id/back_week"
-            android:text="本周"
-            android:layout_marginStart="10dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="本周" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/back_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/back_key"
-        android:id="@+id/back_button">
+        android:layout_below="@+id/back_key">
+
         <Button
+            android:id="@+id/back_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:id="@+id/back_search"
-            android:text="查询"/>
+            android:text="查询" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/back_list"
-        android:name="com.cuse.myAndroidPos.BackFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/back_button"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.cuse.myAndroidpos.BackFragment"
-        tools:listitem="@layout/fragment_back_item" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/back_list"
+            android:name="com.cuse.myAndroidPos.BackFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/back_button"
+            android:layout_alignParentBottom="true"
+            app:layoutManager="LinearLayoutManager"
+            tools:context="com.cuse.myAndroidpos.BackFragment"
+            tools:listitem="@layout/fragment_back_item" />
+
+
 
 </RelativeLayout>
 

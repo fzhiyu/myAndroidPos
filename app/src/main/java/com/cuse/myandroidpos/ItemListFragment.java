@@ -2,6 +2,7 @@ package com.cuse.myandroidpos;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
+import com.cuse.myandroidpos.databinding.FragmentHomeItemBinding;
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +28,13 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
 
+    private SwipeRefreshLayout swipeRefreshLayout;//下拉刷新控件
+
     private TextView tvOilOrderId;
     private TextView tvOil;
     private TextView tvMoney;
     private TextView tvOilOrderTime;
     private TextView tvUser;
-
     private TextView tvTotalMoney;
     private TextView tvTotalOrder;
 
@@ -51,20 +56,12 @@ public class ItemListFragment extends Fragment {
         return binding.getRoot();
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setBackJson();
 
-        setBackButton(view);
-
-        //recycleView,适配器单独写在了HomeAdapter
-        RecyclerView recyclerView = binding.itemList;
-        setRecyclerView(recyclerView);
-    }
-
-    public void setBackJson() {
         //测试的数据，不用管，但是需要写在前面，不然会出现bug
         orderLastJson = new OrderLastJson();
         sJson = "{\n" +
@@ -76,7 +73,7 @@ public class ItemListFragment extends Fragment {
                 "    \"todayCount\": 2,\n" +
                 "    \"oilOrderList\": [\n" +
                 "      {\n" +
-                "        \"oilOrderId\": \"1\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
                 "        \"oilOrderTime\": \"xxxxx\",\n" +
                 "        \"oilName\": \"xxx\",\n" +
                 "        \"user\": \"xxxxxxx\",\n" +
@@ -87,17 +84,17 @@ public class ItemListFragment extends Fragment {
                 "        \"cash\": 95.00\n" +
                 "      },\n" +
                 "      {\n" +
-                "        \"oilOrderId\": \"2\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
                 "        \"oilOrderTime\": \"xxxxx\",\n" +
                 "        \"oilName\": \"xxx\",\n" +
                 "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 200.00,\n" +
+                "        \"money\": 100.00,\n" +
                 "        \"discount\": 2.00,\n" +
                 "        \"coupon\": 3.00,\n" +
                 "        \"balance\": 0,\n" +
                 "        \"cash\": 95.00\n" +
                 "      },{\n" +
-                "        \"oilOrderId\": \"3\",\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
                 "        \"oilOrderTime\": \"xxxxx\",\n" +
                 "        \"oilName\": \"xxx\",\n" +
                 "        \"user\": \"xxxxxxx\",\n" +
@@ -189,9 +186,7 @@ public class ItemListFragment extends Fragment {
                 "}";
 
         orderLastJson = new Gson().fromJson(sJson,OrderLastJson.class);
-    }
 
-    public void setBackButton (View view) {
         //设置显示总金钱和总订单
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
         tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
@@ -235,10 +230,13 @@ public class ItemListFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
             }
         });
-    }
 
-    public void setRecyclerView(RecyclerView recyclerView) {
+        swipeRefreshLayout = view.findViewById(R.id.swipe_home);
+        Log.i("hejun", "onViewCreated: " + swipeRefreshLayout);
+        handleDownPullUpdate();
 
+//recycleView,适配器单独写在了HomeAdapter
+        RecyclerView recyclerView = binding.itemList;
         //设置竖直
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -259,11 +257,33 @@ public class ItemListFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(R.id.show_item_detail,bundle);
             }
         });
+
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void handleDownPullUpdate(){
+        swipeRefreshLayout.setEnabled(true);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //下拉刷新操作
+                tvTotalOrder.setText("正在刷新");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvTotalOrder.setText("刷新成功");
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },3000);
+            }
+        });
     }
+
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        binding = null;
+//    }
+
+
+
 }

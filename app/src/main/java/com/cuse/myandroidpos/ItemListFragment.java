@@ -24,7 +24,7 @@ import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastRequest;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -96,107 +96,107 @@ public class ESCUtil {
 		return buffer.toByteArray();
 	}
 
-//	/**
-//	 * 光栅打印二维码
-//	 */
-//	public static byte[] getPrintQRCode2(String data, int size){
-//		byte[] bytes1  = new byte[4];
-//		bytes1[0] = GS;
-//		bytes1[1] = 0x76;
-//		bytes1[2] = 0x30;
-//		bytes1[3] = 0x00;
-//
-//		byte[] bytes2 = BytesUtil.getZXingQRCode(data, size);
-//		return BytesUtil.byteMerger(bytes1, bytes2);
-//	}
-//
-//	/**
-//	 * 打印一维条形码
-//	 */
-//	public static byte[] getPrintBarCode(String data, int symbology, int height, int width, int textposition){
-//		if(symbology < 0 || symbology > 10){
-//			return new byte[]{LF};
-//		}
-//
-//		if(width < 2 || width > 6){
-//			width = 2;
-//		}
-//
-//		if(textposition <0 || textposition > 3){
-//			textposition = 0;
-//		}
-//
-//		if(height < 1 || height>255){
-//			height = 162;
-//		}
-//
-//		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-//		try{
-//			buffer.write(new byte[]{0x1D,0x66,0x01,0x1D,0x48,(byte)textposition,
-//					0x1D,0x77,(byte)width,0x1D,0x68,(byte)height,0x0A});
-//
-//			byte[] barcode;
-//			if(symbology == 10){
-//				barcode = BytesUtil.getBytesFromDecString(data);
-//			}else{
-//				barcode = data.getBytes("GB18030");
-//			}
-//
-//
-//			if(symbology > 7){
-//				buffer.write(new byte[]{0x1D,0x6B,0x49,(byte)(barcode.length+2),0x7B, (byte) (0x41+symbology-8)});
-//			}else{
-//				buffer.write(new byte[]{0x1D,0x6B,(byte)(symbology + 0x41),(byte)barcode.length});
-//			}
-//			buffer.write(barcode);
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		return buffer.toByteArray();
-//	}
-//
-//	//光栅位图打印
-//	public static byte[] printBitmap(Bitmap bitmap){
-//		byte[] bytes1  = new byte[4];
-//		bytes1[0] = GS;
-//		bytes1[1] = 0x76;
-//		bytes1[2] = 0x30;
-//		bytes1[3] = 0x00;
-//
-//		byte[] bytes2 = BytesUtil.getBytesFromBitMap(bitmap);
-//		return BytesUtil.byteMerger(bytes1, bytes2);
-//	}
-//
-//	//光栅位图打印 设置mode
-//	public static byte[] printBitmap(Bitmap bitmap, int mode){
-//		byte[] bytes1  = new byte[4];
-//		bytes1[0] = GS;
-//		bytes1[1] = 0x76;
-//		bytes1[2] = 0x30;
-//		bytes1[3] = (byte) mode;
-//
-//		byte[] bytes2 = BytesUtil.getBytesFromBitMap(bitmap);
-//		return BytesUtil.byteMerger(bytes1, bytes2);
-//	}
-//
-//	//光栅位图打印
-//	public static byte[] printBitmap(byte[] bytes){
-//		byte[] bytes1  = new byte[4];
-//		bytes1[0] = GS;
-//		bytes1[1] = 0x76;
-//		bytes1[2] = 0x30;
-//		bytes1[3] = 0x00;
-//
-//		return BytesUtil.byteMerger(bytes1, bytes);
-//	}
-//
-//	/*
-//	*	选择位图指令 设置mode
-//	*	需要设置1B 33 00将行间距设为0
-//	 */
-//	public static byte[] selectBitmap(Bitmap bitmap, int mode){
-//		return BytesUtil.byteMerger(BytesUtil.byteMerger(new byte[]{0x1B, 0x33, 0x00}, BytesUtil.getBytesFromBitMap(bitmap, mode)), new byte[]{0x0A, 0x1B, 0x32});
-//	}
+	/**
+	 * 光栅打印二维码
+	 */
+	public static byte[] getPrintQRCode2(String data, int size){
+		byte[] bytes1  = new byte[4];
+		bytes1[0] = GS;
+		bytes1[1] = 0x76;
+		bytes1[2] = 0x30;
+		bytes1[3] = 0x00;
+
+		byte[] bytes2 = BytesUtil.getZXingQRCode(data, size);
+		return BytesUtil.byteMerger(bytes1, bytes2);
+	}
+
+	/**
+	 * 打印一维条形码
+	 */
+	public static byte[] getPrintBarCode(String data, int symbology, int height, int width, int textposition){
+		if(symbology < 0 || symbology > 10){
+			return new byte[]{LF};
+		}
+
+		if(width < 2 || width > 6){
+			width = 2;
+		}
+
+		if(textposition <0 || textposition > 3){
+			textposition = 0;
+		}
+
+		if(height < 1 || height>255){
+			height = 162;
+		}
+
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		try{
+			buffer.write(new byte[]{0x1D,0x66,0x01,0x1D,0x48,(byte)textposition,
+					0x1D,0x77,(byte)width,0x1D,0x68,(byte)height,0x0A});
+
+			byte[] barcode;
+			if(symbology == 10){
+				barcode = BytesUtil.getBytesFromDecString(data);
+			}else{
+				barcode = data.getBytes("GB18030");
+			}
+
+
+			if(symbology > 7){
+				buffer.write(new byte[]{0x1D,0x6B,0x49,(byte)(barcode.length+2),0x7B, (byte) (0x41+symbology-8)});
+			}else{
+				buffer.write(new byte[]{0x1D,0x6B,(byte)(symbology + 0x41),(byte)barcode.length});
+			}
+			buffer.write(barcode);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return buffer.toByteArray();
+	}
+
+	//光栅位图打印
+	public static byte[] printBitmap(Bitmap bitmap){
+		byte[] bytes1  = new byte[4];
+		bytes1[0] = GS;
+		bytes1[1] = 0x76;
+		bytes1[2] = 0x30;
+		bytes1[3] = 0x00;
+
+		byte[] bytes2 = BytesUtil.getBytesFromBitMap(bitmap);
+		return BytesUtil.byteMerger(bytes1, bytes2);
+	}
+
+	//光栅位图打印 设置mode
+	public static byte[] printBitmap(Bitmap bitmap, int mode){
+		byte[] bytes1  = new byte[4];
+		bytes1[0] = GS;
+		bytes1[1] = 0x76;
+		bytes1[2] = 0x30;
+		bytes1[3] = (byte) mode;
+
+		byte[] bytes2 = BytesUtil.getBytesFromBitMap(bitmap);
+		return BytesUtil.byteMerger(bytes1, bytes2);
+	}
+
+	//光栅位图打印
+	public static byte[] printBitmap(byte[] bytes){
+		byte[] bytes1  = new byte[4];
+		bytes1[0] = GS;
+		bytes1[1] = 0x76;
+		bytes1[2] = 0x30;
+		bytes1[3] = 0x00;
+
+		return BytesUtil.byteMerger(bytes1, bytes);
+	}
+
+	/*
+	*	选择位图指令 设置mode
+	*	需要设置1B 33 00将行间距设为0
+	 */
+	public static byte[] selectBitmap(Bitmap bitmap, int mode){
+		return BytesUtil.byteMerger(BytesUtil.byteMerger(new byte[]{0x1B, 0x33, 0x00}, BytesUtil.getBytesFromBitMap(bitmap, mode)), new byte[]{0x0A, 0x1B, 0x32});
+	}
 
 	/**
 	 * 跳指定行数

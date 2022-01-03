@@ -61,4 +61,6 @@ dependencies {
     implementation 'com.sunmi:printerlibrary:1.0.14'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 }

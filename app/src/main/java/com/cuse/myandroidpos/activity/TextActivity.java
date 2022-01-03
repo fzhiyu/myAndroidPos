@@ -21,7 +21,7 @@ public class TextActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
         setMyTitle(R.string.text_title);
-//        setBack();
+        setBack();
 
         testFont = null;
         isBold = true;

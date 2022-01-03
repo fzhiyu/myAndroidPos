@@ -16,7 +16,4 @@
     <color name="gray_1">#D3D2D7</color>
     <color name="weixin_gray">#EDEDED</color>
     <color name="out_internet">#FA5251</color>
-
-    <color name="background">#181a26</color>
-    <color name="text">#ff1b1b</color>
 </resources>

@@ -35,29 +35,52 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/back_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/back_key"
         android:layout_below="@+id/back_picker"
-        android:orientation="horizontal">
-        <Button
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/back_past_hour"
-            android:layout_marginLeft="10dp"
-            android:text="过去一小时" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back_today"
-            android:text="今天"
-            android:layout_marginStart="10dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back_week"
-            android:text="本周"
-            android:layout_marginStart="10dp"/>
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <top.androidman.SuperButton
+                android:id="@+id/back_past_hour"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                app:color_normal="@color/lightBlue"
+                app:text="过去一小时"
+                app:textSize="10sp"
+                app:textColor="@color/white"
+                app:corner="15dp"/>
+
+            <top.androidman.SuperButton
+                android:id="@+id/back_today"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                app:color_normal="@color/lightBlue"
+                app:text="今天"
+                app:textSize="10sp"
+                app:textColor="@color/white"
+                app:corner="15dp"/>
+
+            <top.androidman.SuperButton
+                android:id="@+id/back_week"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                app:color_normal="@color/lightBlue"
+                app:text="本周"
+                app:textSize="10sp"
+                app:textColor="@color/white"
+                app:corner="15dp" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

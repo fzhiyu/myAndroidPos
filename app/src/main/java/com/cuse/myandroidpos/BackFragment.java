@@ -47,6 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import top.androidman.SuperButton;
 
 
 public class BackFragment extends Fragment implements View.OnTouchListener{
@@ -54,9 +55,9 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private FragmentBackBinding binding;
     private EditText searStartTime;
     private EditText searEndTime;
-    private Button btnPastHour;
-    private Button btnToday;
-    private Button btnWeek;
+    private SuperButton btnPastHour;
+    private SuperButton btnToday;
+    private SuperButton btnWeek;
     private Button btnSearch;
 
     private long currentTimeStamp;//当前时间戳
@@ -221,6 +222,14 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 setEdit(startTimeStamp,endTimeStamp);
             }
         });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 
     public void setBackJsonData () {

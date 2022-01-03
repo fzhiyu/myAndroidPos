@@ -37,6 +37,21 @@
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/nav_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/xml/searchable.xml" value="0.30885416666666665" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/drawable/loading.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/activity_login.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/count_item_content.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/dialog_loading.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_back.xml" value="0.26666666666666666" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_back_detail.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_back_item.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_count.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_home_item_content.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_item_detail.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/loading.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.2859375" />
       </map>
     </option>
   </component>

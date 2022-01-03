@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/sign_fragment">
+    app:startDestination="@id/item_list_fragment">
 
     <fragment
         android:id="@+id/item_list_fragment"
@@ -29,16 +29,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/sign_fragment"
-        tools:layout="@layout/fragment_sign"
-        android:name="com.cuse.myandroidpos.SignFragment"
-        android:label="登录">
-        <action
-            android:id="@+id/sign_to_list"
-            app:destination="@+id/item_list_fragment"/>
-    </fragment>
-
-    <fragment
         android:id="@+id/backing_fragment"
         tools:layout="@layout/fragment_setting"
         android:name="com.cuse.myandroidpos.BackFragment"
@@ -51,7 +41,7 @@
 
     <fragment
         android:id="@+id/setting_fragment"
-        android:name="com.cuse.myandroidpos.SettingsFragment_test"
+        android:name="com.cuse.myandroidpos.SettingsFragment"
         android:label="设置">
 
     </fragment>

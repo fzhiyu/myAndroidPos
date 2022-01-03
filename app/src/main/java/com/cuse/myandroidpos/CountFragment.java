@@ -44,6 +44,8 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import top.androidman.SuperButton;
+
 
 public class CountFragment extends Fragment implements View.OnTouchListener {
     private FragmentCountBinding binding;
@@ -60,9 +62,9 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     private String sJson;
     private EditText searStartTime;
     private EditText searEndTime;
-    private Button btnPastHour;
-    private Button btnToday;
-    private Button btnWeek;
+    private SuperButton btnPastHour;
+    private SuperButton btnToday;
+    private SuperButton btnWeek;
     private Button btnSearch;
 
     private long currentTimeStamp;//当前时间戳
@@ -279,75 +281,26 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         //测试的数据，不用管，但是需要写在前面，不然会出现bug
         orderSummaryJson = new OrderSummaryJson();
         sJson = "{\n" +
-                "  \"code\": 0,\n" +
-                "  \"message\": \"\",\n" +
-                "  \"data\": {\n" +
-                "    \"todayMoney\": 300.00,\n" +
-                "    \"todayCount\": 2,\n" +
-                "    \"size\": 2,\n" +
-                "    \"oilOrderList\": [\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },{\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilId\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxxxx\",\n" +
-                "        \"oilCount\": 3,\n" +
-                "        \"oilMoney\": 100.00\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  }\n" +
-                "}";
+                "\t\"code\": 0,\n" +
+                "\t\"message\": \"\",\n" +
+                "\t\"data\": {\n" +
+                "\t\t\"todayMoney\": 300.00,\n" +
+                "\t\t\"todayCount\": 2,\n" +
+                "        \"size\": 1,\n" +
+                "        \"oilOrderList\": [{\n" +
+                "\t\t\t\"oilId\": \"xxxxx\",\n" +
+                "\t\t\t\"oilName\": \"xxxxx\",\n" +
+                "\t\t\t\"oilCount\": 1,\n" +
+                "\t\t\t\"oilMoney\": 100.00\n" +
+                "},\n" +
+                "{\n" +
+                "\t\t\t\"oilId\": \"xxxxx\",\n" +
+                "\t\t\t\"oilName\": \"xxxxx\",\n" +
+                "\t\t\t\"oilCount\": 1,\n" +
+                "\t\t\t\"oilMoney\": 100.00\n" +
+                "}\n" +
+                "]}\n" +
+                "}\n" ;
 
         orderSummaryJson = new Gson().fromJson(sJson,OrderSummaryJson.class);
     }

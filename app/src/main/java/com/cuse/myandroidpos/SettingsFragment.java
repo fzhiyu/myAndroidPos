@@ -26,7 +26,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SettingsFragment_test extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
     private String stationId = "BJ001001";
     private long currentTimeStamp;

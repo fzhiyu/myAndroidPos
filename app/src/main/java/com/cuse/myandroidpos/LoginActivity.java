@@ -18,9 +18,12 @@ import android.widget.Toast;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
 import com.cuse.myandroidpos.Post.LoginJson.LoginRequest;
+import com.cuse.myandroidpos.activity.TextActivity;
+import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.Date;
 
 import okhttp3.MediaType;
@@ -32,7 +35,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity{
 
     private EditText editStationId;
     private EditText editPassWord;
@@ -51,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
     private Retrofit retrofit;
 
     private ProgressDialog dialog;
+
+    private String testFont;
+    private boolean isBold, isUnderLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,18 +103,24 @@ public class LoginActivity extends AppCompatActivity {
                 signature = MD5AndBase64.md5(stringBuffer.toString());
 
                 //得到imei
-                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                String imei = telephonyManager.getImei();
+//                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+////                String imei = telephonyManager.getImei();
 
                 Call<ResponseBody> call = httpBinService.login1(stationId,passWord,
-                        currentTimeStamp / 1000 + "",imei,signature);
+                        currentTimeStamp / 1000 + "","123",signature);
                 Log.i("hejun", "onClick: " + call.toString());
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         dialog.cancel();
                         Log.i("hejun", "onResponse: " + response.code());
-                        Log.i("hejun", "onResponse: " + response.body());
+                        try {
+                            String s = response.body().string();
+                            Log.i("hejun", "onResponse: " + s);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         Log.i("hejun", "onResponse: " + response.errorBody());
                     }
 
@@ -137,78 +149,28 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Button btnLogin_tmp = findViewById(R.id.btn_sign_login_tmp);
 
+        btnLogin_tmp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        testFont = null;
+        isBold = true;
+        isUnderLine = true;
 
-
+        Button btn_print_test = findViewById(R.id.btn_print_test);
+        btn_print_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, TextActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-//    //点击按钮，得到传输的json字符串
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public String getLoginRequestJson() {
-//
-//        stationId = editStationId.getText().toString();
-//        passWord = editPassWord.getText().toString();
-//
-//        currentTimeStamp = new Date().getTime();//得到当前的时间戳，ms
-//        //得到字符串并加密编码
-//        StringBuffer stringBuffer = new StringBuffer();
-//        stringBuffer.append("passWord");
-//        stringBuffer.append(passWord);
-//        stringBuffer.append("stationId");
-//        stringBuffer.append(stationId);
-//        stringBuffer.append("timestamp");
-//        stringBuffer.append(currentTimeStamp / 1000);
-//        stringBuffer.append(interferenceCode);
-//        signature = MD5AndBase64.md5(stringBuffer.toString());
-//
-//        //得到提交的json数据 route
-//        LoginRequest loginRequest = new LoginRequest();
-//        loginRequest.setStationId(stationId);
-//        loginRequest.setPassWord(passWord);
-//        loginRequest.setTimestamp(currentTimeStamp / 1000 + "");
-//        loginRequest.setSignature(signature);
-//
-//        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-//        String route = gson.toJson(loginRequest);
-//
-//        return route;//返回的json字符串
-//    }
-
-//    //测试数据
-//    public LoginJson test() {
-//        //测试数据
-//        String s = "{\n" +
-//                "\t\"code\": 0,\n" +
-//                "\t\"message\": \"\",\n" +
-//                "\t\"data\": {\n" +
-//                "\t\t\t\"result\": 0,\n" +
-//                "\"message\": \"\"\n" +
-//                "}\n" +
-//                "}\n";
-//
-//        return new Gson().fromJson(s, LoginJson.class);
-//    }
-
-//    public void loginPost(String route){
-//        //post
-//        RequestBody body = RequestBody.create(MediaType.parse("application/json, charset=utf-8"), route);
-//
-//        Call<LoginJson> call = httpBinService.login(body);
-//        call.enqueue(new Callback<LoginJson>() {
-//            @Override
-//            public void onResponse(Call<LoginJson> call, Response<LoginJson> response) {
-//                dialog.cancel();
-//                Log.i("hejun1", "onResponse: " + response.code());
-//                Log.i("hejun1", "onResponse: " + response.body());
-//                //loginJson = response.body();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LoginJson> call, Throwable t) {
-//                dialog.cancel();
-//                Log.i("hejun", "onFailure: " + "sibai");
-//            }
-//        });
-//    }
 }

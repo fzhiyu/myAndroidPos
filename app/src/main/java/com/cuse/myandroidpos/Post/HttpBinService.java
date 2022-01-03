@@ -7,13 +7,10 @@ import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
 import com.cuse.myandroidpos.Post.Push.Push;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
-
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;

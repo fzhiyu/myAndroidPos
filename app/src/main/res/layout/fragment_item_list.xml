@@ -4,55 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray"
+    android:background="@color/weixin_gray"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_home_internet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/search_button_bar"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/btn_home_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/single_search"
-            app:icon="@drawable/ic_search"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
-        <Button
-            android:id="@+id/btn_home_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sum_query"
-            android:layout_marginStart="10dp"
-            app:icon="@drawable/ic_statistic"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/btn_home_refund"
-            android:text="退单"
-            android:layout_marginStart="10dp"
-            app:icon="@drawable/ic_statistic"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/btn_home_set"
-            android:text="设置"
-            android:layout_marginStart="10dp"
-            app:icon="@drawable/ic_setting"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"/>
-
-    </LinearLayout>
-
+        android:layout_height="40dp"
+        android:text="网络连接不可用"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:background="#FA5251"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,37 +26,39 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="100"
+            android:layout_weight="150"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_home_TodayTotalMoney"
                 android:layout_width="150dp"
                 android:layout_height="0dp"
-                android:layout_weight="4"
-                android:id="@+id/tv_home_TodayTotalMoney"
-                android:text="1000000.00元"
-                android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:textSize="30sp"/>
+                android:layout_weight="4"
+                android:gravity="center"
+                android:text="1000000.00元"
+                android:textSize="30sp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_gravity="bottom"
-                android:text="今日总金额"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="10sp"/>
+                android:text="今日总金额"
+                android:textSize="10sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
+
             <View
                 android:layout_width="3px"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:background="@color/gray_1"/>
+                android:background="@color/gray_1" />
         </LinearLayout>
 
         <LinearLayout
@@ -100,23 +66,25 @@
             android:layout_height="match_parent"
             android:layout_weight="100"
             android:orientation="vertical">
+
             <TextView
+                android:id="@+id/tv_home_TodayTotalOrder"
                 android:layout_width="150dp"
                 android:layout_height="0dp"
-                android:layout_weight="4"
-                android:id="@+id/tv_home_TodayTotalOrder"
-                android:text="1000000.00元"
-                android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:textSize="30sp"/>
+                android:layout_weight="4"
+                android:gravity="center"
+                android:text="1000000.00元"
+                android:textSize="30sp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_gravity="bottom"
-                android:text="今日总订单数"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="10sp"/>
+                android:text="今日总订单数"
+                android:textSize="10sp" />
 
         </LinearLayout>
 
@@ -124,22 +92,76 @@
 
     <View
         android:layout_width="match_parent"
+        android:layout_height="3px"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_height="3px"
         android:background="@color/gray_1" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/item_list"
-        android:name="com.cuse.myandroidpos.ItemListFragment"
+    <LinearLayout
+        android:id="@+id/search_button_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:context="com.cuse.myAndroidpos.ItemListFragment"
-        tools:listitem="@layout/fragment_home_item_content" />
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/btn_home_search"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/single_search"
+            app:icon="@drawable/ic_search" />
+
+        <Button
+            android:id="@+id/btn_home_all"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="@string/sum_query"
+            app:icon="@drawable/ic_statistic" />
+
+        <Button
+            android:id="@+id/btn_home_refund"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="退单"
+            app:icon="@drawable/ic_statistic" />
+
+        <Button
+            android:id="@+id/btn_home_set"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="设置"
+            app:icon="@drawable/ic_setting" />
+
+    </LinearLayout>
+
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list"
+            android:name="com.cuse.myandroidpos.ItemListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:context="com.cuse.myAndroidpos.ItemListFragment"
+            tools:listitem="@layout/fragment_home_item_content" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

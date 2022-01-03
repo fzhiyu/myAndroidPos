@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     tools:context=".CountFragment"
-    android:background="@color/gray">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/back_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/back_picker">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/sear_startTime"
@@ -35,94 +36,110 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/back_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/back_key"
-        android:layout_below="@+id/back_picker"
-        android:orientation="horizontal">
-        <Button
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/back_past_hour"
-            android:layout_marginLeft="10dp"
-            android:text="过去一小时" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back_today"
-            android:text="今天"
-            android:layout_marginStart="10dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back_week"
-            android:text="本周"
-            android:layout_marginStart="10dp"/>
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <top.androidman.SuperButton
+                android:id="@+id/back_past_hour"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                app:color_normal="@color/lightBlue"
+                app:corner="15dp"
+                app:text="过去一小时"
+                app:textColor="@color/white"
+                app:textSize="10sp" />
+
+            <top.androidman.SuperButton
+                android:id="@+id/back_today"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                app:color_normal="@color/lightBlue"
+                app:corner="15dp"
+                app:text="今天"
+                app:textColor="@color/white"
+                app:textSize="10sp" />
+
+            <top.androidman.SuperButton
+                android:id="@+id/back_week"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                app:color_normal="@color/lightBlue"
+                app:corner="15dp"
+                app:text="本周"
+                app:textColor="@color/white"
+                app:textSize="10sp" />
+
+        </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/back_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="查询" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/back_key"
-        android:id="@+id/back_button">
-        <Button
-            android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_sum_totalMoney"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:id="@+id/back_search"
-            android:text="查询"/>
+            android:layout_weight="2"
+            android:layout_marginLeft="10dp"
+            android:text="加油总额：123456.00"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_sum_totalOrderNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="订单数：123"
+            android:textSize="15sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/sum_oil_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/back_button"
-        android:text="加油总额" />
-    <TextView
-        android:id="@+id/sum_money_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/sum_oil_money"
-        android:layout_below="@id/back_button"
-        android:text="100"/>
-    <TextView
-        android:id="@+id/sum_oil_trac"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="订单数"
-        android:layout_below="@id/sum_oil_money"/>
-
-    <TextView
-        android:id="@+id/sum_trac"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sum_oil_money"
-        android:layout_toEndOf="@id/sum_oil_trac"
-        android:text="10"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sum_oil_list"
+        android:name="com.cuse.myandroidpos.CountFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sum_oil_trac"
-        android:name="com.cuse.myandroidpos.CountFragment"
-        tools:context="com.cuse.myandroidpos.MainActivity"
         app:layoutManager="LinearLayoutManager"
+        tools:context="com.cuse.myandroidpos.MainActivity"
         tools:listitem="@layout/count_item_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
+        android:layout_height="match_parent"
+        android:gravity="bottom">
         <Button
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_sum_print"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="@string/print"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:text="打印"/>
     </LinearLayout>
 
 
-</RelativeLayout>
+
+
+</LinearLayout>

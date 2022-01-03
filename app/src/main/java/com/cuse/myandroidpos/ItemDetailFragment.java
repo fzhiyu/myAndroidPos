@@ -39,7 +39,6 @@ public class ItemDetailFragment extends Fragment {
     private TextView coupon;
     private TextView balance;
     private TextView cash;
-
     private Button print;
     private Button refund;
 

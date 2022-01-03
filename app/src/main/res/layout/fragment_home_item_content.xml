@@ -18,20 +18,41 @@
         android:layout_marginTop="5dp"
         android:background="#fafafa">
 
-        <TextView
-            android:id="@+id/tv_homeItem_oilOrderId"
+        <LinearLayout
+            android:id="@+id/lLayout_home_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="20sp"
             android:background="#eceff1"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_homeItem_oilOrderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="4dp"
+                android:textSize="20sp"
+                android:textAppearance="?attr/textAppearanceListItem"/>
+
+            <TextView
+                android:id="@+id/tv_homeItem_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="170dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textSize="20dp"
+                android:textAppearance="?attr/textAppearanceListItem"/>
+
+        </LinearLayout>
+
+
 
         <TextView
             android:id="@+id/tv_homeItem_oil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_homeItem_oilOrderId"
+            android:layout_below="@+id/lLayout_home_item"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
@@ -39,16 +60,7 @@
             android:textSize="12dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
-        <TextView
-            android:id="@+id/tv_homeItem_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tv_homeItem_oil"
-            android:layout_marginLeft="170dp"
-            android:gravity="center_vertical"
-            android:padding="3dp"
-            android:textSize="12dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+
 
         <TextView
             android:id="@+id/tv_homeItem_oilOrderTime"

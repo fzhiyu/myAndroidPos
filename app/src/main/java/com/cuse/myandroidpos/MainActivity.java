@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         ActivityItemDetailBinding binding = ActivityItemDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //binding.getRoot() -> app:id/container -> activity_item_detail
@@ -80,5 +83,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_item);
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    //隐藏导航栏
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            HideNavBarUtil.hideBottomUIMenu(getWindow().getDecorView());
+        }
     }
 }

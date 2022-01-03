@@ -33,16 +33,23 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.oilOrderId.setText(homeOilOrderList.get(position).getOilOrderId());
-        holder.oil.setText(homeOilOrderList.get(position).getOilName());
-        holder.money.setText(homeOilOrderList.get(position).getMoney() + "");
-        holder.oilOrderTime.setText(homeOilOrderList.get(position).getOilOrderTime());
-        holder.user.setText(homeOilOrderList.get(position).getUser());
+        int number = homeOilOrderList.size() - position - 1;
+        holder.oilOrderId.setText(homeOilOrderList.get(number).getOilOrderId());
+        holder.oil.setText(homeOilOrderList.get(number).getOilName());
+        holder.money.setText("¥ " + homeOilOrderList.get(number).getMoney());
+        holder.oilOrderTime.setText(homeOilOrderList.get(number).getOilOrderTime());
+        holder.user.setText(homeOilOrderList.get(number).getUser());
     }
 
     @Override
     public int getItemCount() {
-        return homeOilOrderList == null ? 0 : homeOilOrderList.size(); }
+        if (homeOilOrderList == null)
+            return 0;
+        else if (homeOilOrderList.size() < 15)
+            return homeOilOrderList.size();
+        else
+            return 15;
+         }
 
     public  class MyViewHolder extends RecyclerView.ViewHolder {
 

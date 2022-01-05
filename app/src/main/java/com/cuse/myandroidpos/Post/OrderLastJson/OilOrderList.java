@@ -1,10 +1,12 @@
 
 package com.cuse.myandroidpos.Post.OrderLastJson;
 
+import com.cuse.myandroidpos.Tools;
+
 import java.io.Serializable;
 
 
-public class OilOrderList implements Serializable {
+public class OilOrderList implements Serializable, Comparable<OilOrderList> {
 
     private String oilOrderId;
     private String oilOrderTime;
@@ -15,6 +17,22 @@ public class OilOrderList implements Serializable {
     private float coupon;
     private float balance;
     private float cash;
+
+    public OilOrderList(){ }
+
+    public OilOrderList(String oilOrderTime) {
+        this.oilOrderId = "";
+        this.oilOrderTime = oilOrderTime;
+        this.oilName = "";
+        this.user = "";
+        this.money = 0;
+        this.discount = 0;
+        this.coupon = 0;
+        this.balance = 0;
+        this.cash = 0;
+    }
+
+
     public void setOilOrderId(String oilOrderId) {
          this.oilOrderId = oilOrderId;
      }
@@ -78,4 +96,19 @@ public class OilOrderList implements Serializable {
          return cash;
      }
 
+    @Override
+    public int compareTo(OilOrderList oilOrderList) {
+        String thisOilOrderTime = Tools.NoT(this.getOilOrderTime());
+        String putOilOrderTime = Tools.NoT(oilOrderList.getOilOrderTime());
+        long thisOilOrderTimeToStamp = Tools.TimeToStamp(new StringBuffer(thisOilOrderTime));
+        long putOilOrderTimeToStamp = Tools.TimeToStamp(new StringBuffer(putOilOrderTime));
+        if ((putOilOrderTimeToStamp > thisOilOrderTimeToStamp) && !(this.user).equals(oilOrderList.getUser()))
+            return 1;
+        else if ((putOilOrderTimeToStamp == thisOilOrderTimeToStamp) && !(this.user).equals(oilOrderList.getUser()))
+            return 0;
+        else
+            return -1;
+
+
+    }
 }

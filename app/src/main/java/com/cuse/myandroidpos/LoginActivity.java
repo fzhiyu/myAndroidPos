@@ -21,6 +21,7 @@ import com.cuse.myandroidpos.Post.LoginJson.LoginRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.Date;
 
 import okhttp3.MediaType;
@@ -97,28 +98,33 @@ public class LoginActivity extends AppCompatActivity {
                 signature = MD5AndBase64.md5(stringBuffer.toString());
 
                 //得到imei
-                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                String imei = telephonyManager.getImei();
+//                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+//                String imei = telephonyManager.getImei();
+//
+//                Call<ResponseBody> call = httpBinService.login1(stationId,passWord,
+//                        currentTimeStamp / 1000 + "",imei,signature);
+//                call.enqueue(new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                        dialog.cancel();
+//                        Log.i("hejun", "onResponse: " + response.code());
+//                        try {
+//                            String s = response.body().string();
+//                            Log.i("hejun", "onResponse: " + s);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        Log.i("hejun", "onResponse: " + response.errorBody());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                    }
+//                });
 
-                Call<ResponseBody> call = httpBinService.login1(stationId,passWord,
-                        currentTimeStamp / 1000 + "",imei,signature);
-                Log.i("hejun", "onClick: " + call.toString());
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        dialog.cancel();
-                        Log.i("hejun", "onResponse: " + response.code());
-                        Log.i("hejun", "onResponse: " + response.body());
-                        Log.i("hejun", "onResponse: " + response.errorBody());
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-
-//                loginPost(route);
+                loginJson = test();
 
                 if (loginJson != null){
                     if (loginJson.getData().getResult() == 0) {
@@ -175,20 +181,20 @@ public class LoginActivity extends AppCompatActivity {
 //        return route;//返回的json字符串
 //    }
 
-//    //测试数据
-//    public LoginJson test() {
-//        //测试数据
-//        String s = "{\n" +
-//                "\t\"code\": 0,\n" +
-//                "\t\"message\": \"\",\n" +
-//                "\t\"data\": {\n" +
-//                "\t\t\t\"result\": 0,\n" +
-//                "\"message\": \"\"\n" +
-//                "}\n" +
-//                "}\n";
-//
-//        return new Gson().fromJson(s, LoginJson.class);
-//    }
+    //测试数据
+    public LoginJson test() {
+        //测试数据
+        String s = "{\n" +
+                "\t\"code\": 0,\n" +
+                "\t\"message\": \"\",\n" +
+                "\t\"data\": {\n" +
+                "\t\t\t\"result\": 0,\n" +
+                "\"message\": \"\"\n" +
+                "}\n" +
+                "}\n";
+
+        return new Gson().fromJson(s, LoginJson.class);
+    }
 
 //    public void loginPost(String route){
 //        //post

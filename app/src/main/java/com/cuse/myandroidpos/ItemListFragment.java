@@ -40,7 +40,7 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
     private long currentTimeStamp;//订单刷新时间
-    private OrderLastJson orderLastJson;//储存得到的订单数据
+    //private OrderLastJson orderLastJson;//储存得到的订单数据
 
     private List<OilOrderList> oilOrderLists;
     private HomeAdapter homeAdapter;
@@ -220,6 +220,7 @@ public class ItemListFragment extends Fragment {
         stringBuffer.append(token);
         stringBuffer.append(LoginActivity.interferenceCode);
         String signature = MD5AndBase64.md5(stringBuffer.toString());
+        Log.i("hejun", "orderLastPost: " + timeStamp / 1000);
         Log.i("hejun", "orderLastPost: " + stringBuffer.toString());
         Log.i("hejun", "orderLastPost: " + signature);
 
@@ -228,25 +229,28 @@ public class ItemListFragment extends Fragment {
         call.enqueue(new Callback<OrderLastJson>() {
             @Override
             public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                OrderLastJson orderLastJson = response.body();
+                //
                 Log.i("hejun", "onResponse: " + response.body());
-                if (response.isSuccessful()){
-                    swipeRefreshLayout.setRefreshing(false);
-                    orderLastJson = response.body();
-                    Gson gson = new Gson();
-                    String s = gson.toJson(orderLastJson);
-                    Log.i("hejun", "onResponse: " + s);
-                    if (response.body().getCode() == 0){
-                        //设置显示总金钱和总订单
-                        tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
-                        tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
-                        for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++){
-                            if (response.body().getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)) >= 0){
-                                oilOrderLists.add(response.body().getData().getOilOrderList().get(i));
-                            }
+                Gson gson = new Gson();
+                String s = gson.toJson(orderLastJson);
+                Log.i("hejun", "onResponse: " + s);
+
+                if (response.body().getCode() == 0) {
+                    //设置显示总金钱和总订单
+                    tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
+                    tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
+                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
+                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+                        if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
+                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
                         }
-                        homeAdapter.notifyDataSetChanged();
                     }
-                }
+
+                    homeAdapter.notifyDataSetChanged();
+                } else
+                    Tools.codeError(getContext(), orderLastJson.getCode());
 
             }
             @Override

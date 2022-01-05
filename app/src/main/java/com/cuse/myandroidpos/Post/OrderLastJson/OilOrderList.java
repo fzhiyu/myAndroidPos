@@ -1,6 +1,8 @@
 
 package com.cuse.myandroidpos.Post.OrderLastJson;
 
+import android.util.Log;
+
 import com.cuse.myandroidpos.Tools;
 
 import java.io.Serializable;
@@ -100,9 +102,14 @@ public class OilOrderList implements Serializable, Comparable<OilOrderList> {
     public int compareTo(OilOrderList oilOrderList) {
         String thisOilOrderTime = Tools.NoT(this.getOilOrderTime());
         String putOilOrderTime = Tools.NoT(oilOrderList.getOilOrderTime());
+
         long thisOilOrderTimeToStamp = Tools.TimeToStamp(new StringBuffer(thisOilOrderTime));
         long putOilOrderTimeToStamp = Tools.TimeToStamp(new StringBuffer(putOilOrderTime));
-        if ((putOilOrderTimeToStamp > thisOilOrderTimeToStamp) && !(this.user).equals(oilOrderList.getUser()))
+        Log.i("hejun", "compareTo: " + "thisOilOrderTime " + thisOilOrderTime);
+        Log.i("hejun", "compareTo: " + "thisOilOrderTimeToStamp " + thisOilOrderTimeToStamp);
+        Log.i("hejun", "compareTo: " + "put " + putOilOrderTime);
+        Log.i("hejun", "compareTo: " + "putOilOrderTimeToStamp " + putOilOrderTimeToStamp);
+        if ((putOilOrderTimeToStamp > thisOilOrderTimeToStamp) )
             return 1;
         else if ((putOilOrderTimeToStamp == thisOilOrderTimeToStamp) && !(this.user).equals(oilOrderList.getUser()))
             return 0;

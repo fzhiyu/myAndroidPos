@@ -27,9 +27,8 @@ public interface HttpBinService {
                           @Query("timestamp") String timestamp, @Query("imei") String imei,
                           @Query("signature") String signature);
 
-    @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/last")
-    Call<OrderLastJson>orderLast(@Body RequestBody requestBody);
+    Call<OrderLastJson> orderLast(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/all")
@@ -43,10 +42,11 @@ public interface HttpBinService {
     @POST("station/oil_order/summary")
     Call<OrderSummaryJson>orderSummary(@Body RequestBody requestBody);
 
-
-    @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/refund/all")
-    Call<RefundAllJson>refundAll(@Body RequestBody requestBody);
+    Call<RefundAllJson>refundAll(@Query("token") String token, @Query("startTime") String startTime,
+                                 @Query("endTime") String endTime, @Query("start") String start,
+                                 @Query("count") String count, @Query("timestamp") String timestamp,
+                                 @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/push/rquest")

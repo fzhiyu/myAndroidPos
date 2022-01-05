@@ -5,7 +5,7 @@ package com.cuse.myandroidpos.Post.OrderLastJson;
 public class OrderLastJson {
 
     private int code;
-    private String message;
+    //private String message;
     private Data data;
     public void setCode(int code) {
          this.code = code;
@@ -14,12 +14,12 @@ public class OrderLastJson {
          return code;
      }
 
-    public void setMessage(String message) {
-         this.message = message;
-     }
-     public String getMessage() {
-         return message;
-     }
+//    public void setMessage(String message) {
+//         this.message = message;
+//     }
+//     public String getMessage() {
+//         return message;
+//     }
 
     public void setData(Data data) {
          this.data = data;

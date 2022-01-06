@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
+import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context,R.layout.fragment_home_item_content,null);
+        View view = View.inflate(context, R.layout.fragment_home_item_content,null);
 
         return new MyViewHolder(view);
     }

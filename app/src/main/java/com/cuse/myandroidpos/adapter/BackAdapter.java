@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.adapter;
 
 import android.content.Context;
 import android.view.View;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
+import com.cuse.myandroidpos.R;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class BackAdapter extends RecyclerView.Adapter<BackAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context,R.layout.fragment_back_item,null);
+        View view = View.inflate(context, R.layout.fragment_back_item,null);
 
         return new MyViewHolder(view);
     }

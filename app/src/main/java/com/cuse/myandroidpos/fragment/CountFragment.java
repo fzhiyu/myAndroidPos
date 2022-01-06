@@ -4,7 +4,6 @@ import static android.content.ContentValues.TAG;
 import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
 import static com.cuse.myandroidpos.TimeKey.getWeekTimestamp;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -25,17 +24,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cuse.myandroidpos.CountAdapter;
+import com.cuse.myandroidpos.adapter.CountAdapter;
 import com.cuse.myandroidpos.MyListData;
-import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OilOrderList;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
 import com.cuse.myandroidpos.R;
-import com.cuse.myandroidpos.databinding.CountItemContentBinding;
 import com.cuse.myandroidpos.databinding.FragmentCountBinding;
 
 import java.text.ParseException;
@@ -98,7 +94,13 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
 
     //打印汇总小票
     public void countprint(View view) {
-        Button btn_count_print = view.findViewById(R.id.)
+        Button btn_count_print = view.findViewById(R.id.btn_sum_print);
+        btn_count_print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){

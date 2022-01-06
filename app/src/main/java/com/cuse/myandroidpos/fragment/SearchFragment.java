@@ -4,7 +4,6 @@ import static android.content.ContentValues.TAG;
 import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
 import static com.cuse.myandroidpos.TimeKey.getWeekTimestamp;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -28,11 +27,10 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cuse.myandroidpos.HomeAdapter;
+import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
-import com.cuse.myandroidpos.databinding.FragmentBackBinding;
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
 
 import java.text.ParseException;

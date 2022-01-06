@@ -1,9 +1,7 @@
 package com.cuse.myandroidpos.fragment;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -20,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.cuse.myandroidpos.HomeAdapter;
+import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.ListDataSave;
 import com.cuse.myandroidpos.LoginActivity;
 import com.cuse.myandroidpos.MD5AndBase64;
@@ -198,8 +195,6 @@ public class ItemListFragment extends Fragment {
         });
     }
 
-
-
     //下拉刷新
     private void handleDownPullUpdate(){
         swipeRefreshLayout.setEnabled(true);
@@ -245,7 +240,6 @@ public class ItemListFragment extends Fragment {
                 Gson gson = new Gson();
                 String s = gson.toJson(orderLastJson);
                 Log.i("hejun", "onResponse: " + s);
-
 
                 if (response.body().getCode() == 0) {
                     //设置显示总金钱和总订单

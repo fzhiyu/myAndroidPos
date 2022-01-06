@@ -1,7 +1,5 @@
 package com.cuse.myandroidpos.fragment;
 
-import static android.content.ContentValues.TAG;
-
 import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
 import static com.cuse.myandroidpos.TimeKey.getWeekTimestamp;
 
@@ -30,9 +28,8 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.cuse.myandroidpos.BackAdapter;
+import com.cuse.myandroidpos.adapter.BackAdapter;
 import com.cuse.myandroidpos.Post.HttpBinService;
-import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
 import com.cuse.myandroidpos.R;
@@ -44,8 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

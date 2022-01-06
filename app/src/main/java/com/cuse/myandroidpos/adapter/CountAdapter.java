@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OilOrderList;
+import com.cuse.myandroidpos.R;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class CountAdapter extends RecyclerView.Adapter<CountAdapter.MyViewHolder
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(context,R.layout.count_item_content,null);
+        View view = View.inflate(context, R.layout.count_item_content,null);
 
         return new MyViewHolder(view);
     }

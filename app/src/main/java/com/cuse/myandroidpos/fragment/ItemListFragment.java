@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.fragment;
 
 import android.content.Context;
 import android.os.Build;
@@ -20,9 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.cuse.myandroidpos.HomeAdapter;
+import com.cuse.myandroidpos.ListDataSave;
+import com.cuse.myandroidpos.LoginActivity;
+import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
+import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 
 import com.google.gson.Gson;

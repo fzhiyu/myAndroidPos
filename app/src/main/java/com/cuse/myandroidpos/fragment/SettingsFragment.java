@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,9 +11,11 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.Push.Push;
 import com.cuse.myandroidpos.Post.Push.PushRequest;
+import com.cuse.myandroidpos.R;
 import com.google.gson.Gson;
 
 import java.util.Date;

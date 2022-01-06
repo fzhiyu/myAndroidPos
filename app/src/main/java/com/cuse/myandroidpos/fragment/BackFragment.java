@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.fragment;
 
 import static android.content.ContentValues.TAG;
 
@@ -30,10 +30,13 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.cuse.myandroidpos.BackAdapter;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
+import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentBackBinding;
 import com.google.gson.Gson;
 

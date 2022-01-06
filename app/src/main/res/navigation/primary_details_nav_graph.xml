@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/item_list_fragment"
-        android:name="com.cuse.myandroidpos.ItemListFragment"
+        android:name="com.cuse.myandroidpos.fragment.ItemListFragment"
         android:label="ItemListFragment"
         tools:layout="@layout/fragment_item_list">
         <action
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/backing_fragment"
         tools:layout="@layout/fragment_setting"
-        android:name="com.cuse.myandroidpos.BackFragment"
+        android:name="com.cuse.myandroidpos.fragment.BackFragment"
         android:label="backing">
         <action
             android:id="@+id/back_to_backDetail"
@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/setting_fragment"
-        android:name="com.cuse.myandroidpos.SettingsFragment"
+        android:name="com.cuse.myandroidpos.fragment.SettingsFragment"
         android:label="设置">
 
     </fragment>
@@ -49,14 +49,14 @@
     <fragment
         android:id="@+id/item_count_fragment"
         tools:layout="@layout/fragment_count"
-        android:name="com.cuse.myandroidpos.CountFragment"
+        android:name="com.cuse.myandroidpos.fragment.CountFragment"
         android:label="items_count">
     </fragment>
 
     <fragment
         android:id="@+id/item_search_fragment"
         tools:layout="@layout/fragment_search"
-        android:name="com.cuse.myandroidpos.SearchFragment"
+        android:name="com.cuse.myandroidpos.fragment.SearchFragment"
         android:label="items_search">
         <argument
             android:name="item_id"
@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/item_detail_fragment"
-        android:name="com.cuse.myandroidpos.ItemDetailFragment"
+        android:name="com.cuse.myandroidpos.fragment.ItemDetailFragment"
         android:label="item_detail"
         tools:layout="@layout/fragment_item_detail">
         <argument

@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.fragment;
 
 import static android.content.ContentValues.TAG;
 import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
@@ -29,42 +28,35 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cuse.myandroidpos.HomeAdapter;
+import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
-import com.cuse.myandroidpos.Post.OrderSummaryJson.OilOrderList;
-import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
-import com.cuse.myandroidpos.databinding.CountItemContentBinding;
-import com.cuse.myandroidpos.databinding.FragmentCountBinding;
+import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.databinding.FragmentBackBinding;
+import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
 import com.google.gson.Gson;
 
-import top.androidman.SuperButton;
 
-
-public class CountFragment extends Fragment implements View.OnTouchListener {
-    private FragmentCountBinding binding;
-    private DatePickerDialog datePickerDialog;
+public class SearchFragment extends Fragment implements View.OnTouchListener{
+    private FragmentSearchBinding binding;
     private Button start_date;
     private Button end_date;
     private Button search_btn;
+    private DatePickerDialog datePickerDialog;
     private ArrayList<MyListData> search_ListData;
-    private float all_money;
-    private int order;
-    private TextView sum_trac;
-    private TextView sum_money;
-    private OrderSummaryJson orderSummaryJson;
+    private OrderLastJson orderLastJson;
     private String sJson;
     private EditText searStartTime;
     private EditText searEndTime;
-    private SuperButton btnPastHour;
-    private SuperButton btnToday;
-    private SuperButton btnWeek;
+    private Button btnPastHour;
+    private Button btnToday;
+    private Button btnWeek;
     private Button btnSearch;
 
     private long currentTimeStamp;//当前时间戳
@@ -72,10 +64,11 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     private long endTimeStamp;
     private String signature;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentCountBinding.inflate(inflater, container, false);
+        binding = FragmentSearchBinding.inflate(inflater, container, false);
 //        System.out.println("binding.getRoot() Search: " + binding.getRoot())
         return binding.getRoot();
     }
@@ -84,10 +77,12 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setCountButton(view);
-        setCountJsonData();
+        setSearchButton(view);
+
+        setSearchJsonData();
+
         //recycleView,适配器单独写在了HomeAdapter
-        RecyclerView recyclerView = binding.sumOilList;
+        RecyclerView recyclerView = binding.searchItemList;
         setRecyclerView(recyclerView);
     }
 
@@ -109,7 +104,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         if (event.getAction() == MotionEvent.ACTION_DOWN){
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());//建立对话框对象
 
-            View view = View.inflate(getActivity(),R.layout.data_time_picker,null);
+            View view = View.inflate(getActivity(), R.layout.data_time_picker,null);
 
             final DatePicker datePicker = (DatePicker) view.findViewById(R.id.back_date_picker);
             final TimePicker timePicker = (TimePicker) view.findViewById(R.id.back_time_picker);//得到date/time picker实例
@@ -232,7 +227,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         return s;
     }
 
-    public void setCountButton (View view) {
+    public void setSearchButton (View view) {
         //文字框
         searStartTime = view.findViewById(R.id.sear_startTime);
         searEndTime = view.findViewById(R.id.sear_endTime);
@@ -277,32 +272,131 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         });
     }
 
-    public void setCountJsonData () {
+    public void setSearchJsonData () {
         //测试的数据，不用管，但是需要写在前面，不然会出现bug
-        orderSummaryJson = new OrderSummaryJson();
+        orderLastJson = new OrderLastJson();
         sJson = "{\n" +
-                "\t\"code\": 0,\n" +
-                "\t\"message\": \"\",\n" +
-                "\t\"data\": {\n" +
-                "\t\t\"todayMoney\": 300.00,\n" +
-                "\t\t\"todayCount\": 2,\n" +
-                "        \"size\": 1,\n" +
-                "        \"oilOrderList\": [{\n" +
-                "\t\t\t\"oilId\": \"xxxxx\",\n" +
-                "\t\t\t\"oilName\": \"xxxxx\",\n" +
-                "\t\t\t\"oilCount\": 1,\n" +
-                "\t\t\t\"oilMoney\": 100.00\n" +
-                "},\n" +
-                "{\n" +
-                "\t\t\t\"oilId\": \"xxxxx\",\n" +
-                "\t\t\t\"oilName\": \"xxxxx\",\n" +
-                "\t\t\t\"oilCount\": 1,\n" +
-                "\t\t\t\"oilMoney\": 100.00\n" +
-                "}\n" +
-                "]}\n" +
-                "}\n" ;
+                "  \"code\": 0,\n" +
+                "  \"message\": \"\",\n" +
+                "  \"data\": {\n" +
+                "    \"stationName\": \"XXXX\",\n" +
+                "    \"todayMoney\": 300.00,\n" +
+                "    \"todayCount\": 2,\n" +
+                "    \"oilOrderList\": [\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"1\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"2\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 200.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },{\n" +
+                "        \"oilOrderId\": \"3\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"oilOrderId\": \"xxxxx\",\n" +
+                "        \"oilOrderTime\": \"xxxxx\",\n" +
+                "        \"oilName\": \"xxx\",\n" +
+                "        \"user\": \"xxxxxxx\",\n" +
+                "        \"money\": 100.00,\n" +
+                "        \"discount\": 2.00,\n" +
+                "        \"coupon\": 3.00,\n" +
+                "        \"balance\": 0,\n" +
+                "        \"cash\": 95.00\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
 
-        orderSummaryJson = new Gson().fromJson(sJson,OrderSummaryJson.class);
+        orderLastJson = new Gson().fromJson(sJson,OrderLastJson.class);
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
@@ -310,15 +404,22 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         //将数据填入homeAdapt
-        List<OilOrderList> oilOrderList = new ArrayList<>();
-        OilOrderList list1 = new OilOrderList();
-        list1.setOilMoney(101);
-        list1.setOilCount(1);
-        list1.setOilId("1");
-        list1.setOilName("ds");
-        oilOrderList.add(list1);
-        CountAdapter countAdapter = new CountAdapter(orderSummaryJson.getData().getOilOrderList(),getActivity());
-        recyclerView.setAdapter(countAdapter);
+        HomeAdapter homeAdapter = new HomeAdapter(orderLastJson.getData().getOilOrderList(),getActivity());
+        recyclerView.setAdapter(homeAdapter);
+        //设置点击事件，点击事件的接口定义哎HomeAdapter
+        homeAdapter.setHomeRecyclerItemClickListener(new HomeAdapter.OnHomeRecyclerItemClickListener() {
+            @Override
+            public void OnHomeRecyclerItemClick(int position) {
+                Bundle bundle = new Bundle();
+
+                //用bundle来传输对象（传输的是OrderLastJson包里面的OilOrderList对象），OilOrderList类需要implements Serializable
+                // 就可以把bundle.putString换成，bundle.putSerializable
+                //详情界面可以用oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");来得到对象
+                bundle.putSerializable("LastOilOrder",orderLastJson.getData().getOilOrderList().get(position));
+
+                Navigation.findNavController(getView()).navigate(R.id.search_to_detail,bundle);
+            }
+        });
     }
 
     @Override

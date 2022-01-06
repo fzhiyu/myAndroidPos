@@ -1,24 +1,19 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
+import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.databinding.FragmentItemDetailBinding;
-
-import java.util.Locale;
+import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -103,13 +98,22 @@ public class ItemDetailFragment extends Fragment {
         print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String textToPrint = String.format(Locale.ROOT, "test print", 1);
+                String content = "加油ID:" + oilOrder.getOilOrderId() + "\n" +
+                        "加油时间:" + oilOrder.getOilOrderTime() + "\n" +
+                        "用户手机号:" + oilOrder.getUser() + "\n" +
+                        "油品名称:" + oilOrder.getOilName() + "\n" +
+                        "加油总额:" + oilOrder.getMoney() + "\n" +
+                        "折扣金额:" + oilOrder.getDiscount() + "\n" +
+                        "优惠卷金额:" + oilOrder.getCoupon() + "\n" +
+                        "会员账户支付金额:" + oilOrder.getBalance() + "\n" +
+                        "微信支付金额:" + oilOrder.getCash();
 
-                // 1) UTF-8 text .  Not available send esc command with chr 128-255 :(
-
-                String url = "rawbt:" + textToPrint;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
+                float size = 24;
+                String testFont = null;
+                boolean isBold = true;
+                boolean isUnderLine = true;
+                SunmiPrintHelper.getInstance().printText(content, size, isBold, isUnderLine, testFont);
+                SunmiPrintHelper.getInstance().feedPaper();
             }
         });
 //        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {

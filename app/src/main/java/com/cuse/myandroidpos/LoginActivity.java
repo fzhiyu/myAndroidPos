@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
 import com.cuse.myandroidpos.Post.LoginJson.LoginRequest;
+import com.cuse.myandroidpos.activity.TextActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -52,6 +53,9 @@ public class LoginActivity extends AppCompatActivity {
     private Retrofit retrofit;
 
     private ProgressDialog dialog;
+
+    private String testFont;
+    private boolean isBold, isUnderLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,9 +147,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        testFont = null;
+        isBold = true;
+        isUnderLine = true;
 
-
-
+        Button btn_print_test = findViewById(R.id.btn_print_test);
+        btn_print_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, TextActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

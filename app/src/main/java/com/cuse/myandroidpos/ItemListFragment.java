@@ -1,5 +1,6 @@
 package com.cuse.myandroidpos;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,16 +73,17 @@ public class ItemListFragment extends Fragment {
     private String stationId;
     private String token = "test123";
 
+    private Context mContext;
+    private ListDataSave dataSave;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentItemListBinding.inflate(inflater, container, false);
 
-        //创建retrofit实例
-        retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                .addConverterFactory(GsonConverterFactory.create()).build();
-        httpBinService = retrofit.create(HttpBinService.class);
+        mContext = getContext();
+
 
 //        oilOrderLists = new ArrayList<>();
 //        OilOrderList oilOrderList = new OilOrderList("2022-01-03T14:22:17");
@@ -107,23 +109,24 @@ public class ItemListFragment extends Fragment {
         btnRefund = view.findViewById(R.id.btn_home_refund);
         btnSet = view.findViewById(R.id.btn_home_set);
 
+        //创建retrofit实例
+        retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        httpBinService = retrofit.create(HttpBinService.class);
+
+        oilOrderLists = new ArrayList<>(20);
+
         //recycleView,适配器单独写在了HomeAdapter
         setRecyclerView(recyclerView);
 
         //网络不好时弹出未连接网络的框
         setInternetLayout();
 
-        //post
-        //orderLastPost();
-
         //按钮功能
         setBackButton(view);
         //下拉刷新
         handleDownPullUpdate();
-
-
     }
-
 
     public void setBackButton (View view) {
         //搜索按钮
@@ -161,7 +164,6 @@ public class ItemListFragment extends Fragment {
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
-
         //设置竖直
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -220,6 +222,7 @@ public class ItemListFragment extends Fragment {
         stringBuffer.append(token);
         stringBuffer.append(LoginActivity.interferenceCode);
         String signature = MD5AndBase64.md5(stringBuffer.toString());
+        //String signature = Tools.encode(stringBuffer.toString());
         Log.i("hejun", "orderLastPost: " + timeStamp / 1000);
         Log.i("hejun", "orderLastPost: " + stringBuffer.toString());
         Log.i("hejun", "orderLastPost: " + signature);
@@ -237,8 +240,10 @@ public class ItemListFragment extends Fragment {
                 String s = gson.toJson(orderLastJson);
                 Log.i("hejun", "onResponse: " + s);
 
+
                 if (response.body().getCode() == 0) {
                     //设置显示总金钱和总订单
+                    Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_SHORT).show();
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
                     for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {

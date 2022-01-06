@@ -28,8 +28,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
 import com.cuse.myandroidpos.databinding.FragmentBackBinding;
@@ -50,6 +52,8 @@ import top.androidman.SuperButton;
 
 
 public class BackFragment extends Fragment implements View.OnTouchListener{
+
+    private static String TAG = "Refund";
 
     private FragmentBackBinding binding;
     private EditText searStartTime;
@@ -153,7 +157,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 stringBuffer.append("token");
                 stringBuffer.append(token);
                 stringBuffer.append(interferenceCode);
-                signature = MD5AndBase64.md5(stringBuffer.toString());
+                signature = Tools.encode(stringBuffer.toString());
                 Log.i(TAG, "refundAllPost: " + token);
                 Log.i(TAG, "refundAllPost: " + startTimeStamp / 1000 + "");
                 Log.i(TAG, "refundAllPost: " + endTimeStamp / 1000 + "");
@@ -173,18 +177,20 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                     public void onResponse(Call<RefundAllJson> call, Response<RefundAllJson> response) {
                         //取消正在查询的弹窗
                         dialog.cancel();
-                        if (response.isSuccessful() && response.body().getCode() ==0){
+                        RefundAllJson refundAllJson = response.body();
+                        Log.i(TAG, "onResponse: " + refundAllJson.getCode());
+                        if (refundAllJson.getCode() ==0){
                             for (int i = 0; i < response.body().getData().getOilOrder().size(); i++)
                                 list.add(response.body().getData().getOilOrder().get(i));
-                        }
-                        backAdapter.notifyDataSetChanged();
-
+                            backAdapter.notifyDataSetChanged();
+                        }else
+                            Tools.codeError(getContext(), refundAllJson.getCode());
                     }
 
                     @Override
                     public void onFailure(Call<RefundAllJson> call, Throwable t) {
                         dialog.cancel();
-                        Log.i(TAG, "onFailure: " + "失败");
+                        Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
                     }
                 });
 

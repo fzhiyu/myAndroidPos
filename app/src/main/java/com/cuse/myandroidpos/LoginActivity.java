@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 stringBuffer.append("timestamp");
                 stringBuffer.append(currentTimeStamp / 1000);
                 stringBuffer.append(interferenceCode);
-                signature = MD5AndBase64.md5(stringBuffer.toString());
+                signature = Tools.encode(stringBuffer.toString());
 
                 //得到imei
 //                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);

@@ -19,7 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.ListDataSave;
-import com.cuse.myandroidpos.LoginActivity;
+import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;

@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.activity;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +40,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.cuse.myandroidpos.HideNavBarUtil;
+import com.cuse.myandroidpos.MyListData;
+import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.databinding.ActivityItemDetailBinding;
 import com.cuse.myandroidpos.databinding.FragmentItemDetailBinding;
 

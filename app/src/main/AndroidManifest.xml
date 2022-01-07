@@ -21,7 +21,7 @@
         android:theme="@style/Theme.MyAndroidPos"
         android:networkSecurityConfig="@xml/network_security_config">
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
 
         </activity>

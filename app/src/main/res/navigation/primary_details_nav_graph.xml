@@ -80,7 +80,7 @@
 
     <fragment
         android:id="@+id/back_detail_fragment"
-        android:name="com.cuse.myandroidpos.BackDetailFragment"
+        android:name="com.cuse.myandroidpos.fragment.BackDetailFragment"
         android:label="退单详情"
         tools:layout="@layout/fragment_back_detail">
     </fragment>

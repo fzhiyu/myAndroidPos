@@ -1,21 +1,17 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.fragment;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
-import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
+import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.databinding.FragmentBackDetailBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

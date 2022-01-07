@@ -27,7 +27,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cuse.myandroidpos.LoginActivity;
+import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;

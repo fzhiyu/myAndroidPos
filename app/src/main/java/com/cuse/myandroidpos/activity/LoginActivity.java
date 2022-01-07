@@ -1,4 +1,4 @@
-package com.cuse.myandroidpos;
+package com.cuse.myandroidpos.activity;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,8 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,22 +15,13 @@ import android.widget.Toast;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
-import com.cuse.myandroidpos.Post.LoginJson.LoginRequest;
-import com.cuse.myandroidpos.activity.TextActivity;
+import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.Date;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -151,14 +140,14 @@ public class LoginActivity extends AppCompatActivity {
         isBold = true;
         isUnderLine = true;
 
-        Button btn_print_test = findViewById(R.id.btn_print_test);
-        btn_print_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, TextActivity.class);
-                startActivity(intent);
-            }
-        });
+//        Button btn_print_test = findViewById(R.id.btn_print_test);
+//        btn_print_test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(LoginActivity.this, TextActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
     }
 

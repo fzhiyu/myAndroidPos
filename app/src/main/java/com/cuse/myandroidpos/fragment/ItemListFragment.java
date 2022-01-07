@@ -74,7 +74,7 @@ public class ItemListFragment extends Fragment {
 
     //请求参数
     private String stationId;
-    private String token = "test123";
+    String token = "test123";
 
     private Context mContext;
     private ListDataSave dataSave;
@@ -112,10 +112,18 @@ public class ItemListFragment extends Fragment {
         btnRefund = view.findViewById(R.id.btn_home_refund);
         btnSet = view.findViewById(R.id.btn_home_set);
 
-        //创建retrofit实例
+        //创建retrofit实例b
+        // on below line we are creating a retrofit builder and passing our base url
         retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                .addConverterFactory(GsonConverterFactory.create()).build();
+                // as we are sending data in json format so
+                // we have to add Gson converter factory
+                .addConverterFactory(GsonConverterFactory.create())
+                // at last we are building our retrofit builder.
+                .build();
+
+        // below line is to create an instance for our retrofit api class.
         httpBinService = retrofit.create(HttpBinService.class);
+
 
         oilOrderLists = new ArrayList<>(20);
 

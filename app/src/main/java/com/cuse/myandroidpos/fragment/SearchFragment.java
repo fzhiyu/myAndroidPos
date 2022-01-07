@@ -27,18 +27,32 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cuse.myandroidpos.LoginActivity;
+import com.cuse.myandroidpos.MD5AndBase64;
+import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
+import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
+import com.cuse.myandroidpos.Post.OrderAllJson.orderAllRequest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
 import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SearchFragment extends Fragment implements View.OnTouchListener{
@@ -82,7 +96,90 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
         //recycleView,适配器单独写在了HomeAdapter
         RecyclerView recyclerView = binding.searchItemList;
         setRecyclerView(recyclerView);
+
+        //搜索
+        Search(view);
     }
+
+    //点击搜索查询最新订单
+    public void Search(View view) {
+        Button btn_search = view.findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postOrderAll();
+            }
+        });
+    }
+
+    //获取最新订单
+    public void postOrderAll() {
+        String token = "test123";
+        // on below line we are creating a retrofit builder and passing our base url
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                // as we are sending data in json format so
+                // we have to add Gson converter factory
+                .addConverterFactory(GsonConverterFactory.create())
+                // at last we are building our retrofit builder.
+                .build();
+        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
+
+        //存储数据
+        List<OilOrderList> oilOrderLists = new ArrayList<>();
+
+        long timeStamp = new Date().getTime();
+        //得到字符串并加密编码
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("count");
+        stringBuffer.append(200);
+        stringBuffer.append("endTime");
+        stringBuffer.append(endTimeStamp/1000);
+        stringBuffer.append("start");
+        stringBuffer.append(1);
+        stringBuffer.append("startTime");
+        stringBuffer.append(startTimeStamp/1000);
+        stringBuffer.append("timestamp");
+        stringBuffer.append(timeStamp / 1000);
+        stringBuffer.append("token");
+        stringBuffer.append(token);
+        stringBuffer.append(LoginActivity.interferenceCode);
+        String signature = MD5AndBase64.md5(stringBuffer.toString());
+
+        orderAllRequest orderAllRequest = new orderAllRequest(token
+                , String.valueOf(startTimeStamp/1000)
+                , String.valueOf(endTimeStamp/1000)
+                , "1"
+                , "200"
+                , timeStamp/1000 + ""
+                , signature);
+        Call<OrderAllJson> call = httpBinService.orderAll(token
+                , String.valueOf(startTimeStamp/1000)
+                , String.valueOf(endTimeStamp/1000)
+                , "1"
+                , "200"
+                , timeStamp/1000 + ""
+                , signature);
+
+        call.enqueue(new Callback<OrderAllJson>() {
+            @Override
+            public void onResponse(Call<OrderAllJson> call, Response<OrderAllJson> response) {
+                OrderAllJson orderAllJson = response.body();
+                Log.i("查询显示", "" + response.body());
+                Gson gson = new Gson();
+                String s = gson.toJson(orderAllJson);
+                Log.i("应答编码", "onResponse: " + s);
+            }
+
+            @Override
+            public void onFailure(Call<OrderAllJson> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+
 
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){

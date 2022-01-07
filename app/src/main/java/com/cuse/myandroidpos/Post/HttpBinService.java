@@ -3,6 +3,7 @@ package com.cuse.myandroidpos.Post;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
+import com.cuse.myandroidpos.Post.OrderAllJson.orderAllRequest;
 import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
 import com.cuse.myandroidpos.Post.Push.Push;
@@ -30,9 +31,12 @@ public interface HttpBinService {
     @POST("station/oil_order/last")
     Call<OrderLastJson> orderLast(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
 
-    @Headers({"Content-Type: application/json","Accept: application/json"})
+//    @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/all")
-    Call<OrderAllJson>orderAll(@Body RequestBody requestBody);
+    Call<OrderAllJson>orderAll(@Query("token") String token, @Query("startTime") String startTime,
+                               @Query("endTime") String endTime, @Query("start") String start,
+                               @Query("count") String count, @Query("timestamp") String timestamp,
+                               @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/refund")
@@ -51,6 +55,4 @@ public interface HttpBinService {
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/push/rquest")
     Call<Push>push(@Body RequestBody requestBody);
-
-
 }

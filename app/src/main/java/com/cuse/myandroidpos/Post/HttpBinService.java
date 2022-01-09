@@ -19,13 +19,6 @@ import retrofit2.http.Query;
 public interface HttpBinService {
 
     @POST("user/login")
-    Call<ResponseBody> login1(@Query("stationId") String stationId,
-                              @Query("passWord") String passWord,
-                              @Query("timestamp") String timestamp,
-                              @Query("imei") String imei,
-                              @Query("signature") String signature);
-
-    @POST("user/login")
     Call<LoginJson>login(@Query("stationId") String stationId,
                          @Query("passWord") String passWord,
                          @Query("timestamp") String timestamp,

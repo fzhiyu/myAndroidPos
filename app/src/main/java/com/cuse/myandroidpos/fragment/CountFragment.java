@@ -115,7 +115,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
             @Override
             public void onClick(View view) {
                 postSummary();
-                Log.i("搜索结果", "" + oilCountLists);
+//                Log.i("搜索结果", "" + oilCountLists);
                 //recycleView,适配器单独写在了HomeAdapter
             }
         });
@@ -161,12 +161,12 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
             @Override
             public void onResponse(Call<OrderSummaryJson> call, Response<OrderSummaryJson> response) {
                 OrderSummaryJson orderSummaryJson = response.body();
-                Log.i("查询显示", "" + response.body());
+//                Log.i("查询显示", "" + response.body());
                 Gson gson = new Gson();
                 String s = gson.toJson(orderSummaryJson);
-                Log.i("stringBuffer", "" + stringBuffer);
-                Log.i("开始时间", "" + startTimeStamp);
-                Log.i("签名", "" + signature);
+//                Log.i("stringBuffer", "" + stringBuffer);
+//                Log.i("开始时间", "" + startTimeStamp);
+//                Log.i("签名", "" + signature);
 //                Log.i("输出", "" + s);
                 //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
                 oilCountLists.addAll(orderSummaryJson.getData().getOilOrderList());

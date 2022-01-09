@@ -107,7 +107,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
             @Override
             public void onClick(View view) {
                 postOrderAll();
-                Log.i("搜索结果", "" + oilOrderLists);
+//                Log.i("搜索结果", "" + oilOrderLists);
                 //recycleView,适配器单独写在了HomeAdapter
             }
         });
@@ -161,14 +161,14 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 //                Log.i("查询显示", "" + response.body());
                 Gson gson = new Gson();
                 String s = gson.toJson(orderAllJson);
-                Log.i("stringBuffer", "" + stringBuffer);
-                Log.i("开始时间", "" + startTimeStamp);
-                Log.i("签名", "" + signature);
+//                Log.i("stringBuffer", "" + stringBuffer);
+//                Log.i("开始时间", "" + startTimeStamp);
+//                Log.i("签名", "" + signature);
 //                Log.i("输出", "" + s);
                 //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
                 oilOrderLists.addAll(orderAllJson.getData().getOilOrder());
-                Log.i("getOilOrder", "" + orderAllJson.getData().getOilOrder());
-                Log.i("oilOrderLists", "" + oilOrderLists);
+//                Log.i("getOilOrder", "" + orderAllJson.getData().getOilOrder());
+//                Log.i("oilOrderLists", "" + oilOrderLists);
                 RecyclerView recyclerView = binding.searchItemList;
                 setRecyclerView(recyclerView);
             }

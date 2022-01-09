@@ -156,13 +156,13 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 stringBuffer.append(token);
                 stringBuffer.append(interferenceCode);
                 signature = Tools.encode(stringBuffer.toString());
-                Log.i(TAG, "refundAllPost: " + token);
-                Log.i(TAG, "refundAllPost: " + startTimeStamp / 1000 + "");
-                Log.i(TAG, "refundAllPost: " + endTimeStamp / 1000 + "");
-                Log.i(TAG, "refundAllPost: " + start);
-                Log.i(TAG, "refundAllPost: " + count);
-                Log.i(TAG, "refundAllPost: " + currentTimeStamp / 1000);
-                Log.i(TAG, "refundAllPost: " + signature);
+//                Log.i(TAG, "refundAllPost: " + token);
+//                Log.i(TAG, "refundAllPost: " + startTimeStamp / 1000 + "");
+//                Log.i(TAG, "refundAllPost: " + endTimeStamp / 1000 + "");
+//                Log.i(TAG, "refundAllPost: " + start);
+//                Log.i(TAG, "refundAllPost: " + count);
+//                Log.i(TAG, "refundAllPost: " + currentTimeStamp / 1000);
+//                Log.i(TAG, "refundAllPost: " + signature);
 
                 //post
                 retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
@@ -176,7 +176,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                         //取消正在查询的弹窗
                         dialog.cancel();
                         RefundAllJson refundAllJson = response.body();
-                        Log.i(TAG, "onResponse: " + refundAllJson.getCode());
+//                        Log.i(TAG, "onResponse: " + refundAllJson.getCode());
                         if (refundAllJson.getCode() ==0){
                             for (int i = 0; i < response.body().getData().getOilOrder().size(); i++)
                                 list.add(response.body().getData().getOilOrder().get(i));
@@ -332,11 +332,11 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
 
 
                         endTimeStamp = Tools.TimeToStamp(sb);
-                        Log.i(TAG, "onClick: " + endTimeStamp);
+//                        Log.i(TAG, "onClick: " + endTimeStamp);
                         long s = new Date().getTime();
-                        Log.i(TAG, "onClick1: " + s);
+//                        Log.i(TAG, "onClick1: " + s);
                         String string = Tools.StampToTime(endTimeStamp);
-                        Log.i(TAG, "onClick2: " + string);
+//                        Log.i(TAG, "onClick2: " + string);
 
 
                         searEndTime.setText(sb);//开始时间显示

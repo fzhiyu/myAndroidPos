@@ -198,11 +198,11 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
 
 
                         endTimeStamp = TimeToStamp(sb);
-                        Log.i(TAG, "onClick: " + endTimeStamp);
+//                        Log.i(TAG, "onClick: " + endTimeStamp);
                         long s = new Date().getTime();
-                        Log.i(TAG, "onClick1: " + s);
+//                        Log.i(TAG, "onClick1: " + s);
                         String string = StampToTime(endTimeStamp);
-                        Log.i(TAG, "onClick2: " + string);
+//                        Log.i(TAG, "onClick2: " + string);
 
 
                         searEndTime.setText(sb);//开始时间显示

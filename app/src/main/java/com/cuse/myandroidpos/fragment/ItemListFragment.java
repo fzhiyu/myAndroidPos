@@ -28,9 +28,16 @@ import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 
+import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +46,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import tech.gusavila92.websocketclient.WebSocketClient;
 
 public class ItemListFragment extends Fragment {
 
@@ -79,6 +88,7 @@ public class ItemListFragment extends Fragment {
     private Context mContext;
     private ListDataSave dataSave;
 
+    private WebSocketClient webSocketClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,11 +96,15 @@ public class ItemListFragment extends Fragment {
         binding = FragmentItemListBinding.inflate(inflater, container, false);
 
         mContext = getContext();
-
-
 //        oilOrderLists = new ArrayList<>();
 //        OilOrderList oilOrderList = new OilOrderList("2022-01-03T14:22:17");
 //        oilOrderLists.add(oilOrderList);
+        //建立websockets连接
+        createWebSocketClient();
+
+        //每隔20秒发送心跳消息
+        sendHeartMessage();
+//        Log.i("view", "");
 
         return binding.getRoot();
     }
@@ -137,6 +151,82 @@ public class ItemListFragment extends Fragment {
         setBackButton(view);
         //下拉刷新
         handleDownPullUpdate();
+    }
+
+    //发送心跳信息
+    private void sendHeartMessage() {
+
+        {
+            JSONObject obj = new JSONObject();
+            Thread thread = new Thread() {
+                public void run() {
+                    try {
+//                        obj.put("type", "log");
+//                        obj.put("sta", "test123");
+                        obj.put("type", "check_pos");
+                        obj.put("sta", "test123");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    webSocketClient.send(String.valueOf(obj));
+                }
+            };
+//            try {
+//                Thread.sleep(2 * 1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            thread.start();
+        }
+
+    }
+
+    //websockets连接
+    private void createWebSocketClient() {
+        URI uri;
+        try {
+            uri = new URI("ws://paas.u-coupon.cn/wss");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        webSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen() {
+                Log.i("WebSocket", "Session is starting");
+            }
+
+            @Override
+            public void onTextReceived(String message) {
+                Log.i("received", "" + message);
+            }
+
+            @Override
+            public void onBinaryReceived(byte[] data) {
+            }
+            @Override
+            public void onPingReceived(byte[] data) {
+//                Log.i("Ping", "" + Arrays.toString(data));
+            }
+            @Override
+            public void onPongReceived(byte[] data) {
+            }
+            @Override
+            public void onException(Exception e) {
+                System.out.println(e.getMessage());
+            }
+            @Override
+            public void onCloseReceived() {
+                Log.i("WebSocket", "Closed ");
+//                System.out.println("onCloseReceived");
+            }
+        };
+
+        webSocketClient.setConnectTimeout(10000);
+        webSocketClient.setReadTimeout(60000);
+        webSocketClient.enableAutomaticReconnection(5000);
+        webSocketClient.connect();
     }
 
     public void setBackButton (View view) {
@@ -223,18 +313,15 @@ public class ItemListFragment extends Fragment {
 
     public void orderLastPost(){
         long timeStamp = new Date().getTime();
+//        Log.i("")
         //得到字符串并加密编码
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("timestamp");
-        stringBuffer.append(timeStamp / 1000);
-        stringBuffer.append("token");
-        stringBuffer.append(token);
-        stringBuffer.append(LoginActivity.interferenceCode);
-        String signature = MD5AndBase64.md5(stringBuffer.toString());
-        //String signature = Tools.encode(stringBuffer.toString());
-        Log.i("hejun", "orderLastPost: " + timeStamp / 1000);
-        Log.i("hejun", "orderLastPost: " + stringBuffer.toString());
-        Log.i("hejun", "orderLastPost: " + signature);
+        String stringBuffer = "timestamp" +
+                timeStamp / 1000 +
+                "token" +
+                "test123" +
+                LoginActivity.interferenceCode;
+        String signature = md5.md5(stringBuffer);
+
 
         //使用Retrofit进行post
         Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);
@@ -244,10 +331,12 @@ public class ItemListFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
                 OrderLastJson orderLastJson = response.body();
                 //
-                Log.i("hejun", "onResponse: " + response.body());
                 Gson gson = new Gson();
                 String s = gson.toJson(orderLastJson);
-                Log.i("hejun", "onResponse: " + s);
+                assert orderLastJson != null;
+                Log.i("应答编码", "" + orderLastJson.getCode());
+//                Log.i("stringBuffer", "" + stringBuffer);
+//                Log.i("签名", "" + signature);
 
                 if (response.body().getCode() == 0) {
                     //设置显示总金钱和总订单
@@ -255,7 +344,7 @@ public class ItemListFragment extends Fragment {
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
                     for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
-                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+//                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
                         if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
                             oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
                         }

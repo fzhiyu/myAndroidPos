@@ -46,6 +46,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -130,21 +131,20 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
         long timeStamp = new Date().getTime();
         //得到字符串并加密编码
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("count");
-        stringBuffer.append(200);
-        stringBuffer.append("endTime");
-        stringBuffer.append(endTimeStamp/1000);
-        stringBuffer.append("start");
-        stringBuffer.append(1);
-        stringBuffer.append("startTime");
-        stringBuffer.append(startTimeStamp/1000);
-        stringBuffer.append("timestamp");
-        stringBuffer.append(timeStamp / 1000);
-        stringBuffer.append("token");
-        stringBuffer.append(token);
-        stringBuffer.append(LoginActivity.interferenceCode);
-        String signature = MD5AndBase64.md5(stringBuffer.toString());
+        String stringBuffer = "count" +
+                200 +
+                "endTime" +
+                endTimeStamp / 1000 +
+                "start" +
+                0 +
+                "startTime" +
+                startTimeStamp / 1000 +
+                "timestamp" +
+                timeStamp / 1000 +
+                "token" +
+                token +
+                LoginActivity.interferenceCode;
+        String signature = md5.md5(stringBuffer);
 
         orderAllRequest orderAllRequest = new orderAllRequest(token
                 , String.valueOf(startTimeStamp/1000)
@@ -165,10 +165,10 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
             @Override
             public void onResponse(Call<OrderAllJson> call, Response<OrderAllJson> response) {
                 OrderAllJson orderAllJson = response.body();
-                Log.i("查询显示", "" + response.body());
+//                Log.i("查询显示", "" + response.body());
                 Gson gson = new Gson();
                 String s = gson.toJson(orderAllJson);
-                Log.i("应答编码", "onResponse: " + s);
+//                Log.i("应答编码", "onResponse: " + s);
             }
 
             @Override
@@ -277,11 +277,11 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
 
                         endTimeStamp = TimeToStamp(sb);
-                        Log.i(TAG, "onClick: " + endTimeStamp);
+//                        Log.i(TAG, "onClick: " + endTimeStamp);
                         long s = new Date().getTime();
-                        Log.i(TAG, "onClick1: " + s);
+//                        Log.i(TAG, "onClick1: " + s);
                         String string = StampToTime(endTimeStamp);
-                        Log.i(TAG, "onClick2: " + string);
+//                        Log.i(TAG, "onClick2: " + string);
 
 
                         searEndTime.setText(sb);//开始时间显示

@@ -30,7 +30,7 @@ public class MD5AndBase64 {
 
         //String sBase64 = Base64.encodeToString(sMD5.getBytes(StandardCharsets.UTF_8),Base64.DEFAULT);
 //        String sBase64 = Base64.getEncoder().encodeToString(sMD5.getBytes(StandardCharsets.UTF_8));
-        String sBase64 = Base64.encodeToString(sMD5.getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP);
-        return sBase64;
+//        String sBase64 = Base64.encodeToString(sMD5.getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP);
+        return sMD5;
     }
 }

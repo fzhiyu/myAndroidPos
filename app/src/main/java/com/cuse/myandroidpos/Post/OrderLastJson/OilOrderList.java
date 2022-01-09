@@ -105,10 +105,10 @@ public class OilOrderList implements Serializable, Comparable<OilOrderList> {
 
         long thisOilOrderTimeToStamp = Tools.TimeToStamp(new StringBuffer(thisOilOrderTime));
         long putOilOrderTimeToStamp = Tools.TimeToStamp(new StringBuffer(putOilOrderTime));
-        Log.i("hejun", "compareTo: " + "thisOilOrderTime " + thisOilOrderTime);
-        Log.i("hejun", "compareTo: " + "thisOilOrderTimeToStamp " + thisOilOrderTimeToStamp);
-        Log.i("hejun", "compareTo: " + "put " + putOilOrderTime);
-        Log.i("hejun", "compareTo: " + "putOilOrderTimeToStamp " + putOilOrderTimeToStamp);
+//        Log.i("hejun", "compareTo: " + "thisOilOrderTime " + thisOilOrderTime);
+//        Log.i("hejun", "compareTo: " + "thisOilOrderTimeToStamp " + thisOilOrderTimeToStamp);
+//        Log.i("hejun", "compareTo: " + "put " + putOilOrderTime);
+//        Log.i("hejun", "compareTo: " + "putOilOrderTimeToStamp " + putOilOrderTimeToStamp);
         if ((putOilOrderTimeToStamp > thisOilOrderTimeToStamp) )
             return 1;
         else if ((putOilOrderTimeToStamp == thisOilOrderTimeToStamp) && !(this.user).equals(oilOrderList.getUser()))

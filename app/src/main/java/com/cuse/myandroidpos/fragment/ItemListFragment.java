@@ -20,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.ListDataSave;
 import com.cuse.myandroidpos.activity.LoginActivity;
-import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
@@ -37,7 +36,6 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -156,7 +154,6 @@ public class ItemListFragment extends Fragment {
     //发送心跳信息
     private void sendHeartMessage() {
 
-        {
             JSONObject obj = new JSONObject();
             Thread thread = new Thread() {
                 public void run() {
@@ -177,7 +174,6 @@ public class ItemListFragment extends Fragment {
 //                e.printStackTrace();
 //            }
             thread.start();
-        }
 
     }
 
@@ -214,7 +210,7 @@ public class ItemListFragment extends Fragment {
             }
             @Override
             public void onException(Exception e) {
-                System.out.println(e.getMessage());
+//                System.out.println(e.getMessage());
             }
             @Override
             public void onCloseReceived() {
@@ -334,7 +330,7 @@ public class ItemListFragment extends Fragment {
                 Gson gson = new Gson();
                 String s = gson.toJson(orderLastJson);
                 assert orderLastJson != null;
-                Log.i("应答编码", "" + orderLastJson.getCode());
+//                Log.i("应答编码", "" + orderLastJson.getCode());
 //                Log.i("stringBuffer", "" + stringBuffer);
 //                Log.i("签名", "" + signature);
 

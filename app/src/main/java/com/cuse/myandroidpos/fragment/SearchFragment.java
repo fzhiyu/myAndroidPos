@@ -76,7 +76,9 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
     private long startTimeStamp;
     private long endTimeStamp;
     private String signature;
-
+    private String sStart;
+    private String sEnd;
+    private List<OilOrderList> oilOrderLists;
 
     @Nullable
     @Override
@@ -92,14 +94,11 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
         setSearchButton(view);
 
-        setSearchJsonData();
-
-        //recycleView,适配器单独写在了HomeAdapter
-        RecyclerView recyclerView = binding.searchItemList;
-        setRecyclerView(recyclerView);
+//        setSearchJsonData();
 
         //搜索
         Search(view);
+
     }
 
     //点击搜索查询最新订单
@@ -109,11 +108,13 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
             @Override
             public void onClick(View view) {
                 postOrderAll();
+                Log.i("搜索结果", "" + oilOrderLists);
+                //recycleView,适配器单独写在了HomeAdapter
             }
         });
     }
 
-    //获取最新订单
+    //获取搜索订单
     public void postOrderAll() {
         String token = "test123";
         // on below line we are creating a retrofit builder and passing our base url
@@ -127,18 +128,18 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
         HttpBinService httpBinService = retrofit.create(HttpBinService.class);
 
         //存储数据
-        List<OilOrderList> oilOrderLists = new ArrayList<>();
+        oilOrderLists = new ArrayList<>();
 
         long timeStamp = new Date().getTime();
         //得到字符串并加密编码
         String stringBuffer = "count" +
                 200 +
                 "endTime" +
-                endTimeStamp / 1000 +
+                 sEnd +
                 "start" +
-                0 +
+                1 +
                 "startTime" +
-                startTimeStamp / 1000 +
+                sStart +
                 "timestamp" +
                 timeStamp / 1000 +
                 "token" +
@@ -146,16 +147,9 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                 LoginActivity.interferenceCode;
         String signature = md5.md5(stringBuffer);
 
-        orderAllRequest orderAllRequest = new orderAllRequest(token
-                , String.valueOf(startTimeStamp/1000)
-                , String.valueOf(endTimeStamp/1000)
-                , "1"
-                , "200"
-                , timeStamp/1000 + ""
-                , signature);
         Call<OrderAllJson> call = httpBinService.orderAll(token
-                , String.valueOf(startTimeStamp/1000)
-                , String.valueOf(endTimeStamp/1000)
+                , sStart + ""
+                , sEnd + ""
                 , "1"
                 , "200"
                 , timeStamp/1000 + ""
@@ -168,7 +162,16 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 //                Log.i("查询显示", "" + response.body());
                 Gson gson = new Gson();
                 String s = gson.toJson(orderAllJson);
-//                Log.i("应答编码", "onResponse: " + s);
+                Log.i("stringBuffer", "" + stringBuffer);
+                Log.i("开始时间", "" + startTimeStamp);
+                Log.i("签名", "" + signature);
+//                Log.i("输出", "" + s);
+                //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+                oilOrderLists.addAll(orderAllJson.getData().getOilOrder());
+                Log.i("getOilOrder", "" + orderAllJson.getData().getOilOrder());
+                Log.i("oilOrderLists", "" + oilOrderLists);
+                RecyclerView recyclerView = binding.searchItemList;
+                setRecyclerView(recyclerView);
             }
 
             @Override
@@ -183,8 +186,8 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){
-        String sStart = StampToTime(startTimeStamp);
-        String sEnd = StampToTime(endTimeStamp);
+        sStart = StampToTime(startTimeStamp);
+        sEnd = StampToTime(endTimeStamp);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行
@@ -499,7 +502,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         //将数据填入homeAdapt
-        HomeAdapter homeAdapter = new HomeAdapter(orderLastJson.getData().getOilOrderList(),getActivity());
+        HomeAdapter homeAdapter = new HomeAdapter(oilOrderLists,getActivity());
         recyclerView.setAdapter(homeAdapter);
         //设置点击事件，点击事件的接口定义哎HomeAdapter
         homeAdapter.setHomeRecyclerItemClickListener(new HomeAdapter.OnHomeRecyclerItemClickListener() {
@@ -510,7 +513,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                 //用bundle来传输对象（传输的是OrderLastJson包里面的OilOrderList对象），OilOrderList类需要implements Serializable
                 // 就可以把bundle.putString换成，bundle.putSerializable
                 //详情界面可以用oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");来得到对象
-                bundle.putSerializable("LastOilOrder",orderLastJson.getData().getOilOrderList().get(position));
+                bundle.putSerializable("LastOilOrder",oilOrderLists.get(position));
 
                 Navigation.findNavController(getView()).navigate(R.id.search_to_detail,bundle);
             }

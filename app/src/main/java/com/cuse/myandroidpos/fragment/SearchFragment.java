@@ -98,7 +98,6 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
         //搜索
         Search(view);
-
     }
 
     //点击搜索查询最新订单

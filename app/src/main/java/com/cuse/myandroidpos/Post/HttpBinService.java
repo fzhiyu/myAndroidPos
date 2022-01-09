@@ -19,23 +19,32 @@ import retrofit2.http.Query;
 public interface HttpBinService {
 
     @POST("user/login")
-    Call<ResponseBody> login1(@Query("stationId") String stationId, @Query("passWord") String passWord,
-                              @Query("timestamp") String timestamp, @Query("imei") String imei,
+    Call<ResponseBody> login1(@Query("stationId") String stationId,
+                              @Query("passWord") String passWord,
+                              @Query("timestamp") String timestamp,
+                              @Query("imei") String imei,
                               @Query("signature") String signature);
 
     @POST("user/login")
-    Call<LoginJson>login(@Query("stationId") String stationId, @Query("passWord") String passWord,
-                          @Query("timestamp") String timestamp, @Query("imei") String imei,
-                          @Query("signature") String signature);
+    Call<LoginJson>login(@Query("stationId") String stationId,
+                         @Query("passWord") String passWord,
+                         @Query("timestamp") String timestamp,
+                         @Query("imei") String imei,
+                         @Query("signature") String signature);
 
     @POST("station/oil_order/last")
-    Call<OrderLastJson> orderLast(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
+    Call<OrderLastJson> orderLast(@Query("token") String token,
+                                  @Query("timestamp") String timestamp,
+                                  @Query("signature") String signature);
 
 //    @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/all")
-    Call<OrderAllJson>orderAll(@Query("token") String token, @Query("startTime") String startTime,
-                               @Query("endTime") String endTime, @Query("start") String start,
-                               @Query("count") String count, @Query("timestamp") String timestamp,
+    Call<OrderAllJson>orderAll(@Query("token") String token,
+                               @Query("startTime") String startTime,
+                               @Query("endTime") String endTime,
+                               @Query("start") String start,
+                               @Query("count") String count,
+                               @Query("timestamp") String timestamp,
                                @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
@@ -44,12 +53,19 @@ public interface HttpBinService {
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/summary")
-    Call<OrderSummaryJson>orderSummary(@Body RequestBody requestBody);
+    Call<OrderSummaryJson>orderSummary(@Query("token") String token,
+                                       @Query("startTime") String startTime,
+                                       @Query("endTime") String endTime,
+                                       @Query("timestamp") String timestamp,
+                                       @Query("signature") String signature);
 
     @POST("station/refund/all")
-    Call<RefundAllJson>refundAll(@Query("token") String token, @Query("startTime") String startTime,
-                                 @Query("endTime") String endTime, @Query("start") String start,
-                                 @Query("count") String count, @Query("timestamp") String timestamp,
+    Call<RefundAllJson>refundAll(@Query("token") String token,
+                                 @Query("startTime") String startTime,
+                                 @Query("endTime") String endTime,
+                                 @Query("start") String start,
+                                 @Query("count") String count,
+                                 @Query("timestamp") String timestamp,
                                  @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})

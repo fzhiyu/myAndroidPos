@@ -27,6 +27,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
+import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.adapter.CountAdapter;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OilOrderList;
@@ -41,8 +44,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import top.androidman.SuperButton;
 
 
@@ -70,6 +79,10 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     private long startTimeStamp;
     private long endTimeStamp;
     private String signature;
+    private String sStart;
+    private String sEnd;
+
+    private List<OilOrderList> oilCountLists;
 
     @Nullable
     @Override
@@ -85,11 +98,89 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
 
         setCountButton(view);
         setCountJsonData();
+
+        //搜索汇总
+        searchSummary(view);
         //recycleView,适配器单独写在了HomeAdapter
         RecyclerView recyclerView = binding.sumOilList;
         setRecyclerView(recyclerView);
         //打印汇总小票
         countprint(view);
+    }
+
+    //搜索汇总
+    private void searchSummary(View view) {
+        Button btn_search = view.findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postSummary();
+                Log.i("搜索结果", "" + oilCountLists);
+                //recycleView,适配器单独写在了HomeAdapter
+            }
+        });
+    }
+
+    //post 汇总结果
+    private void postSummary() {
+        String token = "test123";
+        // on below line we are creating a retrofit builder and passing our base url
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                // as we are sending data in json format so
+                // we have to add Gson converter factory
+                .addConverterFactory(GsonConverterFactory.create())
+                // at last we are building our retrofit builder.
+                .build();
+        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
+
+        //存储数据
+        oilCountLists = new ArrayList<>();
+
+        long timeStamp = new Date().getTime();
+        //得到字符串并加密编码
+        String stringBuffer =
+                "endTime" +
+                sEnd +
+                "startTime" +
+                sStart +
+                "timestamp" +
+                timeStamp / 1000 +
+                "token" +
+                token +
+                LoginActivity.interferenceCode;
+        String signature = md5.md5(stringBuffer);
+
+        Call<OrderSummaryJson> call = httpBinService.orderSummary(token
+                , sStart + ""
+                , sEnd + ""
+                , timeStamp/1000 + ""
+                , signature);
+
+        call.enqueue(new Callback<OrderSummaryJson>() {
+            @Override
+            public void onResponse(Call<OrderSummaryJson> call, Response<OrderSummaryJson> response) {
+                OrderSummaryJson orderSummaryJson = response.body();
+                Log.i("查询显示", "" + response.body());
+                Gson gson = new Gson();
+                String s = gson.toJson(orderSummaryJson);
+                Log.i("stringBuffer", "" + stringBuffer);
+                Log.i("开始时间", "" + startTimeStamp);
+                Log.i("签名", "" + signature);
+//                Log.i("输出", "" + s);
+                //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+                oilCountLists.addAll(orderSummaryJson.getData().getOilOrderList());
+//                Log.i("getOilOrder", "" + orderSummaryJson.getData().getOilOrderList());
+//                Log.i("oilOrderLists", "" + oilCountLists);
+                RecyclerView recyclerView = binding.sumOilList;
+                setRecyclerView(recyclerView);
+            }
+
+            @Override
+            public void onFailure(Call<OrderSummaryJson> call, Throwable t) {
+
+            }
+        });
     }
 
     //打印汇总小票
@@ -104,8 +195,8 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     }
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){
-        String sStart = StampToTime(startTimeStamp);
-        String sEnd = StampToTime(endTimeStamp);
+        sStart = StampToTime(startTimeStamp);
+        sEnd = StampToTime(endTimeStamp);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行
@@ -328,7 +419,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         list1.setOilId("1");
         list1.setOilName("ds");
         oilOrderList.add(list1);
-        CountAdapter countAdapter = new CountAdapter(orderSummaryJson.getData().getOilOrderList(),getActivity());
+        CountAdapter countAdapter = new CountAdapter(oilCountLists,getActivity());
         recyclerView.setAdapter(countAdapter);
     }
 

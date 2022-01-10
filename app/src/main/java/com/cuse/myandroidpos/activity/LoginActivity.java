@@ -140,17 +140,26 @@ public class LoginActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postLogin();
+                dialog = ProgressDialog.show(view.getContext(), "", "正在登录");
+                dialog.show();
+                postLogin(view);
             }
         });
     }
 
     //post login
-    private void postLogin() {
-        String token = "test456";
-        String imei = "testImei1";
-        stationId = "BJ001001";
+    private void postLogin(View view) {
+        String imei = "testImei2";
         passWord = "e10adc3949ba59abbe56e057f20f883e";
+
+        stationId = editStationId.getText().toString();
+        passWord = editPassWord.getText().toString();
+//        while (stationId == "" && passWord == ""){
+//            Toast.makeText(view.getContext(),"用户名或者密码不能为空,请重新输入",Toast.LENGTH_SHORT).show();
+//            stationId = editStationId.getText().toString();
+//            passWord = editPassWord.getText().toString();
+//        }
+
         // on below line we are creating a retrofit builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://paas.u-coupon.cn/pos_api/v1/")

@@ -325,7 +325,7 @@ public class ItemListFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         //每个item的高度一定
         recyclerView.setHasFixedSize(true);
-        initData();
+
 
         //将数据填入homeAdapt
         homeAdapter = new HomeAdapter(oilOrderLists,getActivity());

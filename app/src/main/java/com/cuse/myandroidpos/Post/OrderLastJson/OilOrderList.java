@@ -22,17 +22,6 @@ public class OilOrderList implements Serializable, Comparable<OilOrderList> {
 
     public OilOrderList(){ }
 
-    public OilOrderList(String oilOrderTime) {
-        this.oilOrderId = "";
-        this.oilOrderTime = oilOrderTime;
-        this.oilName = "";
-        this.user = "";
-        this.money = 0;
-        this.discount = 0;
-        this.coupon = 0;
-        this.balance = 0;
-        this.cash = 0;
-    }
 
 
     public void setOilOrderId(String oilOrderId) {
@@ -117,5 +106,21 @@ public class OilOrderList implements Serializable, Comparable<OilOrderList> {
             return -1;
 
 
+    }
+
+    public OilOrderList initData(){
+        OilOrderList oilOrderList = new OilOrderList();
+
+        oilOrderList.oilOrderId = "";
+        oilOrderList.oilOrderTime = "2022-01-03T14:30:25";
+        oilOrderList.oilName = "";
+        oilOrderList.user = "";
+        oilOrderList.money = 0;
+        oilOrderList.discount = 0;
+        oilOrderList.coupon = 0;
+        oilOrderList.balance = 0;
+        oilOrderList.cash = 0;
+
+        return oilOrderList;
     }
 }

@@ -101,6 +101,10 @@ public class ItemListFragment extends Fragment {
         //得到login传来的intent
         token = ((MainActivity)getActivity()).getToken();
 
+        oilOrderLists = new ArrayList<>(20);
+
+        oilOrderLists.add((new OilOrderList()).initData());
+
         //建立websockets连接
         createWebSocketClient();
 
@@ -140,8 +144,7 @@ public class ItemListFragment extends Fragment {
         // below line is to create an instance for our retrofit api class.
         httpBinService = retrofit.create(HttpBinService.class);
 
-
-        oilOrderLists = new ArrayList<>(20);
+        orderLastPost();
 
         //recycleView,适配器单独写在了HomeAdapter
         setRecyclerView(recyclerView);
@@ -153,6 +156,58 @@ public class ItemListFragment extends Fragment {
         setBackButton(view);
         //下拉刷新
         handleDownPullUpdate();
+    }
+
+    public void orderLastPost(){
+        long timeStamp = new Date().getTime();
+//        Log.i("")
+        //得到字符串并加密编码
+        String stringBuffer = "timestamp" +
+                timeStamp / 1000 +
+                "token" +
+                token +
+                LoginActivity.interferenceCode;
+        String signature = md5.md5(stringBuffer);
+
+        //使用Retrofit进行post
+        Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);
+        call.enqueue(new Callback<OrderLastJson>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                OrderLastJson orderLastJson = response.body();
+                //
+                Gson gson = new Gson();
+                String s = gson.toJson(orderLastJson);
+                assert orderLastJson != null;
+//                Log.i("应答编码", "" + orderLastJson.getCode());
+//                Log.i("stringBuffer", "" + stringBuffer);
+//                Log.i("签名", "" + signature);
+
+                if (response.body().getCode() == 0) {
+                    //设置显示总金钱和总订单
+                    Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_SHORT).show();
+                    tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
+                    tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
+                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
+//                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+                        if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
+                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
+                        }
+                    }
+
+                    homeAdapter.notifyDataSetChanged();
+                } else
+                    Tools.codeError(getContext(), orderLastJson.getCode());
+
+            }
+            @Override
+            public void onFailure(Call<OrderLastJson> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //发送心跳信息
@@ -307,59 +362,6 @@ public class ItemListFragment extends Fragment {
 //                    }
 //                },3000);
                 orderLastPost();
-            }
-        });
-    }
-
-    public void orderLastPost(){
-        long timeStamp = new Date().getTime();
-//        Log.i("")
-        //得到字符串并加密编码
-        String stringBuffer = "timestamp" +
-                timeStamp / 1000 +
-                "token" +
-                token +
-                LoginActivity.interferenceCode;
-        String signature = md5.md5(stringBuffer);
-
-
-        //使用Retrofit进行post
-        Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);
-        call.enqueue(new Callback<OrderLastJson>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
-                swipeRefreshLayout.setRefreshing(false);
-                OrderLastJson orderLastJson = response.body();
-                //
-                Gson gson = new Gson();
-                String s = gson.toJson(orderLastJson);
-                assert orderLastJson != null;
-//                Log.i("应答编码", "" + orderLastJson.getCode());
-//                Log.i("stringBuffer", "" + stringBuffer);
-//                Log.i("签名", "" + signature);
-
-                if (response.body().getCode() == 0) {
-                    //设置显示总金钱和总订单
-                    Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_SHORT).show();
-                    tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
-                    tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
-                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
-//                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
-                        if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
-                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
-                        }
-                    }
-
-                    homeAdapter.notifyDataSetChanged();
-                } else
-                    Tools.codeError(getContext(), orderLastJson.getCode());
-
-            }
-            @Override
-            public void onFailure(Call<OrderLastJson> call, Throwable t) {
-                swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
     }

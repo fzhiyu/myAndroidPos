@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
+import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.adapter.CountAdapter;
 import com.cuse.myandroidpos.MyListData;
@@ -169,7 +171,13 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
 //                Log.i("签名", "" + signature);
 //                Log.i("输出", "" + s);
                 //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
-                oilCountLists.addAll(orderSummaryJson.getData().getOilOrderList());
+                if(orderSummaryJson == null) {
+                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
+                } else if (orderSummaryJson.getCode() == 0) {
+                    oilCountLists.addAll(orderSummaryJson.getData().getOilOrderList());
+                } else {
+                    Tools.codeError(getContext(), orderSummaryJson.getCode());
+                }
 //                Log.i("getOilOrder", "" + orderSummaryJson.getData().getOilOrderList());
 //                Log.i("oilOrderLists", "" + oilCountLists);
                 RecyclerView recyclerView = binding.sumOilList;

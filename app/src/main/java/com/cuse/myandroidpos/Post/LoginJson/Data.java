@@ -3,7 +3,7 @@ package com.cuse.myandroidpos.Post.LoginJson;
 
 public class Data {
 
-    private int result;
+    private Integer result;
     private String message;
     private String token;
 
@@ -19,7 +19,7 @@ public class Data {
         this.result = result;
     }
 
-    public int getResult() {
+    public Integer getResult() {
         return result;
     }
 

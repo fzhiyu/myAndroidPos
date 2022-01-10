@@ -8,6 +8,8 @@ import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
 import com.cuse.myandroidpos.Post.Push.Push;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
+import com.cuse.myandroidpos.Post.getSmsCode.SmsCodeJson;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -21,8 +23,8 @@ public interface HttpBinService {
     @POST("user/login")
     Call<LoginJson>login(@Query("stationId") String stationId,
                          @Query("passWord") String passWord,
-                         @Query("timestamp") String timestamp,
                          @Query("imei") String imei,
+                         @Query("timestamp") String timestamp,
                          @Query("signature") String signature);
 
     @POST("station/oil_order/last")
@@ -39,6 +41,11 @@ public interface HttpBinService {
                                @Query("count") String count,
                                @Query("timestamp") String timestamp,
                                @Query("signature") String signature);
+
+    @POST("station/refund/getSmsCode")
+    Call<SmsCodeJson>getSmsCode(@Query("token") String token,
+                                @Query("timestamp") String timestamp,
+                                @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/refund")

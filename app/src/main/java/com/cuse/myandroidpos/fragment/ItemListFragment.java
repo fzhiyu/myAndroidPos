@@ -1,5 +1,6 @@
 package com.cuse.myandroidpos.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -322,6 +323,7 @@ public class ItemListFragment extends Fragment {
         //使用Retrofit进行post
         Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);
         call.enqueue(new Callback<OrderLastJson>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
                 swipeRefreshLayout.setRefreshing(false);

@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
@@ -166,7 +168,13 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 //                Log.i("签名", "" + signature);
 //                Log.i("输出", "" + s);
                 //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
-                oilOrderLists.addAll(orderAllJson.getData().getOilOrder());
+                if (orderAllJson == null) {
+                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
+                } else if(orderAllJson.getCode() == 0) {
+                    oilOrderLists.addAll(orderAllJson.getData().getOilOrder());
+                } else {
+                    Tools.codeError(getContext(), orderLastJson.getCode());
+                }
 //                Log.i("getOilOrder", "" + orderAllJson.getData().getOilOrder());
 //                Log.i("oilOrderLists", "" + oilOrderLists);
                 RecyclerView recyclerView = binding.searchItemList;
@@ -178,7 +186,6 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
             }
         });
-
     }
 
 

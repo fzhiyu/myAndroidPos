@@ -166,19 +166,19 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 //                Log.i("stringBuffer", "" + stringBuffer);
 //                Log.i("开始时间", "" + startTimeStamp);
 //                Log.i("签名", "" + signature);
-//                Log.i("输出", "" + s);
+                Log.i("输出", "" + s);
                 //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
                 if (orderAllJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                 } else if(orderAllJson.getCode() == 0) {
                     oilOrderLists.addAll(orderAllJson.getData().getOilOrder());
+                    RecyclerView recyclerView = binding.searchItemList;
+                    setRecyclerView(recyclerView);
                 } else {
-                    Tools.codeError(getContext(), orderLastJson.getCode());
+                    Tools.codeError(getContext(), orderAllJson.getCode());
                 }
 //                Log.i("getOilOrder", "" + orderAllJson.getData().getOilOrder());
 //                Log.i("oilOrderLists", "" + oilOrderLists);
-                RecyclerView recyclerView = binding.searchItemList;
-                setRecyclerView(recyclerView);
             }
 
             @Override

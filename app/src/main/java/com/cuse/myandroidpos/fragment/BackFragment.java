@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.adapter.BackAdapter;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
@@ -35,6 +36,7 @@ import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentBackBinding;
+import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -78,6 +80,9 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private List<OilOrder> list ;
     private HttpBinService httpBinService;
     private Retrofit retrofit;
+    private String sStart;
+    private String sEnd;
+    private List<OilOrder> oilRefundOrderLists;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
@@ -106,14 +111,24 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         btnWeek = view.findViewById(R.id.back_week);
         btnSearch = view.findViewById(R.id.back_search);
 
-        //列表RecyclerView
-        setBackRecyclerView();
+        //查询退单
+        searchRefundAll(view);
 
         //按钮的点击事件
         setButton(view);
 
     }
 
+    //查询退单
+    private void searchRefundAll(View view) {
+        Button btn_Search = view.findViewById(R.id.back_search);
+        btn_Search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refundAllPost();
+            }
+        });
+    }
 
     public void setBackRecyclerView () {
         //recyclerView
@@ -130,67 +145,70 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
             public void OnBackRecyclerItemClick(int position) {
                 Bundle  bundle = new Bundle();
                 //使用Serializable来传递对象，传递的对象需要继承Serializable
-                bundle.putSerializable("RefundOilOrder",refundAllJson.getData().getOilOrder().get(position));
+                bundle.putSerializable("RefundOilOrder",oilRefundOrderLists.get(position));
                 //bundle.putString("RefundOilOrder", refundAllJson.getData().getOilOrder().get(position).toString());
                 Navigation.findNavController(getView()).navigate(R.id.back_to_backDetail,bundle);
             }
         });//点击Item
     }
 
+    //查询全部退单
     public void refundAllPost () {
                 //得到字符串并加密编码
-                currentTimeStamp = new Date().getTime();
-                StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append("count");
-                stringBuffer.append(count);
-                stringBuffer.append("endTime");
-                stringBuffer.append(endTimeStamp / 1000);
-                stringBuffer.append("start");
-                stringBuffer.append(start);
-                stringBuffer.append("startTime");
-                stringBuffer.append(startTimeStamp / 1000);
-                stringBuffer.append(interferenceCode);
-                stringBuffer.append("timestamp");
-                stringBuffer.append(currentTimeStamp / 1000);
-                stringBuffer.append("token");
-                stringBuffer.append(token);
-                stringBuffer.append(interferenceCode);
-                signature = Tools.encode(stringBuffer.toString());
-//                Log.i(TAG, "refundAllPost: " + token);
-//                Log.i(TAG, "refundAllPost: " + startTimeStamp / 1000 + "");
-//                Log.i(TAG, "refundAllPost: " + endTimeStamp / 1000 + "");
-//                Log.i(TAG, "refundAllPost: " + start);
-//                Log.i(TAG, "refundAllPost: " + count);
-//                Log.i(TAG, "refundAllPost: " + currentTimeStamp / 1000);
-//                Log.i(TAG, "refundAllPost: " + signature);
+        long timeStamp = new Date().getTime();
+        int start = 0;
+        int count = 200;
+        //得到字符串并加密编码
+        String stringBuffer = "count" +
+                count +
+                "endTime" +
+                sEnd +
+                "start" +
+                start +
+                "startTime" +
+                sStart +
+                "timestamp" +
+                timeStamp / 1000 +
+                "token" +
+                token +
+                LoginActivity.interferenceCode;
+        String signature = md5.md5(stringBuffer);
 
-                //post
-                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                        .addConverterFactory(GsonConverterFactory.create()).build();//创建Retrofit并添加json转换器
-                httpBinService = retrofit.create(HttpBinService.class);
-                Call<RefundAllJson> call = httpBinService.refundAll(token,startTimeStamp / 1000 + "",
-                        endTimeStamp / 1000 + "", start + "", count + "", currentTimeStamp / 1000 + "", signature);
-                call.enqueue(new Callback<RefundAllJson>() {
-                    @Override
-                    public void onResponse(Call<RefundAllJson> call, Response<RefundAllJson> response) {
-                        //取消正在查询的弹窗
-                        dialog.cancel();
-                        RefundAllJson refundAllJson = response.body();
+        //post
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();//创建Retrofit并添加json转换器
+        httpBinService = retrofit.create(HttpBinService.class);
+        Call<RefundAllJson> call = httpBinService.refundAll(token
+                ,sStart + ""
+                , sEnd + ""
+                , start + ""
+                , count + ""
+                , timeStamp / 1000 + ""
+                , signature);
+        call.enqueue(new Callback<RefundAllJson>() {
+            @Override
+            public void onResponse(Call<RefundAllJson> call, Response<RefundAllJson> response) {
+                //取消正在查询的弹窗
+                dialog.cancel();
+                RefundAllJson refundAllJson = response.body();
 //                        Log.i(TAG, "onResponse: " + refundAllJson.getCode());
-                        if (refundAllJson.getCode() ==0){
-                            for (int i = 0; i < response.body().getData().getOilOrder().size(); i++)
-                                list.add(response.body().getData().getOilOrder().get(i));
-                            backAdapter.notifyDataSetChanged();
-                        }else
-                            Tools.codeError(getContext(), refundAllJson.getCode());
-                    }
+                if (refundAllJson == null) {
+                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
+                }else if (refundAllJson.getCode() == 0){
+                    oilRefundOrderLists.addAll(refundAllJson.getData().getOilOrder());
+                    setBackRecyclerView();
+                }else
+                    Tools.codeError(getContext(), refundAllJson.getCode());
+            }
 
-                    @Override
-                    public void onFailure(Call<RefundAllJson> call, Throwable t) {
-                        dialog.cancel();
-                        Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(Call<RefundAllJson> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -238,8 +256,8 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
 
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){
-        String sStart = Tools.StampToTime(startTimeStamp);
-        String sEnd = Tools.StampToTime(endTimeStamp);
+        sStart = Tools.StampToTime(startTimeStamp);
+        sEnd = Tools.StampToTime(endTimeStamp);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行

@@ -29,8 +29,19 @@
     </fragment>
 
     <fragment
+        android:id="@+id/backProcess_fragment"
+        tools:layout="@layout/fragment_back_process"
+        android:name="com.cuse.myandroidpos.fragment.BackProcessFragment"
+        android:label="backProcess">
+        <action
+            android:id="@+id/process_to_back"
+            app:destination="@+id/backing_fragment"/>
+
+    </fragment>
+
+    <fragment
         android:id="@+id/backing_fragment"
-        tools:layout="@layout/fragment_setting"
+        tools:layout="@layout/fragment_back"
         android:name="com.cuse.myandroidpos.fragment.BackFragment"
         android:label="backing">
         <action
@@ -72,10 +83,9 @@
         android:name="com.cuse.myandroidpos.fragment.ItemDetailFragment"
         android:label="item_detail"
         tools:layout="@layout/fragment_item_detail">
-        <argument
-            android:name="item_id"
-            android:defaultValue=""
-            app:argType="string" />
+        <action
+            android:id="@+id/detail_to_backProcess"
+            app:destination="@+id/backProcess_fragment"/>
     </fragment>
 
     <fragment

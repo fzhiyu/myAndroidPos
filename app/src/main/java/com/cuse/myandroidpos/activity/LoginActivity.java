@@ -1,14 +1,10 @@
 package com.cuse.myandroidpos.activity;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,13 +14,11 @@ import android.widget.Toast;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
-import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -63,6 +57,15 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_login);
+
+        Button btn_back = findViewById(R.id.btn_back_test);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, BackProcessActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //找到对应的ID
 //        editStationId = findViewById(R.id.editText_sign_stationID);
@@ -143,17 +146,19 @@ public class LoginActivity extends AppCompatActivity {
                 dialog = ProgressDialog.show(view.getContext(), "", "正在登录");
                 dialog.show();
                 postLogin(view);
+                dialog.cancel();
             }
         });
     }
 
     //post login
     private void postLogin(View view) {
-        String imei = "testImei2";
+        String imei = "testImei1";
+        String stationId = "BJ001001";
         passWord = "e10adc3949ba59abbe56e057f20f883e";
 
-        stationId = editStationId.getText().toString();
-        passWord = editPassWord.getText().toString();
+//        stationId = editStationId.getText().toString();
+//        passWord = editPassWord.getText().toString();
 //        while (stationId == "" && passWord == ""){
 //            Toast.makeText(view.getContext(),"用户名或者密码不能为空,请重新输入",Toast.LENGTH_SHORT).show();
 //            stationId = editStationId.getText().toString();

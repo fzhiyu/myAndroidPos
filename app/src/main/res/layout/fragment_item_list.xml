@@ -36,7 +36,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="4"
                 android:gravity="center"
-                android:text="1000000.00元"
+                android:text="00.00元"
                 android:textSize="30sp" />
 
             <TextView
@@ -74,7 +74,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="4"
                 android:gravity="center"
-                android:text="1000000.00元"
+                android:text="00"
                 android:textSize="30sp" />
 
             <TextView
@@ -145,18 +145,25 @@
 
     </LinearLayout>
 
-
+    <Button
+        android:id="@+id/btn_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="刷新"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="3">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_list"
             android:name="com.cuse.myandroidpos.ItemListFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             tools:context="com.cuse.myAndroidpos.ItemListFragment"

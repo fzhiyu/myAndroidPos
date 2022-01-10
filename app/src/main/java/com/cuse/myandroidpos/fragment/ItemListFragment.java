@@ -84,7 +84,7 @@ public class ItemListFragment extends Fragment {
 
     //请求参数
     private String stationId;
-    private String token = "test123";
+    private String token;
 
     private Context mContext;
     private ListDataSave dataSave;
@@ -101,9 +101,7 @@ public class ItemListFragment extends Fragment {
         //得到login传来的intent
         token = ((MainActivity)getActivity()).getToken();
 
-        oilOrderLists = new ArrayList<>(20);
 
-        oilOrderLists.add((new OilOrderList()).initData());
 
         //建立websockets连接
         createWebSocketClient();
@@ -124,14 +122,37 @@ public class ItemListFragment extends Fragment {
         tvTotalOrder = view.findViewById(R.id.tv_home_TodayTotalOrder);
         //下拉刷新
         swipeRefreshLayout = view.findViewById(R.id.swipe_home);
-        //列表
-        recyclerView = binding.itemList;
         //找到按钮实例,搜索，汇总，退单，设置
         btnSearch = view.findViewById(R.id.btn_home_search);
         btnAll = view.findViewById(R.id.btn_home_all);
         btnRefund = view.findViewById(R.id.btn_home_refund);
         btnSet = view.findViewById(R.id.btn_home_set);
 
+        //网络不好时弹出未连接网络的框
+        setInternetLayout();
+
+        //手动刷新
+        manualRefresh(view);
+
+        //按钮功能
+        setButton(view);
+        //下拉刷新
+        handleDownPullUpdate();
+    }
+
+    //手动刷新
+    private void manualRefresh(View view) {
+        Button btn_refresh = view.findViewById(R.id.btn_refresh);
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                orderLastPost();
+            }
+        });
+    }
+
+    public void orderLastPost(){
+        oilOrderLists = new ArrayList<>();
         //创建retrofit实例b
         // on below line we are creating a retrofit builder and passing our base url
         retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
@@ -144,21 +165,6 @@ public class ItemListFragment extends Fragment {
         // below line is to create an instance for our retrofit api class.
         httpBinService = retrofit.create(HttpBinService.class);
 
-        orderLastPost();
-
-        //recycleView,适配器单独写在了HomeAdapter
-        setRecyclerView(recyclerView);
-
-        //网络不好时弹出未连接网络的框
-        setInternetLayout();
-
-        //按钮功能
-        setBackButton(view);
-        //下拉刷新
-        handleDownPullUpdate();
-    }
-
-    public void orderLastPost(){
         long timeStamp = new Date().getTime();
 //        Log.i("")
         //得到字符串并加密编码
@@ -190,17 +196,22 @@ public class ItemListFragment extends Fragment {
                     Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_SHORT).show();
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
-                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
-//                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
-                        if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
-                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
-                        }
-                    }
+//                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
+////                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+//                        if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
+//                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
+//                        }
+//                    }
 
-                    homeAdapter.notifyDataSetChanged();
+                    oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
+                    //列表
+                    recyclerView = binding.itemList;
+                    //recycleView,适配器单独写在了HomeAdapter
+                    setRecyclerView(recyclerView);
+
+//                    homeAdapter.notifyDataSetChanged();
                 } else
                     Tools.codeError(getContext(), orderLastJson.getCode());
-
             }
             @Override
             public void onFailure(Call<OrderLastJson> call, Throwable t) {
@@ -284,7 +295,7 @@ public class ItemListFragment extends Fragment {
         webSocketClient.connect();
     }
 
-    public void setBackButton (View view) {
+    public void setButton (View view) {
         //搜索按钮
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +336,6 @@ public class ItemListFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         //每个item的高度一定
         recyclerView.setHasFixedSize(true);
-
 
         //将数据填入homeAdapt
         homeAdapter = new HomeAdapter(oilOrderLists,getActivity());
@@ -373,240 +383,6 @@ public class ItemListFragment extends Fragment {
             TextView internet = getView().findViewById(R.id.tv_home_internet);
             internet.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void initData() {
-        String sJson = "{\n" +
-                "\t\"code\": 0,\n" +
-                "\t\"data\": {\n" +
-                "\t\t\"stationName\": \"北京测试公司测试站 \",\n" +
-                "\t\t\"todayCount\": 610,\n" +
-                "\t\t\"oilOrderList\": [\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:52:25\",\n" +
-                "\t\t\t\t\"money\": 300,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"4077192745765\",\n" +
-                "\t\t\t\t\"discount\": 3,\n" +
-                "\t\t\t\t\"oilName\": \"汽油95号\",\n" +
-                "\t\t\t\t\"user\": \"T9999994077\",\n" +
-                "\t\t\t\t\"cash\": 297\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:47:48\",\n" +
-                "\t\t\t\t\"money\": 256,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"9517192468202\",\n" +
-                "\t\t\t\t\"discount\": 12.8,\n" +
-                "\t\t\t\t\"oilName\": \"汽油98号\",\n" +
-                "\t\t\t\t\"user\": \"T9999999517\",\n" +
-                "\t\t\t\t\"cash\": 243.2\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:47:12\",\n" +
-                "\t\t\t\t\"money\": 265,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"3823192432156\",\n" +
-                "\t\t\t\t\"discount\": 10.6,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-20号\",\n" +
-                "\t\t\t\t\"user\": \"T9999993823\",\n" +
-                "\t\t\t\t\"cash\": 254.4\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:44:36\",\n" +
-                "\t\t\t\t\"money\": 243,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"3203192276095\",\n" +
-                "\t\t\t\t\"discount\": 9.72,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-20号\",\n" +
-                "\t\t\t\t\"user\": \"T9999993203\",\n" +
-                "\t\t\t\t\"cash\": 233.28\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:41:58\",\n" +
-                "\t\t\t\t\"money\": 230,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"8175192118713\",\n" +
-                "\t\t\t\t\"discount\": 0,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-35号\",\n" +
-                "\t\t\t\t\"user\": \"T9999998175\",\n" +
-                "\t\t\t\t\"cash\": 230\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:41:47\",\n" +
-                "\t\t\t\t\"money\": 235,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"4050192107691\",\n" +
-                "\t\t\t\t\"discount\": 2.35,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-10号\",\n" +
-                "\t\t\t\t\"user\": \"T9999994050\",\n" +
-                "\t\t\t\t\"cash\": 232.65\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:38:04\",\n" +
-                "\t\t\t\t\"money\": 231,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"4190191884146\",\n" +
-                "\t\t\t\t\"discount\": 2.31,\n" +
-                "\t\t\t\t\"oilName\": \"汽油98号\",\n" +
-                "\t\t\t\t\"user\": \"T9999994190\",\n" +
-                "\t\t\t\t\"cash\": 228.69\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:37:35\",\n" +
-                "\t\t\t\t\"money\": 270,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"8754191855074\",\n" +
-                "\t\t\t\t\"discount\": 2.7,\n" +
-                "\t\t\t\t\"oilName\": \"汽油98号\",\n" +
-                "\t\t\t\t\"user\": \"T9999998754\",\n" +
-                "\t\t\t\t\"cash\": 267.3\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:35:28\",\n" +
-                "\t\t\t\t\"money\": 218,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"4217191728799\",\n" +
-                "\t\t\t\t\"discount\": 0,\n" +
-                "\t\t\t\t\"oilName\": \"汽油95号\",\n" +
-                "\t\t\t\t\"user\": \"T9999994217\",\n" +
-                "\t\t\t\t\"cash\": 218\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:33:03\",\n" +
-                "\t\t\t\t\"money\": 276,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"7357191583503\",\n" +
-                "\t\t\t\t\"discount\": 2.76,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-50号\",\n" +
-                "\t\t\t\t\"user\": \"T9999997357\",\n" +
-                "\t\t\t\t\"cash\": 273.24\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:32:37\",\n" +
-                "\t\t\t\t\"money\": 252,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"1604191557449\",\n" +
-                "\t\t\t\t\"discount\": 2.52,\n" +
-                "\t\t\t\t\"oilName\": \"汽油92号\",\n" +
-                "\t\t\t\t\"user\": \"T9999991604\",\n" +
-                "\t\t\t\t\"cash\": 249.48\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:30:25\",\n" +
-                "\t\t\t\t\"money\": 239,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"1840191425201\",\n" +
-                "\t\t\t\t\"discount\": 9.56,\n" +
-                "\t\t\t\t\"oilName\": \"天然气LNG\",\n" +
-                "\t\t\t\t\"user\": \"T9999991840\",\n" +
-                "\t\t\t\t\"cash\": 229.44\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:29:37\",\n" +
-                "\t\t\t\t\"money\": 294,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"5456191377101\",\n" +
-                "\t\t\t\t\"discount\": 14.7,\n" +
-                "\t\t\t\t\"oilName\": \"天然气CNG\",\n" +
-                "\t\t\t\t\"user\": \"T9999995456\",\n" +
-                "\t\t\t\t\"cash\": 279.3\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:28:54\",\n" +
-                "\t\t\t\t\"money\": 225,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"2101191334990\",\n" +
-                "\t\t\t\t\"discount\": 0,\n" +
-                "\t\t\t\t\"oilName\": \"柴油10号\",\n" +
-                "\t\t\t\t\"user\": \"T9999992101\",\n" +
-                "\t\t\t\t\"cash\": 225\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:25:27\",\n" +
-                "\t\t\t\t\"money\": 269,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"7140191127516\",\n" +
-                "\t\t\t\t\"discount\": 10.76,\n" +
-                "\t\t\t\t\"oilName\": \"汽油92号\",\n" +
-                "\t\t\t\t\"user\": \"T9999997140\",\n" +
-                "\t\t\t\t\"cash\": 258.24\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:24:39\",\n" +
-                "\t\t\t\t\"money\": 203,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"1843191079421\",\n" +
-                "\t\t\t\t\"discount\": 0,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-35号\",\n" +
-                "\t\t\t\t\"user\": \"T9999991843\",\n" +
-                "\t\t\t\t\"cash\": 203\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:24:33\",\n" +
-                "\t\t\t\t\"money\": 263,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"2528191073397\",\n" +
-                "\t\t\t\t\"discount\": 13.15,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-20号\",\n" +
-                "\t\t\t\t\"user\": \"T9999992528\",\n" +
-                "\t\t\t\t\"cash\": 249.85\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:22:17\",\n" +
-                "\t\t\t\t\"money\": 290,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"9696190937080\",\n" +
-                "\t\t\t\t\"discount\": 0,\n" +
-                "\t\t\t\t\"oilName\": \"柴油-10号\",\n" +
-                "\t\t\t\t\"user\": \"T9999999696\",\n" +
-                "\t\t\t\t\"cash\": 290\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:21:35\",\n" +
-                "\t\t\t\t\"money\": 261,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"1198190895942\",\n" +
-                "\t\t\t\t\"discount\": 0,\n" +
-                "\t\t\t\t\"oilName\": \"汽油90号\",\n" +
-                "\t\t\t\t\"user\": \"T9999991198\",\n" +
-                "\t\t\t\t\"cash\": 261\n" +
-                "\t\t\t},\n" +
-                "\t\t\t{\n" +
-                "\t\t\t\t\"oilOrderTime\": \"2022-01-03T14:20:52\",\n" +
-                "\t\t\t\t\"money\": 292,\n" +
-                "\t\t\t\t\"coupon\": 0,\n" +
-                "\t\t\t\t\"balance\": 0,\n" +
-                "\t\t\t\t\"oilOrderId\": \"1088190852844\",\n" +
-                "\t\t\t\t\"discount\": 14.6,\n" +
-                "\t\t\t\t\"oilName\": \"汽油92号\",\n" +
-                "\t\t\t\t\"user\": \"T9999991088\",\n" +
-                "\t\t\t\t\"cash\": 277.4\n" +
-                "\t\t\t}\n" +
-                "\t\t],\n" +
-                "\t\t\"todayMoney\": 152971\n" +
-                "\t}\n" +
-                "}";
-        oilOrderLists = (new Gson().fromJson(sJson,OrderLastJson.class)).getData().getOilOrderList();
     }
 
     @Override

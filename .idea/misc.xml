@@ -11,20 +11,25 @@
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/drawable/single_line.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout-sw600dp/fragment_item_detail.xml" value="0.17265625" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout-sw600dp/fragment_item_list.xml" value="0.21015625" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_back_process.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_login.xml" value="0.11875" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_main.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_search.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_setting.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_text.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/backprocess.xml" value="0.4" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/count_item_content.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_back.xml" value="0.28020833333333334" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_back_detail.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_back_item.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_back_process.xml" value="0.12083333333333333" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_count.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_first.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_home_item.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_home_item_content.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_item_detail.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.2" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_setting.xml" value="0.23020833333333332" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/fragment_sign.xml" value="0.152" />

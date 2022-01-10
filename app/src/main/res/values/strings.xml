@@ -51,4 +51,5 @@
     <string name="cancel">Cancel</string>
     <string name="input_order">请输入指令:</string>
     <string name="text_title">Text Test</string>
+    <string name="phone_hint">请输入手机号</string>
 </resources>

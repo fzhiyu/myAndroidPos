@@ -253,7 +253,6 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 refundAllPost();
             }
         });
-
     }
 
     //传入开始，结束时间戳，在editView上显示

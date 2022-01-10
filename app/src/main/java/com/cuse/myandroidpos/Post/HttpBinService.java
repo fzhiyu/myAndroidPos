@@ -38,7 +38,9 @@ public interface HttpBinService {
                                @Query("signature") String signature);
 
     @POST("/station/refund/getSmsCode")
-    Call<SmsCodeJson>getSmsCode(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
+    Call<SmsCodeJson>getSmsCode(@Query("token") String token,
+                                @Query("timestamp") String timestamp,
+                                @Query("signature") String signature);
 
     @POST("/station/refund/new")
     Call<OrderRefundJson>refundNew(@Query("token") String token, @Query("smsCode") String smsCode,

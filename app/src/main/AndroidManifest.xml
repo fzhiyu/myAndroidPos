@@ -21,9 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyAndroidPos">
         <activity
-            android:name=".activity.BackProcessActivity"
-            android:exported="true" />
-        <activity
             android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>

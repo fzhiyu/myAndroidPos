@@ -1,7 +1,6 @@
 package com.cuse.myandroidpos.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import androidx.navigation.Navigation;
 
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.R;
-import com.cuse.myandroidpos.activity.BackProcessActivity;
 import com.cuse.myandroidpos.databinding.FragmentItemDetailBinding;
 import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 

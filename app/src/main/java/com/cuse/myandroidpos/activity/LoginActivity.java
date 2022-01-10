@@ -58,15 +58,6 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-        Button btn_back = findViewById(R.id.btn_back_test);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, BackProcessActivity.class);
-                startActivity(intent);
-            }
-        });
-
         //找到对应的ID
 //        editStationId = findViewById(R.id.editText_sign_stationID);
 //        editPassWord = findViewById(R.id.editText_sign_passWord);

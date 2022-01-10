@@ -6,7 +6,8 @@ import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.Post.OrderAllJson.orderAllRequest;
 import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OrderSummaryJson;
-import com.cuse.myandroidpos.Post.Push.Push;
+import com.cuse.myandroidpos.Post.Push.PushJson;
+import com.cuse.myandroidpos.Post.Push.PushJson;
 import com.cuse.myandroidpos.Post.RefundAllJson.RefundAllJson;
 import com.cuse.myandroidpos.Post.getSmsCode.SmsCodeJson;
 
@@ -21,54 +22,45 @@ import retrofit2.http.Query;
 public interface HttpBinService {
 
     @POST("user/login")
-    Call<LoginJson>login(@Query("stationId") String stationId,
-                         @Query("passWord") String passWord,
-                         @Query("imei") String imei,
-                         @Query("timestamp") String timestamp,
-                         @Query("signature") String signature);
+    Call<ResponseBody> login1(@Query("stationId") String stationId, @Query("passWord") String passWord,
+                              @Query("timestamp") String timestamp, @Query("imei") String imei,
+                              @Query("signature") String signature);
+
+    @POST("user/login")
+    Call<LoginJson>login(@Query("stationId") String stationId, @Query("passWord") String passWord,
+                          @Query("timestamp") String timestamp, @Query("imei") String imei,
+                          @Query("signature") String signature);
 
     @POST("station/oil_order/last")
-    Call<OrderLastJson> orderLast(@Query("token") String token,
-                                  @Query("timestamp") String timestamp,
-                                  @Query("signature") String signature);
+    Call<OrderLastJson> orderLast(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
 
 //    @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/all")
-    Call<OrderAllJson>orderAll(@Query("token") String token,
-                               @Query("startTime") String startTime,
-                               @Query("endTime") String endTime,
-                               @Query("start") String start,
-                               @Query("count") String count,
-                               @Query("timestamp") String timestamp,
+    Call<OrderAllJson>orderAll(@Query("token") String token, @Query("startTime") String startTime,
+                               @Query("endTime") String endTime, @Query("start") String start,
+                               @Query("count") String count, @Query("timestamp") String timestamp,
                                @Query("signature") String signature);
 
-    @POST("station/refund/getSmsCode")
-    Call<SmsCodeJson>getSmsCode(@Query("token") String token,
-                                @Query("timestamp") String timestamp,
-                                @Query("signature") String signature);
+    @POST("/station/refund/getSmsCode")
+    Call<SmsCodeJson>getSmsCode(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
 
-    @Headers({"Content-Type: application/json","Accept: application/json"})
-    @POST("station/oil_order/refund")
-    Call<OrderRefundJson>orderRefund(@Body RequestBody requestBody);
+    @POST("/station/refund/new")
+    Call<OrderRefundJson>refundNew(@Query("token") String token, @Query("smsCode") String smsCode,
+                    @Query("oilOrderId") String oilOrderId, @Query("timestamp") String timestamp,
+                    @Query("signature") String signature);
 
-    @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/oil_order/summary")
-    Call<OrderSummaryJson>orderSummary(@Query("token") String token,
-                                       @Query("startTime") String startTime,
-                                       @Query("endTime") String endTime,
-                                       @Query("timestamp") String timestamp,
+    Call<OrderSummaryJson>orderSummary(@Query("token") String token, @Query("startTime") String startTime,
+                                       @Query("endTime") String endTime, @Query("timestamp") String timestamp,
                                        @Query("signature") String signature);
 
     @POST("station/refund/all")
-    Call<RefundAllJson>refundAll(@Query("token") String token,
-                                 @Query("startTime") String startTime,
-                                 @Query("endTime") String endTime,
-                                 @Query("start") String start,
-                                 @Query("count") String count,
-                                 @Query("timestamp") String timestamp,
+    Call<RefundAllJson>refundAll(@Query("token") String token, @Query("startTime") String startTime,
+                                 @Query("endTime") String endTime, @Query("start") String start,
+                                 @Query("count") String count, @Query("timestamp") String timestamp,
                                  @Query("signature") String signature);
 
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("station/push/rquest")
-    Call<Push>push(@Body RequestBody requestBody);
+    Call<PushJson> push(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
 }

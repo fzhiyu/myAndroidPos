@@ -1,6 +1,5 @@
 package com.cuse.myandroidpos.fragment;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,19 +8,16 @@ import android.widget.Toast;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
 
 import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
-import com.cuse.myandroidpos.Post.Push.Push;
-import com.cuse.myandroidpos.Post.Push.PushRequest;
+import com.cuse.myandroidpos.Post.Push.PushJson;
 import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 import com.google.gson.Gson;
 
 import java.util.Date;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private String stationId = "BJ001001";
+    private String token = "test123";
     private long currentTimeStamp;
     private String signature;
     private final String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
@@ -38,8 +34,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private Retrofit retrofit;
     private HttpBinService httpBinService;
 
-    private PushRequest pushRequest;
-    private Push result;
+    private PushJson result;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -49,65 +44,55 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 //得到字符串并加密
                 currentTimeStamp = new Date().getTime();
                 StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append("stationId");
-                stringBuffer.append(stationId);
                 stringBuffer.append("timestamp");
                 stringBuffer.append(currentTimeStamp / 1000);
+                stringBuffer.append("token");
+                stringBuffer.append(token);
                 stringBuffer.append(interferenceCode);
                 signature = MD5AndBase64.md5(stringBuffer.toString());
+                Log.i("hejun", "onPreferenceClick: " + currentTimeStamp / 1000);
+                Log.i("hejun", "onPreferenceClick: " + stringBuffer.toString());
+                Log.i("hejun", "onPreferenceClick: " + signature);
 
-                //得到提交的json数据 route
-                pushRequest = new PushRequest();
-                pushRequest.setStationId(stationId);
-                pushRequest.setTimestamp(currentTimeStamp / 1000 + "");
-                pushRequest.setSignature(signature);
-
-                String route = new Gson().toJson(pushRequest);
-
-
-                retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                retrofit = new Retrofit.Builder().baseUrl("http://paas.u-coupon.cn/pos_api/v1/")
                         .addConverterFactory(GsonConverterFactory.create()).build();
                 httpBinService = retrofit.create(HttpBinService.class);
+                Call<PushJson> call = httpBinService.push(token, currentTimeStamp / 1000 + "", signature);
+                call.enqueue(new Callback<PushJson>() {
+                    @Override
+                    public void onResponse(Call<PushJson> call, Response<PushJson> response) {
+                        PushJson pushJson = response.body();
+                        Log.i("hejun", "onResponse: " + pushJson.getCode());
+                        if (pushJson.getCode() == 0){
+                            if (pushJson.getData().getResult() == 0)
+                                Toast.makeText(getContext(),"推送成功",Toast.LENGTH_SHORT);
+                            else
+                                Toast.makeText(getContext(),"推送失败",Toast.LENGTH_SHORT);
+                        }else
+                            Tools.codeError(getContext(), pushJson.getCode());
+                    }
 
-//                RequestBody body = RequestBody.create(MediaType.parse("application/json"),route);
-//                Call<Push> call = httpBinService.push(body);
-//                call.enqueue(new Callback<Push>() {
-//                    @Override
-//                    public void onResponse(Call<Push> call, Response<Push> response) {
-//                        result = response.body();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Push> call, Throwable t) {
-//
-//                    }
-//                });
-
-                //测试数据
-                String s = "{\n" +
-                        "\t\"code\": 0,\n" +
-                        "\t\"message\": \"\",\n" +
-                        "\t\"data\": {\n" +
-                        "\t\t\t\"result\": 0,\n" +
-                        "\"message\": \"\"\n" +
-                        "}\n" +
-                        "}\n";
-                Gson gson = new Gson();
-                result = gson.fromJson(s,Push.class);
-
-                if (result.getCode() == 0 && result.getData().getResult() ==0)
-                    Toast.makeText(getActivity(),"同步成功",Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onFailure(Call<PushJson> call, Throwable t) {
+                        Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT);
+                    }
+                });
                 return false;
             }
         });
 
-//得到switch的值
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        Boolean checkPrint = prefs.getBoolean("print",false);
-//        Toast.makeText(getActivity(), "" + checkPrint, Toast.LENGTH_SHORT).show();
+        //得到switch的值
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+                Boolean checkPrint = prefs.getBoolean("print",false);
+                Toast.makeText(getActivity(), "" + checkPrint, Toast.LENGTH_SHORT).show();
+            }
+        });
+        
     }
 }

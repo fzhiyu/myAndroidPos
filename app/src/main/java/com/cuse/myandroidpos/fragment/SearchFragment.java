@@ -239,7 +239,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuffer sb1 = new StringBuffer();//sb对象
-                        sb1.append(String.format("%d-%2d-%02d",
+                        sb1.append(String.format("%d-%02d-%02d",
                                 datePicker.getYear(),
                                 datePicker.getMonth() + 1,
                                 datePicker.getDayOfMonth()));//填入格式化的年月日
@@ -272,7 +272,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         StringBuffer sb = new StringBuffer();//sb对象
-                        sb.append(String.format("%d-%2d-%02d",
+                        sb.append(String.format("%d-%02d-%02d",
                                 datePicker.getYear(),
                                 datePicker.getMonth() + 1,
                                 datePicker.getDayOfMonth()));//填入格式化的年月日

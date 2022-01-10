@@ -2,6 +2,7 @@ package com.cuse.myandroidpos.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.ListDataSave;
 import com.cuse.myandroidpos.activity.LoginActivity;
@@ -82,7 +84,7 @@ public class ItemListFragment extends Fragment {
 
     //请求参数
     private String stationId;
-    String token = "test123";
+    private String token = "test123";
 
     private Context mContext;
     private ListDataSave dataSave;
@@ -95,9 +97,10 @@ public class ItemListFragment extends Fragment {
         binding = FragmentItemListBinding.inflate(inflater, container, false);
 
         mContext = getContext();
-//        oilOrderLists = new ArrayList<>();
-//        OilOrderList oilOrderList = new OilOrderList("2022-01-03T14:22:17");
-//        oilOrderLists.add(oilOrderList);
+
+        //得到login传来的intent
+        token = ((MainActivity)getActivity()).getToken();
+
         //建立websockets连接
         createWebSocketClient();
 

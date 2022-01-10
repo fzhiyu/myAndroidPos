@@ -2,7 +2,7 @@
 package com.cuse.myandroidpos.Post.Push;
 
 
-public class Push {
+public class PushJson {
 
     private int code;
     private String message;

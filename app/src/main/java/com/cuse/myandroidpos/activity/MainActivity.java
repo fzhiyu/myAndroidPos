@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private TextToSpeech textToSpeech;
     private Button btn;
 
+    private String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
         ActivityItemDetailBinding binding = ActivityItemDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //binding.getRoot() -> app:id/container -> activity_item_detail
+
+        //得到loginActivity传过来的token
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
+
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_item);
@@ -97,5 +104,10 @@ public class MainActivity extends AppCompatActivity {
         if(hasFocus){
             HideNavBarUtil.hideBottomUIMenu(getWindow().getDecorView());
         }
+    }
+
+    //向fragment传递token
+    public String getToken(){
+        return token;
     }
 }

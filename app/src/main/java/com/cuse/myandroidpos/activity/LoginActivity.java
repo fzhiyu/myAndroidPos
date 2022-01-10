@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -146,13 +147,13 @@ public class LoginActivity extends AppCompatActivity {
 
     //post login
     private void postLogin() {
-        String token = "test123";
-        String imei = "testImei1";
-        stationId = "BJ001001";
+        String token = "test456";
+        String imei = "testImei2";
+        stationId = "BJ001002";
         passWord = "e10adc3949ba59abbe56e057f20f883e";
         // on below line we are creating a retrofit builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .baseUrl("http://paas.u-coupon.cn/pos_api/v1/")
                 // as we are sending data in json format so
                 // we have to add Gson converter factory
                 .addConverterFactory(GsonConverterFactory.create())
@@ -175,8 +176,8 @@ public class LoginActivity extends AppCompatActivity {
 
         Call<LoginJson> call = httpBinService.login(stationId + "",
                 passWord + "",
-                imei + "",
                 timeStamp/1000 + "",
+                imei + "",
                 signature);
 
         call.enqueue(new Callback<LoginJson>() {
@@ -185,6 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                 LoginJson loginJson = response.body();
                 Gson gson = new Gson();
                 String s = gson.toJson(loginJson);
+                Log.i("responseBody", "onResponse: " + response.code());
                 Log.i("stringBuffer", "" + stringBuffer);
                 Log.i("应答消息", "" + s);
 //                Log.i("应答编码", "" + loginJson.getCode());
@@ -194,6 +196,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (loginJson.getData().getResult() == 0) {
                     Intent intent = new Intent(LoginActivity.this,
                             MainActivity.class);
+                    //传递token
+                    intent.putExtra("token",loginJson.getData().getToken());
                     startActivity(intent);
                 } else {
                     Tools.codeError(getApplicationContext(), loginJson.getCode());

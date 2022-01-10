@@ -191,7 +191,7 @@ public class BackProcessFragment extends Fragment{
                if (smsCodeJson == null) {
                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                } else if(smsCodeJson.getCode() == 0) {
-                   Toast.makeText(getContext(),smsCodeJson.getDate().getMessage(),Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getContext(),smsCodeJson.getData().getMessage(),Toast.LENGTH_SHORT).show();
                } else {
                    Tools.codeError(getContext(), smsCodeJson.getCode());
                }

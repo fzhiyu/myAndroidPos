@@ -34,6 +34,7 @@ import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
+import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
@@ -81,12 +82,15 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
     private String sStart;
     private String sEnd;
     private List<OilOrderList> oilOrderLists;
+    private String token;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
 //        System.out.println("binding.getRoot() Search: " + binding.getRoot())
+        token = ((MainActivity)getActivity()).getToken();
+        Log.i("token", "" + token);
         return binding.getRoot();
     }
 
@@ -117,7 +121,6 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
     //获取搜索订单
     public void postOrderAll() {
-        String token = "test123";
         // on below line we are creating a retrofit builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")

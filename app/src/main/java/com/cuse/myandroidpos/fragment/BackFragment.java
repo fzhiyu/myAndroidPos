@@ -29,6 +29,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.cuse.myandroidpos.activity.LoginActivity;
+import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.adapter.BackAdapter;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.RefundAllJson.OilOrder;
@@ -74,7 +75,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private String signature;
     private int count = 20;
     private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
-    private String token = "test123";
+    private String token;
 
     private RefundAllJson refundAllJson;
     private List<OilOrder> list ;
@@ -89,6 +90,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                              @NonNull Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_back, container, false);
+        token = ((MainActivity)getActivity()).getToken();
         binding = FragmentBackBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }
@@ -196,7 +198,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
 //                        Log.i(TAG, "onResponse: " + refundAllJson.getCode());
                 if (refundAllJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
-                }else if (refundAllJson.getCode() == 0){
+                } else if (refundAllJson.getMessage() != null){
                     oilRefundOrderLists.addAll(refundAllJson.getData().getOilOrder());
                     setBackRecyclerView();
                 }else

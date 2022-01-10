@@ -148,8 +148,8 @@ public class LoginActivity extends AppCompatActivity {
     //post login
     private void postLogin() {
         String token = "test456";
-        String imei = "testImei2";
-        stationId = "BJ001002";
+        String imei = "testImei1";
+        stationId = "BJ001001";
         passWord = "e10adc3949ba59abbe56e057f20f883e";
         // on below line we are creating a retrofit builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()

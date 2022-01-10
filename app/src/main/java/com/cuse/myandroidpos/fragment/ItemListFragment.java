@@ -59,7 +59,7 @@ public class ItemListFragment extends Fragment {
     private List<OilOrderList> oilOrderLists;
     private HomeAdapter homeAdapter;
 
-    private int internet;//网络连接参量，0代表连上，1代表断开
+    private int internet = 0;//网络连接参量，0代表连上，1代表断开
 
     private TextView tvOilOrderId;
     private TextView tvOil;
@@ -318,7 +318,7 @@ public class ItemListFragment extends Fragment {
         String stringBuffer = "timestamp" +
                 timeStamp / 1000 +
                 "token" +
-                "test123" +
+                token +
                 LoginActivity.interferenceCode;
         String signature = md5.md5(stringBuffer);
 
@@ -367,7 +367,6 @@ public class ItemListFragment extends Fragment {
 
     //网络不好时弹出未连接网络的框
     public void setInternetLayout(){
-        internet = 1;
         if (internet == 1){
             TextView internet = getView().findViewById(R.id.tv_home_internet);
             internet.setVisibility(View.VISIBLE);

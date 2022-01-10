@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
 
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_item);
         NavController navController = navHostFragment.getNavController();

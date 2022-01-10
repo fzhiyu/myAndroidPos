@@ -32,6 +32,7 @@ import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.LoginActivity;
+import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.adapter.CountAdapter;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.OrderSummaryJson.OilOrderList;
@@ -85,12 +86,14 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     private String sEnd;
 
     private List<OilOrderList> oilCountLists;
+    private String token;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentCountBinding.inflate(inflater, container, false);
 //        System.out.println("binding.getRoot() Search: " + binding.getRoot())
+        token = ((MainActivity)getActivity()).getToken();
         return binding.getRoot();
     }
 
@@ -125,7 +128,6 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
 
     //post 汇总结果
     private void postSummary() {
-        String token = "test123";
         // on below line we are creating a retrofit builder and passing our base url
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")

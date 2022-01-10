@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
+import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.getSmsCode.SmsCodeJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
@@ -66,6 +67,67 @@ public class BackProcessFragment extends Fragment{
 
         //获取验证码
         getSmsCode();
+
+        //申请退单
+        applyBack();
+    }
+
+    //申请退单
+    private void applyBack () {
+        btn_apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postReFund();
+            }
+        });
+    }
+
+    //post 退单 id
+    private void postReFund () {
+        String oilOrderId = "2182823938284";
+        String smsCode = "";
+        token = ((MainActivity)getActivity()).getToken();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
+        long timeStamp = new Date().getTime();
+        String stringBuffer = "oilOrderId" +
+                        oilOrderId +
+                        "smsCode" +
+                        smsCode +
+                        "timestamp" +
+                        timeStamp / 1000 +
+                        "token" +
+                        token +
+                        LoginActivity.interferenceCode;
+        String signature = md5.md5(stringBuffer);
+
+        Call<OrderRefundJson> call = httpBinService.refundNew(token
+                , smsCode
+                , oilOrderId
+                , timeStamp/1000 + ""
+                , signature);
+
+        call.enqueue(new Callback<OrderRefundJson>() {
+            @Override
+            public void onResponse(Call<OrderRefundJson> call, Response<OrderRefundJson> response) {
+                OrderRefundJson orderRefundJson = response.body();
+                if (orderRefundJson == null) {
+                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
+                } else if(orderRefundJson.getCode() == 0) {
+                    Toast.makeText(getContext(),orderRefundJson.getData().getResult(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Tools.codeError(getContext(), orderRefundJson.getCode());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderRefundJson> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getSmsCode() {

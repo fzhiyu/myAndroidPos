@@ -43,9 +43,11 @@ public interface HttpBinService {
                                 @Query("signature") String signature);
 
     @POST("/station/refund/new")
-    Call<OrderRefundJson>refundNew(@Query("token") String token, @Query("smsCode") String smsCode,
-                    @Query("oilOrderId") String oilOrderId, @Query("timestamp") String timestamp,
-                    @Query("signature") String signature);
+    Call<OrderRefundJson>refundNew(@Query("token") String token,
+                                   @Query("smsCode") String smsCode,
+                                   @Query("oilOrderId") String oilOrderId,
+                                   @Query("timestamp") String timestamp,
+                                   @Query("signature") String signature);
 
     @POST("station/oil_order/summary")
     Call<OrderSummaryJson>orderSummary(@Query("token") String token, @Query("startTime") String startTime,

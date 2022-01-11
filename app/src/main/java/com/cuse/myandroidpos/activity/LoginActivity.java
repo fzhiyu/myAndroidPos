@@ -87,8 +87,8 @@ public class LoginActivity extends AppCompatActivity {
 //        String imei = telephonyManager.getDeviceId();
 
         //测试数据用完删除
-        String imei = "testImei2";
-        String stationId = "BJ001002";
+        String imei = "testImei1";
+        String stationId = "BJ001001";
         String passWord = "e10adc3949ba59abbe56e057f20f883e";
 
         //得到字符串并加密编码

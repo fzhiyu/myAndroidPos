@@ -2,7 +2,10 @@ package com.cuse.myandroidpos.fragment;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.preference.Preference;
@@ -25,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
+    private static final String TAG = "setting";
     private String token;
     private long timeStamp;
     private String signature;
@@ -35,12 +39,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private Dialog dialog;
 
+    private int versionCode = 0;
+    private String versionName = "";
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         Preference sync = findPreference("sync");
         token = ((MainActivity)getActivity()).getToken();
+
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            PackageInfo packageInfo = pm.getPackageInfo(getContext().getPackageName(),0);
+            versionCode = packageInfo.versionCode;
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
 
         sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

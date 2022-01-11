@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,6 +56,8 @@ import top.androidman.SuperButton;
 
 
 public class CountFragment extends Fragment implements View.OnTouchListener {
+
+    private static final String TAG = "count";
     private FragmentCountBinding binding;
     private DatePickerDialog datePickerDialog;
     private Button start_date;
@@ -63,7 +66,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     private ArrayList<MyListData> search_ListData;
     private float all_money;
     private int order;
-    private TextView sum_trac;
+    private TextView sum_orderNumber;
     private TextView sum_money;
     private OrderSummaryJson orderSummaryJson;
     private String sJson;
@@ -97,6 +100,9 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sum_money = view.findViewById(R.id.tv_sum_totalMoney);
+        sum_orderNumber = view.findViewById(R.id.tv_sum_totalOrderNumber);
+
         setCountButton(view);
         setCountJsonData();
 
@@ -116,8 +122,6 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
             @Override
             public void onClick(View view) {
                 postSummary();
-//                Log.i("搜索结果", "" + oilCountLists);
-                //recycleView,适配器单独写在了HomeAdapter
             }
         });
     }
@@ -161,17 +165,19 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
             @Override
             public void onResponse(Call<OrderSummaryJson> call, Response<OrderSummaryJson> response) {
                 OrderSummaryJson orderSummaryJson = response.body();
-//                Log.i("查询显示", "" + response.body());
+                //测试，用完删除
                 Gson gson = new Gson();
                 String s = gson.toJson(orderSummaryJson);
-//                Log.i("stringBuffer", "" + stringBuffer);
-//                Log.i("开始时间", "" + startTimeStamp);
-//                Log.i("签名", "" + signature);
-//                Log.i("输出", "" + s);
-                //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
+                Log.i(TAG, "stringBuffer: " + stringBuffer);
+                Log.i(TAG, "signature: " + signature);
+                Log.i(TAG, "response.code: " + response.code());
+                Log.i(TAG, "orderSummaryJson: " + s);
+
                 if(orderSummaryJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                 } else if (orderSummaryJson.getCode() == 0) {
+                    sum_money.setText("加油总额：" + orderSummaryJson.getData().getTodayMoney());
+                    sum_orderNumber.setText("订单数：" + orderSummaryJson.getData().getTodayCount());
                     oilCountLists.addAll(orderSummaryJson.getData().getOilOrderList());
                 } else {
                     Tools.codeError(getContext(), orderSummaryJson.getCode());

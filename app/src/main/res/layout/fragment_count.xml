@@ -103,16 +103,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:layout_marginLeft="10dp"
-            android:text="加油总额：123456.00"
-            android:textSize="15sp" />
+            android:text="加油总额：0"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_sum_totalOrderNumber"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="订单数：123"
-            android:textSize="15sp" />
+            android:text="订单数：0"
+            android:textSize="20sp" />
     </LinearLayout>
 
 

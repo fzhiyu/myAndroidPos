@@ -38,7 +38,7 @@ public class CountAdapter extends RecyclerView.Adapter<CountAdapter.MyViewHolder
         holder.oilId.setText(homeOilOrderList.get(position).getOilId());
         holder.oilName.setText(homeOilOrderList.get(position).getOilName());
         holder.oilCount.setText(homeOilOrderList.get(position).getStringOilCount() + "");
-        holder.oilMoney.setText(homeOilOrderList.get(position).getStringOilMoney());
+        holder.oilMoney.setText("¥ " + homeOilOrderList.get(position).getStringOilMoney());
     }
 
     @Override

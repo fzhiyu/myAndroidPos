@@ -60,7 +60,8 @@ public interface HttpBinService {
                                  @Query("count") String count, @Query("timestamp") String timestamp,
                                  @Query("signature") String signature);
 
-    @Headers({"Content-Type: application/json","Accept: application/json"})
-    @POST("station/push/rquest")
-    Call<PushJson> push(@Query("token") String token, @Query("timestamp") String timestamp, @Query("signature") String signature);
+    @POST("station/push/request")
+    Call<PushJson> push(@Query("token") String token,
+                        @Query("timestamp") String timestamp,
+                        @Query("signature") String signature);
 }

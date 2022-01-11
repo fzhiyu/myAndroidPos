@@ -1,5 +1,7 @@
 package com.cuse.myandroidpos.fragment;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alibaba.fastjson.JSON;
+import com.cuse.myandroidpos.PosWebSocket.wsInfo;
 import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.ListDataSave;
@@ -91,6 +95,21 @@ public class ItemListFragment extends Fragment {
 
     private WebSocketClient webSocketClient;
 
+    private wsInfo wsInfo_login;
+    private wsInfo wsInfo_logout;
+    private wsInfo wsInfo_heart;
+    private wsInfo wsInfo_newOrder;
+    private wsInfo wsInfo_pushNew;
+    private wsInfo wsInfo_checkOnline;
+    private wsInfo wsInfo_isOnlineNo;
+    private String json_login;
+    private String json_logout;
+    private String json_heart;
+    private String json_newOrder;
+    private String json_pushNew;
+    private String json_checkOnline;
+    private String json_isOnlineNo;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -100,15 +119,6 @@ public class ItemListFragment extends Fragment {
 
         //得到login传来的intent
         token = ((MainActivity)getActivity()).getToken();
-
-
-
-        //建立websockets连接
-        createWebSocketClient();
-
-        //每隔20秒发送心跳消息
-        sendHeartMessage();
-//        Log.i("view", "");
 
         return binding.getRoot();
     }
@@ -138,6 +148,77 @@ public class ItemListFragment extends Fragment {
         setButton(view);
         //下拉刷新
         handleDownPullUpdate();
+
+        initData();
+        testWebsockets(view);
+    }
+
+    //初始发送数据
+    private void initData() {
+        wsInfo_login = new wsInfo(token,"login");
+        json_login = JSON.toJSONString(wsInfo_login);
+        wsInfo_checkOnline = new wsInfo("", "check_online");
+        json_checkOnline = JSON.toJSONString(wsInfo_checkOnline);
+    }
+
+    //测试websockets
+    private void testWebsockets(View view) {
+        Button btn_test_ws = view.findViewById(R.id.btn_Test);
+        btn_test_ws.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createWebSocketClient();
+                webSocketClient.send(json_login);
+                webSocketClient.send(json_checkOnline);
+            }
+        });
+    }
+
+    private void createWebSocketClient() {
+        URI uri;
+        try {
+            uri = new URI("ws://paas.u-coupon.cn/wss");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        webSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen() {
+                Log.i("WebSocket", "Session is starting");
+            }
+
+            @Override
+            public void onTextReceived(String message) {
+                Log.i("received", "" + message);
+            }
+
+            @Override
+            public void onBinaryReceived(byte[] data) {
+            }
+            @Override
+            public void onPingReceived(byte[] data) {
+//                Log.i("Ping", "" + Arrays.toString(data));
+            }
+            @Override
+            public void onPongReceived(byte[] data) {
+            }
+            @Override
+            public void onException(Exception e) {
+//                System.out.println(e.getMessage());
+            }
+            @Override
+            public void onCloseReceived() {
+                Log.i("WebSocket", "Closed ");
+//                System.out.println("onCloseReceived");
+            }
+        };
+
+        webSocketClient.setConnectTimeout(10000);
+        webSocketClient.setReadTimeout(60000);
+        webSocketClient.enableAutomaticReconnection(5000);
+        webSocketClient.connect();
     }
 
     //手动刷新
@@ -219,80 +300,6 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    //发送心跳信息
-    private void sendHeartMessage() {
-
-            JSONObject obj = new JSONObject();
-            Thread thread = new Thread() {
-                public void run() {
-                    try {
-//                        obj.put("type", "log");
-//                        obj.put("sta", "test123");
-                        obj.put("type", "check_pos");
-                        obj.put("sta", "test123");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    webSocketClient.send(String.valueOf(obj));
-                }
-            };
-//            try {
-//                Thread.sleep(2 * 1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-            thread.start();
-
-    }
-
-    //websockets连接
-    private void createWebSocketClient() {
-        URI uri;
-        try {
-            uri = new URI("ws://paas.u-coupon.cn/wss");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        webSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen() {
-                Log.i("WebSocket", "Session is starting");
-            }
-
-            @Override
-            public void onTextReceived(String message) {
-                Log.i("received", "" + message);
-            }
-
-            @Override
-            public void onBinaryReceived(byte[] data) {
-            }
-            @Override
-            public void onPingReceived(byte[] data) {
-//                Log.i("Ping", "" + Arrays.toString(data));
-            }
-            @Override
-            public void onPongReceived(byte[] data) {
-            }
-            @Override
-            public void onException(Exception e) {
-//                System.out.println(e.getMessage());
-            }
-            @Override
-            public void onCloseReceived() {
-                Log.i("WebSocket", "Closed ");
-//                System.out.println("onCloseReceived");
-            }
-        };
-
-        webSocketClient.setConnectTimeout(10000);
-        webSocketClient.setReadTimeout(60000);
-        webSocketClient.enableAutomaticReconnection(5000);
-        webSocketClient.connect();
     }
 
     public void setButton (View view) {

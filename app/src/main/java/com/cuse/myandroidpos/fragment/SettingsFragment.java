@@ -11,8 +11,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.Push.PushJson;
 import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.MainActivity;
-import com.cuse.myandroidpos.md5;
 
 import java.util.Date;
 
@@ -56,7 +56,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         "token" +
                         token +
                         interferenceCode;
-                signature = md5.md5(stringBuffer);
+                signature = Tools.md5.md5(stringBuffer);
 
                 retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
                         .addConverterFactory(GsonConverterFactory.create()).build();

@@ -3,14 +3,12 @@ package com.cuse.myandroidpos.fragment;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Message;
@@ -18,13 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
-import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.getSmsCode.SmsCodeJson;
 import com.cuse.myandroidpos.R;
@@ -32,11 +28,8 @@ import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.databinding.FragmentBackProcessBinding;
-import com.cuse.myandroidpos.md5;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -104,7 +97,7 @@ public class BackProcessFragment extends Fragment{
                         "token" +
                         token +
                         LoginActivity.interferenceCode;
-        String signature = md5.md5(stringBuffer);
+        String signature = Tools.md5.md5(stringBuffer);
 
         Call<OrderRefundJson> call = httpBinService.refundNew(token
                 , smsCode
@@ -180,7 +173,7 @@ public class BackProcessFragment extends Fragment{
                 "token" +
                 token +
                 LoginActivity.interferenceCode;
-        String signature = md5.md5(stringBuffer);
+        String signature = Tools.md5.md5(stringBuffer);
 
         Call<SmsCodeJson> call = httpBinService.getSmsCode(token
                 , timeStamp/1000 + ""

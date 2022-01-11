@@ -1,12 +1,7 @@
 package com.cuse.myandroidpos.fragment;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,11 +36,7 @@ import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 
-import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -271,7 +262,7 @@ public class ItemListFragment extends Fragment {
                 "token" +
                 token +
                 LoginActivity.interferenceCode;
-        String signature = md5.md5(stringBuffer);
+        String signature = Tools.md5.md5(stringBuffer);
 
         //使用Retrofit进行post
         Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);

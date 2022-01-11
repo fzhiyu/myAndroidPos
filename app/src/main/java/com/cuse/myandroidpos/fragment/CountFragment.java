@@ -1,6 +1,5 @@
 package com.cuse.myandroidpos.fragment;
 
-import static android.content.ContentValues.TAG;
 import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
 import static com.cuse.myandroidpos.TimeKey.getWeekTimestamp;
 
@@ -9,7 +8,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
-import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.LoginActivity;
 import com.cuse.myandroidpos.activity.MainActivity;
@@ -47,7 +44,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -153,7 +149,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                 "token" +
                 token +
                 LoginActivity.interferenceCode;
-        String signature = md5.md5(stringBuffer);
+        String signature = Tools.md5.md5(stringBuffer);
 
         Call<OrderSummaryJson> call = httpBinService.orderSummary(token
                 , sStart + ""

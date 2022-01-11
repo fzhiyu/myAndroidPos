@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,7 +16,6 @@ import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
-import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
 import java.util.Date;
@@ -89,8 +87,8 @@ public class LoginActivity extends AppCompatActivity {
 //        String imei = telephonyManager.getDeviceId();
 
         //测试数据用完删除
-        String imei = "testImei1";
-        String stationId = "BJ001001";
+        String imei = "testImei2";
+        String stationId = "BJ001002";
         String passWord = "e10adc3949ba59abbe56e057f20f883e";
 
         //得到字符串并加密编码
@@ -104,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                 "timestamp" +
                 timeStamp/1000 +
                 LoginActivity.interferenceCode;
-        String signature = md5.md5(stringBuffer);
+        String signature = Tools.md5.md5(stringBuffer);
         //测试，用完删除
         Log.i(TAG, "stringBuffer:" + stringBuffer);
         Log.i(TAG, "signature: " + signature);

@@ -38,7 +38,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -68,8 +67,10 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
     private long startTimeStamp;
     private long endTimeStamp;
-    private int start = 0;
-    private int count = 20;
+    private String sStart;
+    private String sEnd;
+    private int start = 1;
+    private int count = 200;
     private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
     private String token;
 
@@ -139,21 +140,23 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
         String stringBuffer = "count" +
                  count +
                 "endTime" +
-                endTimeStamp / 1000 + "" +
+                sEnd +
                 "start" +
                 start +
                 "startTime" +
-                startTimeStamp / 1000 + "" +
+                sStart +
                 "timestamp" +
                 timeStamp / 1000 +
                 "token" +
                 token +
                 interferenceCode;
-        String signature = md5.md5(stringBuffer);
+        String signature = Tools.md5.md5(stringBuffer);
+        Log.i(TAG, "postOrderAll: " + stringBuffer);
+        Log.i(TAG, "postOrderAll: " + signature);
 
         Call<OrderAllJson> call = httpBinService.orderAll(token
-                , startTimeStamp / 1000 + ""
-                , endTimeStamp / 1000 + ""
+                , sStart
+                , sEnd
                 , start + ""
                 , count + ""
                 , timeStamp/1000 + ""
@@ -173,8 +176,13 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
                 if (response.isSuccessful() && orderAllJson != null) {
                     if (orderAllJson.getCode() == 0) {
-                        oilOrderLists = orderAllJson.getData().getOilOrder();
-                        setRecyclerView();
+                        if (orderAllJson.getData().getOilOrder().size() == 0)
+                            Toast.makeText(getContext(), "无订单", Toast.LENGTH_SHORT).show();
+                        else {
+                            oilOrderLists = orderAllJson.getData().getOilOrder();
+                            setRecyclerView();
+                        }
+
                     } else
                         Tools.codeError(getContext(), orderAllJson.getCode());
                 }
@@ -238,8 +246,8 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){
-        String sStart = Tools.StampToTime(startTimeStamp);
-        String sEnd = Tools.StampToTime(endTimeStamp);
+        sStart = Tools.StampToTime(startTimeStamp);
+        sEnd = Tools.StampToTime(endTimeStamp);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行

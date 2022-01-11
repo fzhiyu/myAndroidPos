@@ -45,7 +45,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.cuse.myandroidpos.HideNavBarUtil;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(hasFocus){
-            HideNavBarUtil.hideBottomUIMenu(getWindow().getDecorView());
+            Tools.hideBottomUIMenu(getWindow().getDecorView());
         }
     }
 

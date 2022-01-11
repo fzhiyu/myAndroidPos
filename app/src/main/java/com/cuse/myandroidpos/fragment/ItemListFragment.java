@@ -42,7 +42,6 @@ import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 
-import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
 
 import org.json.JSONException;

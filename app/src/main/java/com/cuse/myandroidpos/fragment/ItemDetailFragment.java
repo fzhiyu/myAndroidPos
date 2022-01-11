@@ -106,7 +106,9 @@ public class ItemDetailFragment extends Fragment {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getView()).navigate(R.id.detail_to_backProcess, null);
+                Bundle bundle = new Bundle();
+                bundle.putString("oilOrderId", oilOrder.getOilOrderId());
+                Navigation.findNavController(getView()).navigate(R.id.detail_to_backProcess, bundle);
             }
         });
 //        String data = "hi";

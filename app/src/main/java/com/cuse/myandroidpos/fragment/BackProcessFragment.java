@@ -84,7 +84,9 @@ public class BackProcessFragment extends Fragment{
 
     //post 退单 id
     private void postReFund () {
-        String oilOrderId = "2182823938284";
+//        String oilOrderId = "2182823938284";
+        String oilOrderId = getArguments().getString("oilOrderId");
+        Log.e("oilOrderId", "postReFund: " + oilOrderId);
         String smsCode = "";
         token = ((MainActivity)getActivity()).getToken();
         Retrofit retrofit = new Retrofit.Builder()

@@ -13,7 +13,7 @@
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout-sw600dp/fragment_item_list.xml" value="0.21015625" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_back_process.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.264" />
-        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_login.xml" value="0.11875" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_main.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_search.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/layout/activity_setting.xml" value="0.1" />
@@ -60,10 +60,6 @@
         <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/loading.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.2859375" />
-        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/activity_login.xml" value="0.1648148148148148" />
-        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/data_time_picker.xml" value="0.1" />
-        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.2859375" />
-        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/xml/root_preferences.xml" value="0.2859375" />
       </map>
     </option>
   </component>

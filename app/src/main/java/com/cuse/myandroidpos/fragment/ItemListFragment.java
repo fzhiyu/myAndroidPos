@@ -121,6 +121,7 @@ public class ItemListFragment extends Fragment {
     private String stringBuffer;
     private String signature;
     private Handler handler;
+    private Runnable runnable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -157,12 +158,12 @@ public class ItemListFragment extends Fragment {
         //下拉刷新
         handleDownPullUpdate();
 
+        initData();
         //建立websockets连接
         createWebSocketClient();
-
-        initData();
+        //login
+        webSocketClient.send(json_login);
         testWebsockets(view);
-
         //定时发送heartbeat
         heartBeat();
     }
@@ -170,15 +171,21 @@ public class ItemListFragment extends Fragment {
     //每隔20s发送心跳
     private void heartBeat() {
         handler = new Handler();
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
-                webSocketClient.send(json_login);
                 webSocketClient.send(json_heart);
-                handler.postDelayed(this, 20000);
+                handler.postDelayed(this, 2000);
             }
         };
-        handler.postDelayed(runnable, 20000);
+        handler.postDelayed(runnable, 2000);
+    }
+
+    //关闭定时器
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -223,7 +230,6 @@ public class ItemListFragment extends Fragment {
         btn_test_ws.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                webSocketClient.send(json_login);
 //                webSocketClient.send(json_checkOnline);
                 webSocketClient.send(json_heart);
                 webSocketClient.send(json_newOrder);

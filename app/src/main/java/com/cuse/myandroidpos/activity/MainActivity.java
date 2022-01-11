@@ -99,13 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 Builder(navController.getGraph())
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
-            actionBar.setHomeButtonEnabled(true);
-        }
     }
 
     @Override
@@ -126,6 +119,17 @@ public class MainActivity extends AppCompatActivity {
     //向fragment传递token
     public String getToken(){
         return token;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.back){
+//            logout();
+            onBackPressed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

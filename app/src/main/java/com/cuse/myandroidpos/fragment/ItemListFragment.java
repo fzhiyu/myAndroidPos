@@ -3,7 +3,9 @@ package com.cuse.myandroidpos.fragment;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -171,10 +173,12 @@ public class ItemListFragment extends Fragment {
         if (item.getItemId() == R.id.refresh) {
             orderLastPost();
             return true;
+        } else if (item.getItemId() == R.id.back){
+//            logout();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
-
     }
 
     //初始发送数据

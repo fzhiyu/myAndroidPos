@@ -12,4 +12,9 @@
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_refresh"/>
+    <item
+        android:title="登出"
+        android:id="@+id/back"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
 </menu>

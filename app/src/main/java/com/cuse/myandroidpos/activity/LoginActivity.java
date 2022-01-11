@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,25 +30,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "login";
+
     private EditText editStationId;
     private EditText editPassWord;
     private Button btnLogin;
-
-    private long currentTimeStamp;
-    private String signature;
-    private String stationId;
-    private String passWord;
-    public  static String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
-
-    //private LoginRequest loginRequest;
-    private LoginJson loginJson;
-
+    private ProgressDialog dialog;
     private HttpBinService httpBinService;
     private Retrofit retrofit;
 
-    private ProgressDialog dialog;
+    public  static String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
 
-    private String testFont;
     private boolean isBold, isUnderLine;
 
     @Override
@@ -59,115 +52,49 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //找到对应的ID
-//        editStationId = findViewById(R.id.editText_sign_stationID);
-//        editPassWord = findViewById(R.id.editText_sign_passWord);
-//        btnLogin = findViewById(R.id.btn_sign_login);
+        editStationId = findViewById(R.id.editText_sign_stationID);
+        editPassWord = findViewById(R.id.editText_sign_passWord);
+        btnLogin = findViewById(R.id.btn_sign_login);
 
-//        retrofit = new Retrofit.Builder().baseUrl("http://paas.u-coupon.cn/pos_api/v1/")
-//                .addConverterFactory(GsonConverterFactory.create()).build();
-//        retrofit = new Retrofit.Builder().baseUrl("http://paas.u-coupon.cn/pos_api/v1/").build();
-//        httpBinService = retrofit.create(HttpBinService.class);
+        retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        httpBinService = retrofit.create(HttpBinService.class);
 
-//        btnLogin.setOnClickListener(new View.OnClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.O)
-//            @Override
-//            public void onClick(View view) {
-//
-//                dialog = ProgressDialog.show(view.getContext(), "", "正在登录");
-//                dialog.show();
-//
-//                stationId = editStationId.getText().toString();
-//                passWord = editPassWord.getText().toString();
-//
-//                currentTimeStamp = new Date().getTime();//得到当前的时间戳，ms
-
-                //得到imei
-//                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-//                String imei = telephonyManager.getImei();
-//
-//                Call<ResponseBody> call = httpBinService.login1(stationId,passWord,
-//                        currentTimeStamp / 1000 + "",imei,signature);
-//                call.enqueue(new Callback<ResponseBody>() {
-//                    @Override
-//                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                        dialog.cancel();
-//                        Log.i("hejun", "onResponse: " + response.code());
-//                        try {
-//                            String s = response.body().string();
-//                            Log.i("hejun", "onResponse: " + s);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        Log.i("hejun", "onResponse: " + response.errorBody());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-//
-//                    }
-//                });
-
-//                loginJson = test();
-
-//                if (loginJson != null){
-//                    if (loginJson.getData().getResult() == 0) {
-//                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                        intent.putExtra("staionId", stationId);
-//                        intent.putExtra("currentTimeStamp", currentTimeStamp);
-//                        dialog.cancel();
-//                        startActivity(intent);
-//                        finish();
-//                    } else {
-//                        Toast.makeText(LoginActivity.this, loginJson.getData().getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//        });
-        //登录
-        Login();
-    }
-
-    //登录
-    private void Login() {
-        Button btn_login = findViewById(R.id.btn_sign_login);
-        btn_login.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog = ProgressDialog.show(view.getContext(), "", "正在登录");
-                dialog.show();
-                postLogin(view);
-                dialog.cancel();
+                if (editStationId.getText() == null || editStationId.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(),"用户名不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (editPassWord.getText() == null || editPassWord.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(),"密码不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else
+                    postLogin(view);
             }
         });
     }
 
     //post login
     private void postLogin(View view) {
+        //弹出正在登录的弹窗
+        dialog = ProgressDialog.show(view.getContext(), "", "正在登录");
+        dialog.show();
+
+//        //得到需要的传送的值
+//        String stationId = editStationId.getText().toString();
+//        String passWord = editPassWord.getText().toString();
+//        //得到imei
+//        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+//        String imei = telephonyManager.getDeviceId();
+
+        //测试数据用完删除
         String imei = "testImei1";
         String stationId = "BJ001001";
-        passWord = "e10adc3949ba59abbe56e057f20f883e";
+        String passWord = "e10adc3949ba59abbe56e057f20f883e";
 
-//        stationId = editStationId.getText().toString();
-//        passWord = editPassWord.getText().toString();
-//        while (stationId == "" && passWord == ""){
-//            Toast.makeText(view.getContext(),"用户名或者密码不能为空,请重新输入",Toast.LENGTH_SHORT).show();
-//            stationId = editStationId.getText().toString();
-//            passWord = editPassWord.getText().toString();
-//        }
-
-        // on below line we are creating a retrofit builder and passing our base url
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://paas.u-coupon.cn/pos_api/v1/")
-                // as we are sending data in json format so
-                // we have to add Gson converter factory
-                .addConverterFactory(GsonConverterFactory.create())
-                // at last we are building our retrofit builder.
-                .build();
-        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
-
-        long timeStamp = new Date().getTime();
         //得到字符串并加密编码
+        long timeStamp = new Date().getTime();
         String stringBuffer = "imei" +
                 imei +
                 "passWord" +
@@ -178,6 +105,9 @@ public class LoginActivity extends AppCompatActivity {
                 timeStamp/1000 +
                 LoginActivity.interferenceCode;
         String signature = md5.md5(stringBuffer);
+        //测试，用完删除
+        Log.i(TAG, "stringBuffer:" + stringBuffer);
+        Log.i(TAG, "signature: " + signature);
 
         Call<LoginJson> call = httpBinService.login(stationId + "",
                 passWord + "",
@@ -188,45 +118,38 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<LoginJson>() {
             @Override
             public void onResponse(Call<LoginJson> call, Response<LoginJson> response) {
+                //取消弹窗
+                dialog.cancel();
                 LoginJson loginJson = response.body();
+
+                //测试，用完删除
                 Gson gson = new Gson();
                 String s = gson.toJson(loginJson);
-                Log.i("responseBody", "onResponse: " + response.code());
-                Log.i("stringBuffer", "" + stringBuffer);
-                Log.i("应答消息", "" + s);
-//                Log.i("应答编码", "" + loginJson.getCode());
-//                Log.i("result", "" + loginJson.getData().getResult());
-                if (loginJson == null) {
-                    Toast.makeText(getApplicationContext(),"",Toast.LENGTH_SHORT).show();
-                } else if (loginJson.getData().getResult() == 0) {
-                    Intent intent = new Intent(LoginActivity.this,
-                            MainActivity.class);
-                    //传递token
-                    intent.putExtra("token",loginJson.getData().getToken());
-                    startActivity(intent);
-                } else {
-                    Tools.codeError(getApplicationContext(), loginJson.getCode());
+                Log.i(TAG, "response.code:" + response.code());
+                Log.i(TAG, "response.json" + s);
+
+                if(response.isSuccessful() && loginJson != null){
+                    if (loginJson.getCode() == 0){
+                        if (loginJson.getData().getResult() == 0){
+                            Intent intent = new Intent(LoginActivity.this,
+                                    MainActivity.class);
+                            //传递token
+                            intent.putExtra("token",loginJson.getData().getToken());
+                            startActivity(intent);
+                        }else
+                            Toast.makeText(LoginActivity.this,loginJson.getData().getMessage(),Toast.LENGTH_SHORT).show();
+                    }else
+                        Tools.codeError(LoginActivity.this,loginJson.getCode());
                 }
+
             }
 
             @Override
             public void onFailure(Call<LoginJson> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(LoginActivity.this,"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    //测试数据
-    public LoginJson test() {
-        //测试数据
-        String s = "{\n" +
-                "\t\"code\": 0,\n" +
-                "\t\"message\": \"\",\n" +
-                "\t\"data\": {\n" +
-                "\t\t\t\"result\": 0,\n" +
-                "\"message\": \"\"\n" +
-                "}\n" +
-                "}\n";
-
-        return new Gson().fromJson(s, LoginJson.class);
-    }
 }

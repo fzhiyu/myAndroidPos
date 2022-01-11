@@ -1,11 +1,7 @@
 package com.cuse.myandroidpos.fragment;
 
-import static android.content.ContentValues.TAG;
-import static com.cuse.myandroidpos.TimeKey.getTodayTimestamp;
-import static com.cuse.myandroidpos.TimeKey.getWeekTimestamp;
-
-import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
@@ -28,23 +24,16 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cuse.myandroidpos.TimeKey;
 import com.cuse.myandroidpos.Tools;
-import com.cuse.myandroidpos.activity.LoginActivity;
-import com.cuse.myandroidpos.MD5AndBase64;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderAllJson.OrderAllJson;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.activity.MainActivity;
 import com.cuse.myandroidpos.adapter.HomeAdapter;
-import com.cuse.myandroidpos.MyListData;
-import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
-import com.cuse.myandroidpos.Post.OrderAllJson.orderAllRequest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -60,37 +49,37 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SearchFragment extends Fragment implements View.OnTouchListener{
+    private static final String TAG = "search";
+
     private FragmentSearchBinding binding;
-    private Button start_date;
-    private Button end_date;
-    private Button search_btn;
-    private DatePickerDialog datePickerDialog;
-    private ArrayList<MyListData> search_ListData;
-    private OrderLastJson orderLastJson;
-    private String sJson;
+
     private EditText searStartTime;
     private EditText searEndTime;
     private Button btnPastHour;
     private Button btnToday;
     private Button btnWeek;
     private Button btnSearch;
+    private RecyclerView recyclerView;
 
-    private long currentTimeStamp;//当前时间戳
+    private HttpBinService httpBinService;
+    private Retrofit retrofit;
+
+    private Dialog dialog;
+
     private long startTimeStamp;
     private long endTimeStamp;
-    private String signature;
-    private String sStart;
-    private String sEnd;
-    private List<OilOrderList> oilOrderLists;
+    private int start = 0;
+    private int count = 20;
+    private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
     private String token;
+
+    private List<OilOrderList> oilOrderLists;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
-//        System.out.println("binding.getRoot() Search: " + binding.getRoot())
         token = ((MainActivity)getActivity()).getToken();
-        Log.i("token", "" + token);
         return binding.getRoot();
     }
 
@@ -98,105 +87,159 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setSearchButton(view);
+        recyclerView = binding.searchItemList;
+        //文字框
+        searStartTime = view.findViewById(R.id.search_searStartTime);
+        searEndTime = view.findViewById(R.id.search_searEndTime);
+        searStartTime.setOnTouchListener(this);
+        searEndTime.setOnTouchListener(this);
+        //功能按钮
+        btnPastHour = view.findViewById(R.id.search_past_hour);
+        btnToday = view.findViewById(R.id.search_today);
+        btnWeek = view.findViewById(R.id.search_week);
+        btnSearch = view.findViewById(R.id.search_btn_search);
+        //retrofit
+        retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        httpBinService = retrofit.create(HttpBinService.class);
 
-//        setSearchJsonData();
-
-        //搜索
-        Search(view);
+        //按钮的点击事件
+        setButton(view);
     }
 
-    //点击搜索查询最新订单
-    public void Search(View view) {
-        Button btn_search = view.findViewById(R.id.btn_search);
-        btn_search.setOnClickListener(new View.OnClickListener() {
+    public void setRecyclerView() {
+        //设置竖直
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        //将数据填入homeAdapt
+        HomeAdapter homeAdapter = new HomeAdapter(oilOrderLists,getActivity());
+        recyclerView.setAdapter(homeAdapter);
+        //设置点击事件，点击事件的接口定义哎HomeAdapter
+        homeAdapter.setHomeRecyclerItemClickListener(new HomeAdapter.OnHomeRecyclerItemClickListener() {
             @Override
-            public void onClick(View view) {
-                postOrderAll();
-//                Log.i("搜索结果", "" + oilOrderLists);
-                //recycleView,适配器单独写在了HomeAdapter
+            public void OnHomeRecyclerItemClick(int position) {
+                Bundle bundle = new Bundle();
+                //用bundle来传输对象（传输的是OrderLastJson包里面的OilOrderList对象），OilOrderList类需要implements Serializable
+                // 就可以把bundle.putString换成，bundle.putSerializable
+                //详情界面可以用oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");来得到对象
+                bundle.putSerializable("LastOilOrder",oilOrderLists.get(position));
+
+                Navigation.findNavController(getView()).navigate(R.id.search_to_detail,bundle);
             }
         });
     }
 
     //获取搜索订单
     public void postOrderAll() {
-        // on below line we are creating a retrofit builder and passing our base url
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                // as we are sending data in json format so
-                // we have to add Gson converter factory
-                .addConverterFactory(GsonConverterFactory.create())
-                // at last we are building our retrofit builder.
-                .build();
-        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
-
-        //存储数据
-        oilOrderLists = new ArrayList<>();
+        //显示正在查询的弹窗
+        dialog = ProgressDialog.show(getContext(),"","正在查询");
 
         long timeStamp = new Date().getTime();
         //得到字符串并加密编码
         String stringBuffer = "count" +
-                200 +
+                 count +
                 "endTime" +
-                 sEnd +
+                endTimeStamp / 1000 + "" +
                 "start" +
-                1 +
+                start +
                 "startTime" +
-                sStart +
+                startTimeStamp / 1000 + "" +
                 "timestamp" +
                 timeStamp / 1000 +
                 "token" +
                 token +
-                LoginActivity.interferenceCode;
+                interferenceCode;
         String signature = md5.md5(stringBuffer);
 
         Call<OrderAllJson> call = httpBinService.orderAll(token
-                , sStart + ""
-                , sEnd + ""
-                , "1"
-                , "200"
+                , startTimeStamp / 1000 + ""
+                , endTimeStamp / 1000 + ""
+                , start + ""
+                , count + ""
                 , timeStamp/1000 + ""
                 , signature);
-
         call.enqueue(new Callback<OrderAllJson>() {
             @Override
             public void onResponse(Call<OrderAllJson> call, Response<OrderAllJson> response) {
+                //取消正在查询的弹窗
+                dialog.cancel();
                 OrderAllJson orderAllJson = response.body();
-//                Log.i("查询显示", "" + response.body());
+
+                //测试，用完删除
                 Gson gson = new Gson();
                 String s = gson.toJson(orderAllJson);
-//                Log.i("stringBuffer", "" + stringBuffer);
-//                Log.i("开始时间", "" + startTimeStamp);
-//                Log.i("签名", "" + signature);
-                Log.i("输出", "" + s);
-                //                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
-                if (orderAllJson == null) {
-                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
-                } else if(orderAllJson.getCode() == 0) {
-                    oilOrderLists.addAll(orderAllJson.getData().getOilOrder());
-                    RecyclerView recyclerView = binding.searchItemList;
-                    setRecyclerView(recyclerView);
-                } else {
-                    Tools.codeError(getContext(), orderAllJson.getCode());
-                }
-//                Log.i("getOilOrder", "" + orderAllJson.getData().getOilOrder());
-//                Log.i("oilOrderLists", "" + oilOrderLists);
-            }
+                Log.i(TAG, "response.code: " + response.code());
+                Log.i(TAG, "response.json: " + s);
 
+                if (response.isSuccessful() && orderAllJson != null) {
+                    if (orderAllJson.getCode() == 0) {
+                        oilOrderLists = orderAllJson.getData().getOilOrder();
+                        setRecyclerView();
+                    } else
+                        Tools.codeError(getContext(), orderAllJson.getCode());
+                }
+            }
             @Override
             public void onFailure(Call<OrderAllJson> call, Throwable t) {
-
+                dialog.cancel();
+                Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
+    public void setButton (View view) {
+        //功能按钮的点击事件
+        btnPastHour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                endTimeStamp = new Date().getTime();
+                startTimeStamp = endTimeStamp - 3600 * 1000;
+
+                setEdit(startTimeStamp,endTimeStamp);
+            }
+        });
+
+        btnToday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTimeStamp = TimeKey.getTodayTimestamp();
+                endTimeStamp = new Date().getTime();
+
+                setEdit(startTimeStamp,endTimeStamp);
+            }
+        });
+
+        btnWeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startTimeStamp = TimeKey.getWeekTimestamp();
+                endTimeStamp = new Date().getTime();
+
+                setEdit(startTimeStamp,endTimeStamp);
+            }
+        });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (searStartTime.getText() == null || searStartTime.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(),"开始时间不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (searEndTime.getText() == null || searEndTime.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(),"结束时间不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else{
+                    postOrderAll();
+                }
+            }
+        });
+    }
 
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){
-        sStart = StampToTime(startTimeStamp);
-        sEnd = StampToTime(endTimeStamp);
+        String sStart = Tools.StampToTime(startTimeStamp);
+        String sEnd = Tools.StampToTime(endTimeStamp);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行
@@ -229,7 +272,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
             timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
             timePicker.setCurrentMinute(Calendar.MINUTE);
 
-            if (v.getId() == R.id.sear_startTime){
+            if (v.getId() == R.id.search_searStartTime){
 
                 final int inType = searStartTime.getInputType();
                 searStartTime.setInputType(InputType.TYPE_NULL);
@@ -254,7 +297,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                                 .append(":")
                                 .append("00");//填入时分
 
-                        startTimeStamp = TimeToStamp(sb1);//得到startTime的时间戳
+                        startTimeStamp = Tools.TimeToStamp(sb1);//得到startTime的时间戳
 //                        Log.i(TAG, "onClick: " + startTimeStamp);
 
                         searStartTime.setText(sb1);//开始时间显示
@@ -263,12 +306,11 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                         dialogInterface.cancel();//
                     }
                 });
-            } else if (v.getId() == R.id.sear_endTime){
+            } else if (v.getId() == R.id.search_searEndTime){
                 final int inType = searEndTime.getInputType();
                 searEndTime.setInputType(InputType.TYPE_NULL);
                 searEndTime.onTouchEvent(event);
                 searEndTime.setInputType(inType);
-
 
                 builder.setTitle("选定结束时间");
                 builder.setPositiveButton("确 定", new DialogInterface.OnClickListener() {
@@ -288,13 +330,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                                 .append("00");//填入时分
 
 
-                        endTimeStamp = TimeToStamp(sb);
-//                        Log.i(TAG, "onClick: " + endTimeStamp);
-                        long s = new Date().getTime();
-//                        Log.i(TAG, "onClick1: " + s);
-                        String string = StampToTime(endTimeStamp);
-//                        Log.i(TAG, "onClick2: " + string);
-
+                        endTimeStamp = Tools.TimeToStamp(sb);
 
                         searEndTime.setText(sb);//开始时间显示
                         searEndTime.requestFocus();//输入焦点
@@ -310,223 +346,6 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
         }
         return false;
-    }
-
-    //时间转成unix秒
-    public long TimeToStamp(StringBuffer sb){
-        long unixTimestamp = 0l;
-        try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date1 = df.parse(sb.toString());
-            unixTimestamp = date1.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return unixTimestamp;
-    }
-    //unix秒转化为"yyyy-MM-dd HH:mm:ss"格式字符串
-    public String StampToTime(long stamp){
-        String s;
-
-        SimpleDateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        s = df.format(new Date(stamp));
-
-        return s;
-    }
-
-    public void setSearchButton (View view) {
-        //文字框
-        searStartTime = view.findViewById(R.id.sear_startTime);
-        searEndTime = view.findViewById(R.id.sear_endTime);
-        searStartTime.setOnTouchListener(this);
-        searEndTime.setOnTouchListener(this);
-
-        //功能按钮
-        btnPastHour = view.findViewById(R.id.back_past_hour);
-        btnToday = view.findViewById(R.id.back_today);
-        btnWeek = view.findViewById(R.id.back_week);
-        btnSearch = view.findViewById(R.id.back_search);
-
-        //功能按钮的点击事件
-        btnPastHour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                endTimeStamp = new Date().getTime();
-                startTimeStamp = endTimeStamp - 3600 * 1000;
-
-                setEdit(startTimeStamp,endTimeStamp);
-            }
-        });
-
-        btnToday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startTimeStamp = getTodayTimestamp();
-                endTimeStamp = new Date().getTime();
-
-                setEdit(startTimeStamp,endTimeStamp);
-            }
-        });
-
-        btnWeek.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startTimeStamp = getWeekTimestamp();
-                endTimeStamp = new Date().getTime();
-
-                setEdit(startTimeStamp,endTimeStamp);
-            }
-        });
-    }
-
-    public void setSearchJsonData () {
-        //测试的数据，不用管，但是需要写在前面，不然会出现bug
-        orderLastJson = new OrderLastJson();
-        sJson = "{\n" +
-                "  \"code\": 0,\n" +
-                "  \"message\": \"\",\n" +
-                "  \"data\": {\n" +
-                "    \"stationName\": \"XXXX\",\n" +
-                "    \"todayMoney\": 300.00,\n" +
-                "    \"todayCount\": 2,\n" +
-                "    \"oilOrderList\": [\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"1\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"2\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 200.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },{\n" +
-                "        \"oilOrderId\": \"3\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  }\n" +
-                "}";
-
-        orderLastJson = new Gson().fromJson(sJson,OrderLastJson.class);
-    }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-        //设置竖直
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        //将数据填入homeAdapt
-        HomeAdapter homeAdapter = new HomeAdapter(oilOrderLists,getActivity());
-        recyclerView.setAdapter(homeAdapter);
-        //设置点击事件，点击事件的接口定义哎HomeAdapter
-        homeAdapter.setHomeRecyclerItemClickListener(new HomeAdapter.OnHomeRecyclerItemClickListener() {
-            @Override
-            public void OnHomeRecyclerItemClick(int position) {
-                Bundle bundle = new Bundle();
-
-                //用bundle来传输对象（传输的是OrderLastJson包里面的OilOrderList对象），OilOrderList类需要implements Serializable
-                // 就可以把bundle.putString换成，bundle.putSerializable
-                //详情界面可以用oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");来得到对象
-                bundle.putSerializable("LastOilOrder",oilOrderLists.get(position));
-
-                Navigation.findNavController(getView()).navigate(R.id.search_to_detail,bundle);
-            }
-        });
     }
 
     @Override

@@ -9,12 +9,14 @@
     <SwitchPreferenceCompat
         app:defaultValue="true"
         app:key="voice"
-        app:summary="点击关闭自动语音播报"
+        app:summaryOff="自动语音播报已关闭"
+        app:summaryOn="自动语音播报已打开"
         app:title="语音播报" />
     <SwitchPreference
         app:defaultValue="true"
         app:key="print"
-        app:summary="点击关闭自动打印小票"
+        app:summaryOff="自动打印已关闭"
+        app:summaryOn="自动打印已打开"
         app:title="自动打印" />
 
 

@@ -1,8 +1,10 @@
 package com.cuse.myandroidpos;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.nio.charset.StandardCharsets;
@@ -74,26 +76,26 @@ public class Tools {
         }
     }
 
-    public static String encode(String data) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            MessageDigest md = MessageDigest.getInstance("md5");
-            byte[] md5 = md.digest(data.getBytes(StandardCharsets.UTF_8));
-
-            // 将字节数据转换为十六进制
-            for (byte b : md5) {
-                sb.append(Integer.toHexString(b & 0xff));
-            }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+    public static void hideBottomUIMenu(View v) {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY ;
+            v.setSystemUiVisibility(uiOptions);
         }
 
-        String sMD5 = sb.toString();
+    }
 
-        //String sBase64 = Base64.encodeToString(sMD5.getBytes(StandardCharsets.UTF_8),Base64.DEFAULT);
-//        String sBase64 = Base64.getEncoder().encodeToString(sMD5.getBytes(StandardCharsets.UTF_8));
-        String sBase64 = Base64.encodeToString(sMD5.getBytes(StandardCharsets.UTF_8),Base64.NO_WRAP);
-        return sBase64;
+    //调起输入法 用于隐藏输入法后隐藏导航栏
+    public static void hideWhenSystemUiVisible(View v){
+        v.setOnSystemUiVisibilityChangeListener(visibility -> {
+            if(visibility==View.SYSTEM_UI_FLAG_VISIBLE){
+                hideBottomUIMenu(v);
+            }
+        });
     }
 
 }

@@ -8,7 +8,6 @@
         android:id="@+id/back_date_picker"
         android:layout_width="wrap_content"
         android:datePickerMode="calendar"
-
         android:layout_height="320dp"
         android:layout_marginTop="5dip" />
 

@@ -54,7 +54,7 @@ import top.androidman.SuperButton;
 
 public class BackFragment extends Fragment implements View.OnTouchListener{
 
-    private static String TAG = "Refund";
+    private static final String TAG = "refund";
 
     private FragmentBackBinding binding;
     private EditText searStartTime;
@@ -66,30 +66,24 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     private RecyclerView recyclerView;
     private BackAdapter backAdapter;
 
+    private HttpBinService httpBinService;
+    private Retrofit retrofit;
+
     private Dialog dialog;
 
-    private long currentTimeStamp;//当前时间戳
     private long startTimeStamp;
     private long endTimeStamp;
-    private int start = 1;
-    private String signature;
+    private int start = 0;
     private int count = 20;
     private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
     private String token;
 
-    private RefundAllJson refundAllJson;
-    private List<OilOrder> list ;
-    private HttpBinService httpBinService;
-    private Retrofit retrofit;
-    private String sStart;
-    private String sEnd;
     private List<OilOrder> oilRefundOrderLists;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                              @NonNull Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_back, container, false);
+
         token = ((MainActivity)getActivity()).getToken();
         binding = FragmentBackBinding.inflate(inflater,container,false);
         return binding.getRoot();
@@ -106,30 +100,19 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         searEndTime = view.findViewById(R.id.sear_endTime);
         searStartTime.setOnTouchListener(this);
         searEndTime.setOnTouchListener(this);
-
         //功能按钮
         btnPastHour = view.findViewById(R.id.back_past_hour);
         btnToday = view.findViewById(R.id.back_today);
         btnWeek = view.findViewById(R.id.back_week);
         btnSearch = view.findViewById(R.id.back_search);
-
-        //查询退单
-        searchRefundAll(view);
+        //retrofit
+        retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create()).build();//创建Retrofit并添加json转换器
+        httpBinService = retrofit.create(HttpBinService.class);
 
         //按钮的点击事件
         setButton(view);
 
-    }
-
-    //查询退单
-    private void searchRefundAll(View view) {
-        Button btn_Search = view.findViewById(R.id.back_search);
-        btn_Search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refundAllPost();
-            }
-        });
     }
 
     public void setBackRecyclerView () {
@@ -137,9 +120,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);//列表竖向
 
-        initData();
-        list = refundAllJson.getData().getOilOrder();
-        backAdapter = new BackAdapter(list,getActivity());
+        backAdapter = new BackAdapter(oilRefundOrderLists,getActivity());
         recyclerView.setAdapter(backAdapter);//填入数据
 
         backAdapter.setBackRecyclerItemClickListener(new BackAdapter.OnBackRecyclerItemClickListener() {
@@ -156,35 +137,33 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
 
     //查询全部退单
     public void refundAllPost () {
-                //得到字符串并加密编码
+        //显示正在查询的弹窗
+        dialog = ProgressDialog.show(getContext(),"","正在查询");
+
         long timeStamp = new Date().getTime();
-        int start = 0;
-        int count = 200;
         //得到字符串并加密编码
         String stringBuffer = "count" +
                 count +
                 "endTime" +
-                sEnd +
+                endTimeStamp / 1000 + "" +
                 "start" +
                 start +
                 "startTime" +
-                sStart +
+                startTimeStamp / 1000 + "" +
                 "timestamp" +
                 timeStamp / 1000 +
                 "token" +
                 token +
-                LoginActivity.interferenceCode;
+                interferenceCode;
         String signature = md5.md5(stringBuffer);
 
-        //post
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();//创建Retrofit并添加json转换器
-        httpBinService = retrofit.create(HttpBinService.class);
+        //测试，用完删除
+        Log.i(TAG, "stringBuffer: " + stringBuffer);
+        Log.i(TAG, "signature: " + signature);
+
         Call<RefundAllJson> call = httpBinService.refundAll(token
-                ,sStart + ""
-                , sEnd + ""
+                ,startTimeStamp / 1000 + ""
+                , endTimeStamp / 1000 + ""
                 , start + ""
                 , count + ""
                 , timeStamp / 1000 + ""
@@ -195,23 +174,28 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                 //取消正在查询的弹窗
                 dialog.cancel();
                 RefundAllJson refundAllJson = response.body();
-//                        Log.i(TAG, "onResponse: " + refundAllJson.getCode());
-                if (refundAllJson == null) {
-                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
-                } else if (refundAllJson.getMessage() != null){
-                    oilRefundOrderLists.addAll(refundAllJson.getData().getOilOrder());
-                    setBackRecyclerView();
-                }else
-                    Tools.codeError(getContext(), refundAllJson.getCode());
-            }
 
+                //测试，用完删除
+                Gson gson = new Gson();
+                String s = gson.toJson(refundAllJson);
+                Log.i(TAG, "response.code: " + response.code());
+                Log.i(TAG, "response.json: " + s);
+
+                if (response.isSuccessful() && refundAllJson != null){
+                    if (refundAllJson.getCode() == 0){
+                        oilRefundOrderLists = refundAllJson.getData().getOilOrder();
+                        setBackRecyclerView();
+                    }else
+                        Tools.codeError(getContext(),refundAllJson.getCode());
+                }
+
+            }
             @Override
             public void onFailure(Call<RefundAllJson> call, Throwable t) {
                 dialog.cancel();
                 Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public void setButton (View view) {
@@ -249,16 +233,22 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog = ProgressDialog.show(view.getContext(),"","正在查询");
-                refundAllPost();
+                if (searStartTime.getText() == null || searStartTime.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(),"开始时间不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (searEndTime.getText() == null || searEndTime.getText().toString().equals("")){
+                    Toast.makeText(view.getContext(),"结束时间不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else
+                    refundAllPost();
             }
         });
     }
 
     //传入开始，结束时间戳，在editView上显示
     public void setEdit(long startTimeStamp, long endTimeStamp){
-        sStart = Tools.StampToTime(startTimeStamp);
-        sEnd = Tools.StampToTime(endTimeStamp);
+        String sStart = Tools.StampToTime(startTimeStamp);
+        String sEnd = Tools.StampToTime(endTimeStamp);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行
@@ -372,179 +362,5 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
 
         }
         return false;
-    }
-    public void initData() {
-        //测试数据
-        String sJson = "{\n" +
-                "  \"code\": 0,\n" +
-                "  \"message\": \"\",\n" +
-                "  \"data\": {\n" +
-                "    \"totalCount\": 2,\n" +
-                "    \"current\": 1,\n" +
-                "    \"oilOrder\": [\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"refundId\": \"xxxxx\",\n" +
-                "        \"refundRequestTime\": \"xxxxx\",\n" +
-                "        \"refundStatus\": 0,\n" +
-                "        \"refundReason\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilOrderId\": \"xxxxx\",\n" +
-                "        \"oilOrderTime\": \"xxxxx\",\n" +
-                "        \"oilName\": \"xxx\",\n" +
-                "        \"user\": \"xxxxxxx\",\n" +
-                "        \"money\": 100.00,\n" +
-                "        \"discount\": 2.00,\n" +
-                "        \"coupon\": 3.00,\n" +
-                "        \"balance\": 0,\n" +
-                "        \"cash\": 95.00\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  }\n" +
-                "}";
-        refundAllJson = new Gson().fromJson(sJson,RefundAllJson.class);
     }
 }

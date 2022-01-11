@@ -14,6 +14,7 @@ import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.MainActivity;
 
+
 import java.util.Date;
 
 import retrofit2.Call;
@@ -41,8 +42,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference sync = findPreference("sync");
         token = ((MainActivity)getActivity()).getToken();
 
-        //测试，用后删除
-        token = "test123";
 
         sync.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

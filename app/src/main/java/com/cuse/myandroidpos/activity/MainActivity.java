@@ -55,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
                 Builder(navController.getGraph())
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        getSupportActionBar().setTitle("首页");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

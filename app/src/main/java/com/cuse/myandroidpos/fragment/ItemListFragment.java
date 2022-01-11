@@ -1,8 +1,14 @@
 package com.cuse.myandroidpos.fragment;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +42,11 @@ import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 
+import com.cuse.myandroidpos.md5;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -107,6 +117,11 @@ public class ItemListFragment extends Fragment {
     private String json_pushNew;
     private String json_checkOnline;
     private String json_isOnlineNo;
+    private long timeStamp;
+    private String stringBuffer;
+    private String signature;
+    private Handler handler;
+    private Runnable runnable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,13 +154,40 @@ public class ItemListFragment extends Fragment {
         //网络不好时弹出未连接网络的框
         setInternetLayout();
 
+        orderLastPost();
         //按钮功能
         setButton(view);
         //下拉刷新
         handleDownPullUpdate();
 
         initData();
+        //建立websockets连接
+        createWebSocketClient();
+        //login
+        webSocketClient.send(json_login);
         testWebsockets(view);
+        //定时发送heartbeat
+        heartBeat();
+    }
+
+    //每隔20s发送心跳
+    private void heartBeat() {
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                webSocketClient.send(json_heart);
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(runnable, 2000);
+    }
+
+    //关闭定时器
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -164,9 +206,6 @@ public class ItemListFragment extends Fragment {
         if (item.getItemId() == R.id.refresh) {
             orderLastPost();
             return true;
-        } else if (item.getItemId() == R.id.back){
-//            logout();
-            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -176,8 +215,15 @@ public class ItemListFragment extends Fragment {
     private void initData() {
         wsInfo_login = new wsInfo(token,"login");
         json_login = JSON.toJSONString(wsInfo_login);
+
         wsInfo_checkOnline = new wsInfo("", "check_online");
         json_checkOnline = JSON.toJSONString(wsInfo_checkOnline);
+
+        wsInfo_heart = new wsInfo(token, "heartbeat");
+        json_heart = JSON.toJSONString(wsInfo_heart);
+
+        wsInfo_newOrder = new wsInfo(token, "new_order");
+        json_newOrder = JSON.toJSONString(wsInfo_newOrder);
     }
 
     //测试websockets
@@ -186,9 +232,9 @@ public class ItemListFragment extends Fragment {
         btn_test_ws.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createWebSocketClient();
-                webSocketClient.send(json_login);
-                webSocketClient.send(json_checkOnline);
+//                webSocketClient.send(json_checkOnline);
+                webSocketClient.send(json_heart);
+                webSocketClient.send(json_newOrder);
             }
         });
     }
@@ -254,15 +300,15 @@ public class ItemListFragment extends Fragment {
         // below line is to create an instance for our retrofit api class.
         httpBinService = retrofit.create(HttpBinService.class);
 
-        long timeStamp = new Date().getTime();
+        timeStamp = new Date().getTime();
 //        Log.i("")
         //得到字符串并加密编码
-        String stringBuffer = "timestamp" +
+        stringBuffer = "timestamp" +
                 timeStamp / 1000 +
                 "token" +
                 token +
                 LoginActivity.interferenceCode;
-        String signature = Tools.md5.md5(stringBuffer);
+        signature = Tools.md5.md5(stringBuffer);
 
         //使用Retrofit进行post
         Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);

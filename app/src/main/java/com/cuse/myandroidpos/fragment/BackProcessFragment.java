@@ -55,7 +55,7 @@ public class BackProcessFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                                  Bundle savedInstanceState) {
         FragmentBackProcessBinding binding = FragmentBackProcessBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }

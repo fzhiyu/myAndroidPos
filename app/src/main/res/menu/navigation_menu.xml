@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent">
 
+    <!-- action button for refresh -->
     <item
-        android:id="@+id/action_Search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.widget.Button">
-
-    </item>
+        android:title="refresh"
+        android:id="@+id/refresh"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_refresh"/>
 </menu>

@@ -1,5 +1,8 @@
 package com.cuse.myandroidpos.activity;
 
+import static android.content.ContentValues.TAG;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -24,6 +27,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Gravity;
@@ -42,16 +47,28 @@ import android.widget.Toast;
 
 import com.cuse.myandroidpos.HideNavBarUtil;
 import com.cuse.myandroidpos.MyListData;
+import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
+import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.ActivityItemDetailBinding;
 import com.cuse.myandroidpos.databinding.FragmentItemDetailBinding;
+import com.cuse.myandroidpos.fragment.ItemListFragment;
+import com.cuse.myandroidpos.md5;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<MyListData> myListData;
@@ -87,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+            actionBar.setHomeButtonEnabled(true);
         }
     }
 
@@ -109,4 +127,19 @@ public class MainActivity extends AppCompatActivity {
     public String getToken(){
         return token;
     }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        MainActivity.super.onBackPressed();
+                    }
+                }).create().show();
+    }
+
 }

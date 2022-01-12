@@ -49,8 +49,11 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -67,7 +70,7 @@ public class ItemListFragment extends Fragment {
     private long currentTimeStamp;//订单刷新时间
     //private OrderLastJson orderLastJson;//储存得到的订单数据
 
-    private List<OilOrderList> oilOrderLists;
+    private LinkedList<OilOrderList> oilOrderLists;
     private HomeAdapter homeAdapter;
 
     private int internet = 0;//网络连接参量，0代表连上，1代表断开
@@ -139,6 +142,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        oilOrderLists = new LinkedList<>();
         //总金钱和总订单数
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
         tvTotalOrder = view.findViewById(R.id.tv_home_TodayTotalOrder);
@@ -286,7 +290,6 @@ public class ItemListFragment extends Fragment {
     }
 
     public void orderLastPost(){
-        oilOrderLists = new ArrayList<>();
         //创建retrofit实例b
         // on below line we are creating a retrofit builder and passing our base url
         retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
@@ -327,7 +330,6 @@ public class ItemListFragment extends Fragment {
 
                 if (response.body().getCode() == 0) {
                     //设置显示总金钱和总订单
-                    Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_SHORT).show();
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
 //                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
@@ -336,8 +338,29 @@ public class ItemListFragment extends Fragment {
 //                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
 //                        }
 //                    }
+                    List<OilOrderList> tmp = orderLastJson.getData().getOilOrderList();
 
-                    oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
+                    int newOrderNum = 0;
+                    if (oilOrderLists.size() == 0) {
+                        //判读是否有新订单
+                        oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
+                    } else {
+                        newOrderNum = judgeNewOrder(orderLastJson.getData().getOilOrderList());
+                    }
+                    Log.e("oilOrderLists.size", "onResponse: " + tmp.get(0).getOilOrderTime());
+//                    Log.e(TAG, "onResponse: " + newOrderNum);
+
+                    for (int i = 0; i < newOrderNum; i++) {
+                        oilOrderLists.removeLast();
+                        oilOrderLists.addFirst(orderLastJson.getData().getOilOrderList().get(i));
+                    }
+
+                    if(newOrderNum == 0) {
+                        Toast.makeText(getContext(),"无新订单",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(),"有" + newOrderNum + "笔新订单"
+                                ,Toast.LENGTH_SHORT).show();
+                    }
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter
@@ -353,6 +376,24 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //判断新订单
+    private int judgeNewOrder(List<OilOrderList> newOrderList) {
+        for (int i = 0; i < newOrderList.size(); i++) {
+//            if(t.getOilOrderTime())
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            try {
+                Date oldDate = sdf.parse(oilOrderLists.get(0).getOilOrderTime());
+                Date newDate = sdf.parse(newOrderList.get(i).getOilOrderTime());
+                if (newDate.equals(oldDate)) {
+                    return i;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return 20;
     }
 
     public void setButton (View view) {

@@ -333,6 +333,7 @@ public class ItemListFragment extends Fragment {
                     //设置显示总金钱和总订单
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
+                    //加入新订单
                     addOrder();
                     //列表
                     recyclerView = binding.itemList;
@@ -365,9 +366,10 @@ public class ItemListFragment extends Fragment {
         Log.e("oilOrderLists.size", "onResponse: " + tmp.get(0).getOilOrderTime());
 //                    Log.e(TAG, "onResponse: " + newOrderNum);
 
-        for (int i = 0; i < newOrderNum; i++) {
+        for (int i = newOrderNum - 1; i >= 0; i--) {
             oilOrderLists.removeLast();
             oilOrderLists.addFirst(orderLastJson.getData().getOilOrderList().get(i));
+
         }
 
         if(newOrderNum == 0) {

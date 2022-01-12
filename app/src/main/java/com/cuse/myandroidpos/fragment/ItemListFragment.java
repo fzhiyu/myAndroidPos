@@ -125,6 +125,7 @@ public class ItemListFragment extends Fragment {
     private Handler handler;
     private Runnable runnable;
     private OrderLastJson orderLastJson;
+    private int newOrderNum;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -356,7 +357,7 @@ public class ItemListFragment extends Fragment {
     private void addOrder() {
         List<OilOrderList> tmp = orderLastJson.getData().getOilOrderList();
 
-        int newOrderNum = 0;
+        newOrderNum = 0;
         if (oilOrderLists.size() == 0) {
             //判读是否有新订单
             oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
@@ -441,7 +442,7 @@ public class ItemListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         //将数据填入homeAdapt
-        homeAdapter = new HomeAdapter(oilOrderLists,getActivity());
+        homeAdapter = new HomeAdapter(oilOrderLists, newOrderNum ,getActivity());
         recyclerView.setAdapter(homeAdapter);
         //默认添加动画
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -113,7 +113,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         //将数据填入homeAdapt
-        HomeAdapter homeAdapter = new HomeAdapter(oilOrderLists,getActivity());
+        HomeAdapter homeAdapter = new HomeAdapter(oilOrderLists,0 , getActivity());
         recyclerView.setAdapter(homeAdapter);
         //设置点击事件，点击事件的接口定义哎HomeAdapter
         homeAdapter.setHomeRecyclerItemClickListener(new HomeAdapter.OnHomeRecyclerItemClickListener() {

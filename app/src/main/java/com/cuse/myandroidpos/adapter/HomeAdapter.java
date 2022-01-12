@@ -18,10 +18,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 
     private List<OilOrderList> homeOilOrderList;
     private Context context;
+    private int newOrderNum;
     private OnHomeRecyclerItemClickListener mHomeRecyclerItemClickListener;
 
-    public HomeAdapter(List<OilOrderList> homeOilOrderList, Context context) {
+    public HomeAdapter(List<OilOrderList> homeOilOrderList, int newOrderNum, Context context) {
         this.homeOilOrderList = homeOilOrderList;
+        this.newOrderNum = newOrderNum;
         this.context = context;
     }
 
@@ -40,13 +42,16 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         holder.money.setText("¥ " + homeOilOrderList.get(position).getMoney());
         holder.oilOrderTime.setText(Tools.NoT(homeOilOrderList.get(position).getOilOrderTime()));
         holder.user.setText(homeOilOrderList.get(position).getUser());
+        if (position < newOrderNum){
+            holder.newOrderSign.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public int getItemCount() {
         if (homeOilOrderList == null)
             return 0;
-        else if (homeOilOrderList.size() < 15)
+        else if (homeOilOrderList.size() <= 20)
             return homeOilOrderList.size();
         else
             return 20;
@@ -59,6 +64,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         private TextView money;
         private TextView oilOrderTime;
         private TextView user;
+        private TextView newOrderSign;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +74,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
             money = itemView.findViewById(R.id.tv_homeItem_money);
             oilOrderTime = itemView.findViewById(R.id.tv_homeItem_oilOrderTime);
             user = itemView.findViewById(R.id.tv_homeItem_user);
+            newOrderSign = itemView.findViewById(R.id.newOrderSign);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -238,11 +238,17 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                long currentTimestamp = new Date().getTime();
+                long oneWeekAgoTimestamp = currentTimestamp - 7 * 24 * 3600 * 1000;//七天之前的时间戳
+                //判断输入不能为空
                 if (searStartTime.getText() == null || searStartTime.getText().toString().equals("")){
                     Toast.makeText(view.getContext(),"开始时间不能为空",Toast.LENGTH_SHORT).show();
                     return;
                 }else if (searEndTime.getText() == null || searEndTime.getText().toString().equals("")){
                     Toast.makeText(view.getContext(),"结束时间不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }else if (startTimeStamp < oneWeekAgoTimestamp || endTimeStamp < oneWeekAgoTimestamp){
+                    Toast.makeText(view.getContext(),"不能查询七天以前的退单",Toast.LENGTH_SHORT).show();
                     return;
                 }else
                     refundAllPost();

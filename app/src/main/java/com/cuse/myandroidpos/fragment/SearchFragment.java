@@ -48,7 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SearchFragment extends Fragment implements View.OnTouchListener{
-    private static final String TAG = "search";
+    private static final String TAG = "搜索";
 
     private FragmentSearchBinding binding;
 
@@ -167,12 +167,13 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                 //取消正在查询的弹窗
                 dialog.cancel();
                 OrderAllJson orderAllJson = response.body();
+                Log.e(TAG, "onResponse: " + response.raw());
 
                 //测试，用完删除
                 Gson gson = new Gson();
                 String s = gson.toJson(orderAllJson);
-                Log.i(TAG, "response.code: " + response.code());
-                Log.i(TAG, "response.json: " + s);
+//                Log.i(TAG, "response.code: " + response.code());
+//                Log.i(TAG, "response.json: " + s);
 
                 if (response.isSuccessful() && orderAllJson != null) {
                     if (orderAllJson.getCode() == 0) {

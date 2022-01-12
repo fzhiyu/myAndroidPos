@@ -37,16 +37,17 @@ public interface HttpBinService {
                                @Query("count") String count, @Query("timestamp") String timestamp,
                                @Query("signature") String signature);
 
-    @POST("/station/refund/getSmsCode")
+    @POST("station/refund/getSmsCode")
     Call<SmsCodeJson>getSmsCode(@Query("token") String token,
                                 @Query("timestamp") String timestamp,
                                 @Query("signature") String signature);
 
-    @POST("/station/refund/new")
+    @POST("station/refund/new")
     Call<OrderRefundJson>refundNew(@Query("token") String token,
                                    @Query("smsCode") String smsCode,
                                    @Query("oilOrderId") String oilOrderId,
                                    @Query("timestamp") String timestamp,
+                                   @Query("refundReason") String refundReason,
                                    @Query("signature") String signature);
 
     @POST("station/oil_order/summary")

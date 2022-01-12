@@ -172,7 +172,7 @@ public class ItemListFragment extends Fragment {
         webSocketClient.send(json_login);
         testWebsockets(view);
         //定时发送heartbeat
-        heartBeat();
+//        heartBeat();
     }
 
     //每隔20s发送心跳

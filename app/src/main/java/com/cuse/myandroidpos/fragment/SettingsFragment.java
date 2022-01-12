@@ -28,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
-    private static final String TAG = "setting";
+    private static final String TAG = "设置";
     private String token;
     private long timeStamp;
     private String signature;
@@ -82,7 +82,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     public void onResponse(Call<PushJson> call, Response<PushJson> response) {
                         dialog.cancel();
                         PushJson pushJson = response.body();
-
+                        Log.e(TAG, "onResponse: " + response.raw());
                         if (response.isSuccessful() && pushJson != null && pushJson.getCode() == 0) {
                             Toast.makeText(getContext(), "推送成功", Toast.LENGTH_SHORT).show();
                         } else

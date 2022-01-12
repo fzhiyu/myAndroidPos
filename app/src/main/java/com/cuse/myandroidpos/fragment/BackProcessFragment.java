@@ -1,7 +1,5 @@
 package com.cuse.myandroidpos.fragment;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -20,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderRefundJson.OrderRefundJson;
 import com.cuse.myandroidpos.Post.getSmsCode.SmsCodeJson;
@@ -45,6 +44,7 @@ public class BackProcessFragment extends Fragment{
     private EditText mobile_phone, smsCode;
     private Button getSmsCode, btn_apply;
     private String token;
+    private String TAG = "退单";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,7 +80,8 @@ public class BackProcessFragment extends Fragment{
 //        String oilOrderId = "2182823938284";
         String oilOrderId = getArguments().getString("oilOrderId");
         Log.e("oilOrderId", "postReFund: " + oilOrderId);
-        String smsCode = "";
+        String smsCode = "505703";
+        String refundReason = "退单";
         token = ((MainActivity)getActivity()).getToken();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
@@ -90,6 +91,8 @@ public class BackProcessFragment extends Fragment{
         long timeStamp = new Date().getTime();
         String stringBuffer = "oilOrderId" +
                         oilOrderId +
+                        "refundReason" +
+                        refundReason +
                         "smsCode" +
                         smsCode +
                         "timestamp" +
@@ -103,16 +106,23 @@ public class BackProcessFragment extends Fragment{
                 , smsCode
                 , oilOrderId
                 , timeStamp/1000 + ""
+                , refundReason
                 , signature);
 
         call.enqueue(new Callback<OrderRefundJson>() {
             @Override
             public void onResponse(Call<OrderRefundJson> call, Response<OrderRefundJson> response) {
                 OrderRefundJson orderRefundJson = response.body();
+//                Log.e(TAG, "onResponse: " + response.raw());
+//                Log.e(TAG, "onResponse: " + JSON.toJSONString(orderRefundJson));
+//                Log.e(TAG, "onResponse: " + response.raw());
                 if (orderRefundJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                 } else if(orderRefundJson.getCode() == 0) {
-                    Toast.makeText(getContext(),orderRefundJson.getData().getResult(),Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "onResponse: " + orderRefundJson.getData().getMessage());
+//                    Toast.makeText(getContext(),orderRefundJson.getData()
+//                      .getResult(),Toast.LENGTH_SHORT).show();
+
                 } else {
                     Tools.codeError(getContext(), orderRefundJson.getCode());
                 }
@@ -132,7 +142,7 @@ public class BackProcessFragment extends Fragment{
                 //判断是否有手机号
                 String mobilePhone = mobile_phone.getText().toString();
                 getMobilePhone(mobilePhone);
-//                startCountBack();
+                startCountBack();
             }
         });
     }
@@ -179,10 +189,12 @@ public class BackProcessFragment extends Fragment{
                 , timeStamp/1000 + ""
                 , signature);
 
-       call.enqueue(new Callback<SmsCodeJson>() {
+        call.enqueue(new Callback<SmsCodeJson>() {
            @Override
            public void onResponse(Call<SmsCodeJson> call, Response<SmsCodeJson> response) {
                SmsCodeJson smsCodeJson = response.body();
+//               Log.e(TAG, "onResponse: " + JSON.toJSONString(smsCodeJson));
+//               Log.e(TAG, "onResponse: " + response.raw());
                if (smsCodeJson == null) {
                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                } else if(smsCodeJson.getCode() == 0) {

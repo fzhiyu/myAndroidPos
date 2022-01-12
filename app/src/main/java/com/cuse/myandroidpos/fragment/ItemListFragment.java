@@ -124,6 +124,7 @@ public class ItemListFragment extends Fragment {
     private String signature;
     private Handler handler;
     private Runnable runnable;
+    private OrderLastJson orderLastJson;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -319,7 +320,7 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
                 swipeRefreshLayout.setRefreshing(false);
-                OrderLastJson orderLastJson = response.body();
+                orderLastJson = response.body();
                 //
                 Gson gson = new Gson();
                 String s = gson.toJson(orderLastJson);
@@ -332,35 +333,7 @@ public class ItemListFragment extends Fragment {
                     //设置显示总金钱和总订单
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
-//                    for (int i = 0; i < response.body().getData().getOilOrderList().size(); i++) {
-////                        Log.i("hejun", "onResponse: " + orderLastJson.getData().getOilOrderList().get(i).compareTo(oilOrderLists.get(0)));
-//                        if (oilOrderLists.get(0).compareTo(orderLastJson.getData().getOilOrderList().get(i)) >= 0) {
-//                            oilOrderLists.add(0, response.body().getData().getOilOrderList().get(i));
-//                        }
-//                    }
-                    List<OilOrderList> tmp = orderLastJson.getData().getOilOrderList();
-
-                    int newOrderNum = 0;
-                    if (oilOrderLists.size() == 0) {
-                        //判读是否有新订单
-                        oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
-                    } else {
-                        newOrderNum = judgeNewOrder(orderLastJson.getData().getOilOrderList());
-                    }
-                    Log.e("oilOrderLists.size", "onResponse: " + tmp.get(0).getOilOrderTime());
-//                    Log.e(TAG, "onResponse: " + newOrderNum);
-
-                    for (int i = 0; i < newOrderNum; i++) {
-                        oilOrderLists.removeLast();
-                        oilOrderLists.addFirst(orderLastJson.getData().getOilOrderList().get(i));
-                    }
-
-                    if(newOrderNum == 0) {
-                        Toast.makeText(getContext(),"无新订单",Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(),"有" + newOrderNum + "笔新订单"
-                                ,Toast.LENGTH_SHORT).show();
-                    }
+                    addOrder();
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter
@@ -376,6 +349,33 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //判断新旧订单，如果有新订单就加到就订单上面，并移除最后订单
+    private void addOrder() {
+        List<OilOrderList> tmp = orderLastJson.getData().getOilOrderList();
+
+        int newOrderNum = 0;
+        if (oilOrderLists.size() == 0) {
+            //判读是否有新订单
+            oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
+        } else {
+            newOrderNum = judgeNewOrder(orderLastJson.getData().getOilOrderList());
+        }
+        Log.e("oilOrderLists.size", "onResponse: " + tmp.get(0).getOilOrderTime());
+//                    Log.e(TAG, "onResponse: " + newOrderNum);
+
+        for (int i = 0; i < newOrderNum; i++) {
+            oilOrderLists.removeLast();
+            oilOrderLists.addFirst(orderLastJson.getData().getOilOrderList().get(i));
+        }
+
+        if(newOrderNum == 0) {
+            Toast.makeText(getContext(),"无新订单",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(),"有" + newOrderNum + "笔新订单"
+                    ,Toast.LENGTH_SHORT).show();
+        }
     }
 
     //判断新订单

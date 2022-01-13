@@ -368,7 +368,7 @@ public class ItemListFragment extends Fragment {
 
     //新订单语音播报
     private void newOrderSpeech() {
-        if (oilOrderLists != null) {
+        if (oilOrderLists != null && newOrderNum != 0) {
             String phone = oilOrderLists.get(0).getUser();
             String subPhone = phone.substring(phone.length() - 4);
             String aPhone = subPhone.charAt(0) + "-"

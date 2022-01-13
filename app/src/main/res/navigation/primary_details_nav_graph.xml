@@ -43,7 +43,7 @@
         android:id="@+id/backing_fragment"
         tools:layout="@layout/fragment_back"
         android:name="com.cuse.myandroidpos.fragment.BackFragment"
-        android:label="退单">
+        android:label="退单查询">
         <action
             android:id="@+id/back_to_backDetail"
             app:destination="@+id/back_detail_fragment"/>

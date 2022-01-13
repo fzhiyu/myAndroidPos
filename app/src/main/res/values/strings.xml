@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">myAndroidPos</string>
+    <string name="app_name">油站管理</string>
     <string name="fzy">fzy</string>
     <string name="pos">POS</string>
     <string name="name_station">OIL</string>

@@ -46,13 +46,12 @@
 
             <TextView
                 android:id="@+id/newOrderSign"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:text="new"
                 android:textSize="15sp"
-                android:textColor="#00FF7F"
-                android:layout_gravity="center_vertical"
+                android:textColor="#07C160"
+                android:layout_gravity="right"
                 android:gravity="center_vertical"
                 android:visibility="gone"/>
 

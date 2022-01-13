@@ -10,12 +10,14 @@ import android.widget.Toast;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.Push.PushJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.activity.MainActivity;
+import com.google.gson.Gson;
 
 
 import java.util.Date;
@@ -63,6 +65,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 dialog = ProgressDialog.show(getContext(),"","正在测试");
+                //测试，用完删除
+                token = "test123";
 
                 //得到字符串并加密
                 timeStamp = new Date().getTime();
@@ -72,6 +76,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         token +
                         interferenceCode;
                 signature = Tools.md5.md5(stringBuffer);
+                //测试，用完删除
+                Log.i(TAG, "stringBuffer: " + stringBuffer);
+                Log.i(TAG, "signature): " + signature);
 
                 retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
                         .addConverterFactory(GsonConverterFactory.create()).build();
@@ -82,6 +89,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     public void onResponse(Call<PushJson> call, Response<PushJson> response) {
                         dialog.cancel();
                         PushJson pushJson = response.body();
+                        //测试，用完删除
+                        Log.i(TAG, "response.code: " + response.code());
+                        Gson gson = new Gson();
+                        Log.i(TAG, "pushJson " + gson.toJson(pushJson));
 
                         if (response.isSuccessful() && pushJson != null && pushJson.getCode() == 0) {
                             Toast.makeText(getContext(), "推送成功", Toast.LENGTH_SHORT).show();

@@ -1,5 +1,7 @@
 package com.cuse.myandroidpos;
 
+
+
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
@@ -9,6 +11,7 @@ import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Tools {
     public static String NoT(String time){
@@ -33,6 +36,7 @@ public class Tools {
         String s;
 
         SimpleDateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         s = df.format(new Date(stamp));
 
         return s;

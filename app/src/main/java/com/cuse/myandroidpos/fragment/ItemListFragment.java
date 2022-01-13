@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -25,6 +26,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -140,7 +144,7 @@ public class ItemListFragment extends Fragment {
         mContext = getContext();
 
         //得到login传来的intent
-        token = ((MainActivity)getActivity()).getToken();
+        token = ((MainActivity) getActivity()).getToken();
 
         //初始化语音engine
         initSpeech();
@@ -182,6 +186,7 @@ public class ItemListFragment extends Fragment {
         testWebsockets(view);
         //定时发送heartbeat
 //        heartBeat();
+
 
     }
 
@@ -228,7 +233,7 @@ public class ItemListFragment extends Fragment {
 
     //初始发送数据
     private void initData() {
-        wsInfo_login = new wsInfo(token,"login");
+        wsInfo_login = new wsInfo(token, "login");
         json_login = JSON.toJSONString(wsInfo_login);
 
         wsInfo_checkOnline = new wsInfo("", "check_online");
@@ -277,17 +282,21 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onBinaryReceived(byte[] data) {
             }
+
             @Override
             public void onPingReceived(byte[] data) {
 //                Log.i("Ping", "" + Arrays.toString(data));
             }
+
             @Override
             public void onPongReceived(byte[] data) {
             }
+
             @Override
             public void onException(Exception e) {
 //                System.out.println(e.getMessage());
             }
+
             @Override
             public void onCloseReceived() {
                 Log.i("WebSocket", "Closed ");
@@ -301,7 +310,7 @@ public class ItemListFragment extends Fragment {
         webSocketClient.connect();
     }
 
-    public void orderLastPost(){
+    public void orderLastPost() {
         //创建retrofit实例b
         // on below line we are creating a retrofit builder and passing our base url
         retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
@@ -325,7 +334,7 @@ public class ItemListFragment extends Fragment {
         signature = Tools.md5.md5(stringBuffer);
 
         //使用Retrofit进行post
-        Call<OrderLastJson> call = httpBinService.orderLast(token,timeStamp / 1000 + "", signature);
+        Call<OrderLastJson> call = httpBinService.orderLast(token, timeStamp / 1000 + "", signature);
         call.enqueue(new Callback<OrderLastJson>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -347,24 +356,28 @@ public class ItemListFragment extends Fragment {
                     //加入新订单
                     addOrder();
 
-                    //进行语音播报
-//                    newOrderSpeech();
-
-                    //新订单打印
-                    newOrderPrint();
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter
                     setRecyclerView(recyclerView);
 
-//                    homeAdapter.notifyDataSetChanged();
+                    //进行语音播报
+                    if (getVoiceValue())
+                        newOrderSpeech();
+
+                    //新订单打印
+                    if (getPrintValue())
+                        newOrderPrint();
+
+// 列表刷新                   homeAdapter.notifyDataSetChanged();
                 } else
                     Tools.codeError(getContext(), orderLastJson.getCode());
             }
+
             @Override
             public void onFailure(Call<OrderLastJson> call, Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "连接失败", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -434,11 +447,11 @@ public class ItemListFragment extends Fragment {
 
         }
 
-        if(newOrderNum == 0) {
-            Toast.makeText(getContext(),"无新订单",Toast.LENGTH_SHORT).show();
+        if (newOrderNum == 0) {
+            Toast.makeText(getContext(), "无新订单", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(),"有" + newOrderNum + "笔新订单"
-                    ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "有" + newOrderNum + "笔新订单"
+                    , Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -460,7 +473,7 @@ public class ItemListFragment extends Fragment {
         return 20;
     }
 
-    public void setButton (View view) {
+    public void setButton(View view) {
         //搜索按钮
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -503,7 +516,7 @@ public class ItemListFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         //将数据填入homeAdapt
-        homeAdapter = new HomeAdapter(oilOrderLists, newOrderNum ,getActivity());
+        homeAdapter = new HomeAdapter(oilOrderLists, newOrderNum, getActivity());
         recyclerView.setAdapter(homeAdapter);
         //默认添加动画
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -516,15 +529,15 @@ public class ItemListFragment extends Fragment {
                 //用bundle来传输对象（传输的是OrderLastJson包里面的OilOrderList对象），OilOrderList类需要implements Serializable
                 // 就可以把bundle.putString换成，bundle.putSerializable
                 //详情界面可以用oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");来得到对象
-                bundle.putSerializable("LastOilOrder",oilOrderLists.get(position));
+                bundle.putSerializable("LastOilOrder", oilOrderLists.get(position));
 
-                Navigation.findNavController(getView()).navigate(R.id.show_item_detail,bundle);
+                Navigation.findNavController(getView()).navigate(R.id.show_item_detail, bundle);
             }
         });
     }
 
     //下拉刷新
-    private void handleDownPullUpdate(){
+    private void handleDownPullUpdate() {
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -543,8 +556,8 @@ public class ItemListFragment extends Fragment {
 
 
     //网络不好时弹出未连接网络的框
-    public void setInternetLayout(){
-        if (internet == 1){
+    public void setInternetLayout() {
+        if (internet == 1) {
             TextView internet = getView().findViewById(R.id.tv_home_internet);
             internet.setVisibility(View.VISIBLE);
         }
@@ -556,7 +569,7 @@ public class ItemListFragment extends Fragment {
         binding = null;
     }
 
-    private void initSpeech () {
+    private void initSpeech() {
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
@@ -565,5 +578,17 @@ public class ItemListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private boolean getPrintValue() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Boolean print = prefs.getBoolean("print",false);
+        return print;
+    }
+
+    private Boolean getVoiceValue(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Boolean voice = prefs.getBoolean("voice",false);
+        return voice;
     }
 }

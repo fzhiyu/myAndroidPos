@@ -124,6 +124,12 @@ public class BackProcessFragment extends Fragment{
                     Log.e(TAG, "onResponse: " + orderRefundJson.getData().getMessage());
                     Toast.makeText(getContext(),orderRefundJson.getData()
                       .getMessage(),Toast.LENGTH_SHORT).show();
+                    //阻塞0.5秒
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     Navigation.findNavController(getView()).navigate(R.id.process_to_back, null);
                 } else {
                     Tools.codeError(getContext(), orderRefundJson.getCode());

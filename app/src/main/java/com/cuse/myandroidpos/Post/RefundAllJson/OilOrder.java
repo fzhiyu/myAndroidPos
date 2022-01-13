@@ -15,11 +15,11 @@ public class OilOrder implements Serializable {
     private String oilOrderTime;
     private String oilName;
     private String user;
-    private int money;
-    private int discount;
-    private int coupon;
-    private int balance;
-    private int cash;
+    private float money;
+    private float discount;
+    private float coupon;
+    private float balance;
+    private float cash;
 
     public void setRefundId(String refundId) { this.refundId = refundId; }
     public String getRefundId() { return refundId;}
@@ -67,35 +67,35 @@ public class OilOrder implements Serializable {
     public void setMoney(int money) {
          this.money = money;
      }
-     public int getMoney() {
+     public float getMoney() {
          return money;
      }
 
     public void setDiscount(int discount) {
          this.discount = discount;
      }
-     public int getDiscount() {
+     public float getDiscount() {
          return discount;
      }
 
     public void setCoupon(int coupon) {
          this.coupon = coupon;
      }
-     public int getCoupon() {
+     public float getCoupon() {
          return coupon;
      }
 
     public void setBalance(int balance) {
          this.balance = balance;
      }
-     public int getBalance() {
+     public float getBalance() {
          return balance;
      }
 
     public void setCash(int cash) {
          this.cash = cash;
      }
-     public int getCash() {
+     public float getCash() {
          return cash;
      }
 

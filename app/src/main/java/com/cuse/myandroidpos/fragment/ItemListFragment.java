@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -126,6 +128,8 @@ public class ItemListFragment extends Fragment {
     private Runnable runnable;
     private OrderLastJson orderLastJson;
     private int newOrderNum;
+    private TextToSpeech textToSpeech;
+    private View sView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -137,6 +141,9 @@ public class ItemListFragment extends Fragment {
         //得到login传来的intent
         token = ((MainActivity)getActivity()).getToken();
 
+        //初始化语音engine
+        initSpeech();
+
         return binding.getRoot();
     }
 
@@ -144,6 +151,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sView = view;
         oilOrderLists = new LinkedList<>();
         //总金钱和总订单数
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
@@ -173,6 +181,7 @@ public class ItemListFragment extends Fragment {
         testWebsockets(view);
         //定时发送heartbeat
 //        heartBeat();
+
     }
 
     //每隔20s发送心跳
@@ -336,6 +345,10 @@ public class ItemListFragment extends Fragment {
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
                     //加入新订单
                     addOrder();
+
+                    //进行语音播报
+                    newOrderSpeech();
+
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter
@@ -351,6 +364,29 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //新订单语音播报
+    private void newOrderSpeech() {
+        if (oilOrderLists != null) {
+            String phone = oilOrderLists.get(0).getUser();
+            String subPhone = phone.substring(phone.length() - 4);
+            String aPhone = subPhone.charAt(0) + "-"
+                    + subPhone.charAt(1) + "-"
+                    + subPhone.charAt(2) + "-"
+                    + subPhone.charAt(3);
+            String oilName = oilOrderLists.get(0).getOilName();
+            String[] aOilName = oilName.split("-");
+            StringBuilder speechOilName = new StringBuilder();
+            for (String s : aOilName) {
+                speechOilName.append(s);
+            }
+            String oilMoney = String.valueOf(oilOrderLists.get(0).getMoney());
+            Log.e(TAG, "newOrderSpeech: " + phone);
+            String data = "新订单，手机尾号" + aPhone + "," + speechOilName + oilMoney + "元";
+            textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+        }
+
     }
 
     //判断新旧订单，如果有新订单就加到就订单上面，并移除最后订单
@@ -495,4 +531,14 @@ public class ItemListFragment extends Fragment {
         binding = null;
     }
 
+    private void initSpeech () {
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS) {
+                    textToSpeech.setLanguage(Locale.CHINESE);
+                }
+            }
+        });
+    }
 }

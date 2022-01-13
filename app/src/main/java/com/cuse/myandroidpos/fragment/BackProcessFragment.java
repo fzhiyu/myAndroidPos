@@ -113,9 +113,9 @@ public class BackProcessFragment extends Fragment{
             @Override
             public void onResponse(Call<OrderRefundJson> call, Response<OrderRefundJson> response) {
                 OrderRefundJson orderRefundJson = response.body();
-//                Log.e(TAG, "onResponse: " + response.raw());
-//                Log.e(TAG, "onResponse: " + JSON.toJSONString(orderRefundJson));
-//                Log.e(TAG, "onResponse: " + response.raw());
+                Log.e(TAG, "onResponse: " + response.raw());
+                Log.e(TAG, "onResponse: " + JSON.toJSONString(orderRefundJson));
+                Log.e(TAG, "onResponse: " + response.raw());
                 if (orderRefundJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                 } else if(orderRefundJson.getCode() == 0) {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.os.Handler;
 import android.os.Message;
@@ -71,6 +72,7 @@ public class BackProcessFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 postReFund();
+
             }
         });
     }
@@ -122,7 +124,7 @@ public class BackProcessFragment extends Fragment{
                     Log.e(TAG, "onResponse: " + orderRefundJson.getData().getMessage());
                     Toast.makeText(getContext(),orderRefundJson.getData()
                       .getMessage(),Toast.LENGTH_SHORT).show();
-
+                    Navigation.findNavController(getView()).navigate(R.id.process_to_back, null);
                 } else {
                     Tools.codeError(getContext(), orderRefundJson.getCode());
                 }
@@ -199,6 +201,7 @@ public class BackProcessFragment extends Fragment{
                    Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                } else if(smsCodeJson.getCode() == 0) {
                    Toast.makeText(getContext(),smsCodeJson.getData().getMessage(),Toast.LENGTH_SHORT).show();
+
                } else {
                    Tools.codeError(getContext(), smsCodeJson.getCode());
                }

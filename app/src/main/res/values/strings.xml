@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">油站管理</string>
+    <string name="login">登录</string>
     <string name="fzy">fzy</string>
     <string name="pos">POS</string>
     <string name="name_station">OIL</string>

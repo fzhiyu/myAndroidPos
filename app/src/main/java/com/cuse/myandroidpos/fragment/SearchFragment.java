@@ -45,6 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import top.androidman.SuperButton;
 
 
 public class SearchFragment extends Fragment implements View.OnTouchListener{
@@ -54,9 +55,9 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
     private EditText searStartTime;
     private EditText searEndTime;
-    private Button btnPastHour;
-    private Button btnToday;
-    private Button btnWeek;
+    private SuperButton btnPastHour;
+    private SuperButton btnToday;
+    private SuperButton btnWeek;
     private Button btnSearch;
     private RecyclerView recyclerView;
 

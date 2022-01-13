@@ -52,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
+        this.setTitle("登录");
+
         //找到对应的ID
         editStationId = findViewById(R.id.editText_sign_stationID);
         editPassWord = findViewById(R.id.editText_sign_passWord);
@@ -74,8 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                     postLogin(view);
             }
         });
-        //得到imei测试，用完删除
-        getImei();
+
     }
 
     //post login
@@ -84,17 +85,15 @@ public class LoginActivity extends AppCompatActivity {
         dialog = ProgressDialog.show(view.getContext(), "", "正在登录");
         dialog.show();
 
-//        //得到需要的传送的值
-//        String stationId = editStationId.getText().toString();
-//        String passWord = editPassWord.getText().toString();
-//        //得到imei
-//        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-//        String imei = telephonyManager.getDeviceId();
+        //得到需要的传送的值
+        String stationId = editStationId.getText().toString();
+        String passWord = editPassWord.getText().toString();
+        //得到imei
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        String imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        //测试数据用完删除
-        String imei = "testImei1";
-        String stationId = "BJ001001";
-        String passWord = "e10adc3949ba59abbe56e057f20f883e";
+        //测试
+        imei = "testImei1";
 
         //得到字符串并加密编码
         long timeStamp = new Date().getTime();
@@ -155,33 +154,5 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void getImei(){
-        Button button = findViewById(R.id.btn_sign_getImei);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "onClick: ");
-                TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                String imei = null;
-
-//                if (tm != null){
-//                    imei = tm.getDeviceId();
-//                }
-
-//                if (imei == null || imei.length() == 0){
-                    imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-//                }
-
-                if (imei != null)
-                    Toast.makeText(LoginActivity.this, "imei = " + imei, Toast.LENGTH_LONG).show();
-                else
-                    Toast.makeText(LoginActivity.this, "没有得到imei", Toast.LENGTH_LONG).show();
-
-
-            }
-        });
-
-    }
 
 }

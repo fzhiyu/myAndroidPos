@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -71,6 +74,8 @@ public class LoginActivity extends AppCompatActivity {
                     postLogin(view);
             }
         });
+        //得到imei测试，用完删除
+        getImei();
     }
 
     //post login
@@ -148,6 +153,31 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void getImei(){
+        Button button = findViewById(R.id.btn_sign_getImei);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "onClick: ");
+                TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                String imei = null;
+
+                if (tm != null){
+                    imei = tm.getDeviceId();
+                }
+
+                if (imei == null || imei.length() == 0){
+                    imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+                }
+
+                Toast.makeText(LoginActivity.this, "imei = " + imei, Toast.LENGTH_LONG).show();
+
+            }
+        });
+
     }
 
 }

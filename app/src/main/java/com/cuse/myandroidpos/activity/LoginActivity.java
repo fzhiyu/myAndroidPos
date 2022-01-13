@@ -173,7 +173,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
 
-                Toast.makeText(LoginActivity.this, "imei = " + imei, Toast.LENGTH_LONG).show();
+                if (imei != null)
+                    Toast.makeText(LoginActivity.this, "imei = " + imei, Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(LoginActivity.this, "没有得到imei", Toast.LENGTH_LONG).show();
+
 
             }
         });

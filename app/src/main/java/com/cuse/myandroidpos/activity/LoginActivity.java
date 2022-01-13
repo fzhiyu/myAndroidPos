@@ -164,14 +164,14 @@ public class LoginActivity extends AppCompatActivity {
                 TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
                 String imei = null;
 
-                if (tm != null){
-                    imei = tm.getDeviceId();
-                }
+//                if (tm != null){
+//                    imei = tm.getDeviceId();
+//                }
 
-                if (imei == null || imei.length() == 0){
+//                if (imei == null || imei.length() == 0){
                     imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                }
+//                }
 
                 if (imei != null)
                     Toast.makeText(LoginActivity.this, "imei = " + imei, Toast.LENGTH_LONG).show();

@@ -43,6 +43,7 @@ import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 
+import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -201,7 +202,7 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(runnable);
+//        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -347,8 +348,10 @@ public class ItemListFragment extends Fragment {
                     addOrder();
 
                     //进行语音播报
-                    newOrderSpeech();
+//                    newOrderSpeech();
 
+                    //新订单打印
+                    newOrderPrint();
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter
@@ -364,6 +367,28 @@ public class ItemListFragment extends Fragment {
                 Toast.makeText(getContext(),"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //新订单打印
+    private void newOrderPrint() {
+        if (oilOrderLists != null && newOrderNum !=0) {
+            String content = "加油ID:" + oilOrderLists.get(0).getOilOrderId() + "\n" +
+                    "加油时间:" + oilOrderLists.get(0).getOilOrderTime() + "\n" +
+                    "用户手机号:" + oilOrderLists.get(0).getUser() + "\n" +
+                    "油品名称:" + oilOrderLists.get(0).getOilName() + "\n" +
+                    "加油总额:" + oilOrderLists.get(0).getMoney() + "\n" +
+                    "折扣金额:" + oilOrderLists.get(0).getDiscount() + "\n" +
+                    "优惠卷金额:" + oilOrderLists.get(0).getCoupon() + "\n" +
+                    "会员账户支付金额:" + oilOrderLists.get(0).getBalance() + "\n" +
+                    "微信支付金额:" + oilOrderLists.get(0).getCash();
+
+            float size = 24;
+            String testFont = null;
+            boolean isBold = true;
+            boolean isUnderLine = true;
+            SunmiPrintHelper.getInstance().printText(content, size, isBold, isUnderLine, testFont);
+            SunmiPrintHelper.getInstance().feedPaper();
+        }
     }
 
     //新订单语音播报

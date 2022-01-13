@@ -120,8 +120,8 @@ public class BackProcessFragment extends Fragment{
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                 } else if(orderRefundJson.getCode() == 0) {
                     Log.e(TAG, "onResponse: " + orderRefundJson.getData().getMessage());
-//                    Toast.makeText(getContext(),orderRefundJson.getData()
-//                      .getResult(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),orderRefundJson.getData()
+                      .getMessage(),Toast.LENGTH_SHORT).show();
 
                 } else {
                     Tools.codeError(getContext(), orderRefundJson.getCode());

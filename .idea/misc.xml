@@ -44,6 +44,8 @@
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/hexprint.xml" value="0.15" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/nav_menu.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14114583333333333" />
+        <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/mipmap-anydpi-v26/ic_pos_round.xml" value="0.14114583333333333" />
         <entry key="..\:/AndroidStudioProjects/myAndroidPos/app/src/main/res/xml/searchable.xml" value="0.30885416666666665" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/drawable/loading.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_1/myAndroidPos/app/src/main/res/layout/activity_item_detail.xml" value="0.2859375" />
@@ -65,7 +67,6 @@
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/data_time_picker.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_back.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_back_detail.xml" value="0.2859375" />
-        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_back_item.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_count.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_home_item_content.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_item_detail.xml" value="0.2859375" />

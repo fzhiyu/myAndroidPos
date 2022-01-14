@@ -52,7 +52,7 @@
                 android:textSize="15sp"
                 android:textColor="#07C160"
                 android:layout_gravity="right"
-                android:gravity="center_vertical"
+                android:gravity="right"
                 android:visibility="gone"/>
 
         </LinearLayout>

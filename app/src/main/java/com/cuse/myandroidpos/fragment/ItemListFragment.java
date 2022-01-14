@@ -133,6 +133,7 @@ public class ItemListFragment extends Fragment {
     private int newOrderNum;
     private TextToSpeech textToSpeech;
     private View sView;
+    private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -177,15 +178,10 @@ public class ItemListFragment extends Fragment {
         handleDownPullUpdate();
 
         //连接webSocket
-//        ws_connect();
-
-        example();
+        ws_connect();
     }
 
-    private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
-//    private WebSocketClientService.WebSocketClientBinder binder;
-
-    private void example() {
+    private void ws_connect() {
         initData();
         URI uri;
         try {
@@ -194,8 +190,7 @@ public class ItemListFragment extends Fragment {
             e.printStackTrace();
             return;
         }
-        com.cuse.myandroidpos.PosWebSocket.WebSocketClient client =
-                new com.cuse.myandroidpos.PosWebSocket.WebSocketClient(uri) {
+        client = new com.cuse.myandroidpos.PosWebSocket.WebSocketClient(uri) {
             @Override
             public void onMessage(String message) {
                 super.onMessage(message);
@@ -203,6 +198,12 @@ public class ItemListFragment extends Fragment {
                 if(message.contains("{")) {
                     orderLastPost();
                 }
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+                super.onClose(code, reason, remote);
+                Log.e(TAG, "onClose: ");
             }
         };
         try {
@@ -214,27 +215,7 @@ public class ItemListFragment extends Fragment {
             client.send(json_login);
             client.send(json_checkOnline);
         }
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-//                client.send(json_login);
-                client.send(json_heart);
-                handler.postDelayed(this, 20000);
-            }
-        };
-        handler.postDelayed(runnable, 20000);
-    }
-
-
-
-    private void ws_connect () {
-        initData();
-        //建立websockets连接
-        createWebSocketClient();
-        //login
-        webSocketClient.send(json_login);
-        //定时发送heartbeat
+        //心跳
         heartBeat();
     }
 
@@ -244,7 +225,7 @@ public class ItemListFragment extends Fragment {
         runnable = new Runnable() {
             @Override
             public void run() {
-                webSocketClient.send(json_heart);
+                client.send(json_heart);
                 handler.postDelayed(this, 20000);
             }
         };
@@ -255,7 +236,21 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        handler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause: ");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        handler.removeCallbacks(runnable);
+        client.close();
+        Log.e(TAG, "onStop: ");
     }
 
     @Override
@@ -293,58 +288,6 @@ public class ItemListFragment extends Fragment {
 
         wsInfo_newOrder = new wsInfo(stationId, "new_order");
         json_newOrder = JSON.toJSONString(wsInfo_newOrder);
-    }
-
-    private void createWebSocketClient() {
-        URI uri;
-        try {
-            uri = new URI("ws://paas.u-coupon.cn/wss");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        webSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen() {
-                Log.i("WebSocket", "Session is starting");
-            }
-
-            @Override
-            public void onTextReceived(String message) {
-                Log.e(TAG, "onTextReceived: " + message);
-            }
-
-            @Override
-            public void onBinaryReceived(byte[] data) {
-            }
-
-            @Override
-            public void onPingReceived(byte[] data) {
-//                Log.i("Ping", "" + Arrays.toString(data));
-            }
-
-            @Override
-            public void onPongReceived(byte[] data) {
-            }
-
-            @Override
-            public void onException(Exception e) {
-//                System.out.println(e.getMessage());
-            }
-
-            @Override
-            public void onCloseReceived() {
-                Log.i("WebSocket", "Closed ");
-//                System.out.println("onCloseReceived");
-            }
-        };
-
-        webSocketClient.setConnectTimeout(10000);
-        webSocketClient.setReadTimeout(6000);
-        webSocketClient.enableAutomaticReconnection(5000);
-        webSocketClient.connect();
-
     }
 
     public void orderLastPost() {

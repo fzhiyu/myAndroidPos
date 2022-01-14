@@ -24,7 +24,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +37,7 @@ import com.cuse.myandroidpos.ListDataSave;
 import com.cuse.myandroidpos.PosWebSocket.WebSocketClientService;
 import com.cuse.myandroidpos.PosWebSocket.wsInfo;
 import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.OrderLastJson.Data;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
@@ -135,6 +138,9 @@ public class ItemListFragment extends Fragment {
     private View sView;
     private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
 
+    private TextView tvStationName;
+    private TextView tvRefreshView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -160,6 +166,9 @@ public class ItemListFragment extends Fragment {
         //总金钱和总订单数
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
         tvTotalOrder = view.findViewById(R.id.tv_home_TodayTotalOrder);
+        //刷新时间和油站名称
+        tvStationName = view.findViewById(R.id.tv_home_stationName);
+        tvRefreshView = view.findViewById(R.id.tv_home_refreshView);
         //下拉刷新
         swipeRefreshLayout = view.findViewById(R.id.swipe_home);
         //找到按钮实例,搜索，汇总，退单，设置
@@ -328,11 +337,20 @@ public class ItemListFragment extends Fragment {
 //                Log.i("应答编码", "" + orderLastJson.getCode());
 //                Log.i("stringBuffer", "" + stringBuffer);
 //                Log.i("签名", "" + signature);
+//                Log.i(TAG, "onResponse: " + s);
 
                 if (response.body().getCode() == 0) {
                     //设置显示总金钱和总订单
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
+
+                    //设置刷新时间和油站名称
+                    if (orderLastJson.getData().getStationName() != null || orderLastJson.getData().getStationName().equals(""))
+                        tvStationName.setText(orderLastJson.getData().getStationName());
+                    Date d = new Date();
+                    SimpleDateFormat sim = new SimpleDateFormat("HH:mm:ss");
+                    tvRefreshView.setText("刷新时间: " + sim.format(d));
+
                     //加入新订单
                     addOrder();
 

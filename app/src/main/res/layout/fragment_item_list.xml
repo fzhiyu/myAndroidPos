@@ -97,6 +97,26 @@
         android:layout_marginRight="10dp"
         android:background="@color/gray_1" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_home_stationName"
+            android:layout_marginLeft="5dp"
+            android:textSize="15sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_home_refreshView"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:textSize="15sp"/>
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/search_button_bar"
         android:layout_width="match_parent"

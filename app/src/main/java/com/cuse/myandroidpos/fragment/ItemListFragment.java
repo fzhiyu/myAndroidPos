@@ -3,10 +3,7 @@ package com.cuse.myandroidpos.fragment;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,49 +24,49 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.alibaba.fastjson.JSON;
-import com.cuse.myandroidpos.PosWebSocket.wsInfo;
-import com.cuse.myandroidpos.activity.MainActivity;
-import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.ListDataSave;
-import com.cuse.myandroidpos.activity.LoginActivity;
+import com.cuse.myandroidpos.PosWebSocket.WebSocketClientService;
+import com.cuse.myandroidpos.PosWebSocket.wsInfo;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderLastJson.OilOrderList;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
+import com.cuse.myandroidpos.activity.LoginActivity;
+import com.cuse.myandroidpos.activity.MainActivity;
+import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
-
 import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventListener;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import io.crossbar.autobahn.websocket.WebSocketConnection;
+import io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
+import io.crossbar.autobahn.websocket.exceptions.WebSocketException;
+import io.crossbar.autobahn.websocket.types.ConnectionResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 import tech.gusavila92.websocketclient.WebSocketClient;
 
 public class ItemListFragment extends Fragment {
@@ -179,16 +176,66 @@ public class ItemListFragment extends Fragment {
         //下拉刷新
         handleDownPullUpdate();
 
+        //连接webSocket
+//        ws_connect();
+
+        example();
+    }
+
+    private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
+//    private WebSocketClientService.WebSocketClientBinder binder;
+
+    private void example() {
+        initData();
+        URI uri;
+        try {
+            uri = new URI("ws://paas.u-coupon.cn/wss");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+        com.cuse.myandroidpos.PosWebSocket.WebSocketClient client =
+                new com.cuse.myandroidpos.PosWebSocket.WebSocketClient(uri) {
+            @Override
+            public void onMessage(String message) {
+                super.onMessage(message);
+                Log.e(TAG, "连接: " + message);
+                if(message.contains("{")) {
+                    orderLastPost();
+                }
+            }
+        };
+        try {
+            client.connectBlocking();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (client != null && client.isOpen()) {
+            client.send(json_login);
+            client.send(json_checkOnline);
+        }
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+//                client.send(json_login);
+                client.send(json_heart);
+                handler.postDelayed(this, 20000);
+            }
+        };
+        handler.postDelayed(runnable, 20000);
+    }
+
+
+
+    private void ws_connect () {
         initData();
         //建立websockets连接
         createWebSocketClient();
         //login
         webSocketClient.send(json_login);
-        testWebsockets(view);
         //定时发送heartbeat
-//        heartBeat();
-
-
+        heartBeat();
     }
 
     //每隔20s发送心跳
@@ -198,10 +245,10 @@ public class ItemListFragment extends Fragment {
             @Override
             public void run() {
                 webSocketClient.send(json_heart);
-                handler.postDelayed(this, 2000);
+                handler.postDelayed(this, 20000);
             }
         };
-        handler.postDelayed(runnable, 2000);
+        handler.postDelayed(runnable, 20000);
     }
 
     //关闭定时器
@@ -234,30 +281,18 @@ public class ItemListFragment extends Fragment {
 
     //初始发送数据
     private void initData() {
-        wsInfo_login = new wsInfo(token, "login");
+        stationId = "BJ001001";
+        wsInfo_login = new wsInfo(stationId, "login");
         json_login = JSON.toJSONString(wsInfo_login);
 
         wsInfo_checkOnline = new wsInfo("", "check_online");
         json_checkOnline = JSON.toJSONString(wsInfo_checkOnline);
 
-        wsInfo_heart = new wsInfo(token, "heartbeat");
+        wsInfo_heart = new wsInfo(stationId, "heartbeat");
         json_heart = JSON.toJSONString(wsInfo_heart);
 
-        wsInfo_newOrder = new wsInfo(token, "new_order");
+        wsInfo_newOrder = new wsInfo(stationId, "new_order");
         json_newOrder = JSON.toJSONString(wsInfo_newOrder);
-    }
-
-    //测试websockets
-    private void testWebsockets(View view) {
-        Button btn_test_ws = view.findViewById(R.id.btn_Test);
-        btn_test_ws.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                webSocketClient.send(json_checkOnline);
-                webSocketClient.send(json_heart);
-                webSocketClient.send(json_newOrder);
-            }
-        });
     }
 
     private void createWebSocketClient() {
@@ -277,7 +312,7 @@ public class ItemListFragment extends Fragment {
 
             @Override
             public void onTextReceived(String message) {
-                Log.i("received", "" + message);
+                Log.e(TAG, "onTextReceived: " + message);
             }
 
             @Override
@@ -306,9 +341,10 @@ public class ItemListFragment extends Fragment {
         };
 
         webSocketClient.setConnectTimeout(10000);
-        webSocketClient.setReadTimeout(60000);
+        webSocketClient.setReadTimeout(6000);
         webSocketClient.enableAutomaticReconnection(5000);
         webSocketClient.connect();
+
     }
 
     public void orderLastPost() {
@@ -357,11 +393,6 @@ public class ItemListFragment extends Fragment {
                     //加入新订单
                     addOrder();
 
-                    //列表
-                    recyclerView = binding.itemList;
-                    //recycleView,适配器单独写在了HomeAdapter
-                    setRecyclerView(recyclerView);
-
                     //进行语音播报
                     if (getVoiceValue())
                         newOrderSpeech();
@@ -369,6 +400,10 @@ public class ItemListFragment extends Fragment {
                     //新订单打印
                     if (getPrintValue())
                         newOrderPrint();
+                    //列表
+                    recyclerView = binding.itemList;
+                    //recycleView,适配器单独写在了HomeAdapter
+                    setRecyclerView(recyclerView);
 
 // 列表刷新                   homeAdapter.notifyDataSetChanged();
                 } else

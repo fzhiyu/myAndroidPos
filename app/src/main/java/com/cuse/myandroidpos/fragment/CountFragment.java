@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -86,6 +87,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
 
     private List<OilOrderList> oilCountLists;
     private String token;
+//    private long timeStamp;
 
     @Nullable
     @Override
@@ -112,7 +114,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         RecyclerView recyclerView = binding.sumOilList;
         setRecyclerView(recyclerView);
         //打印汇总小票
-        countprint(view);
+        countPrint(view);
     }
 
     //搜索汇总
@@ -164,7 +166,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         call.enqueue(new Callback<OrderSummaryJson>() {
             @Override
             public void onResponse(Call<OrderSummaryJson> call, Response<OrderSummaryJson> response) {
-                OrderSummaryJson orderSummaryJson = response.body();
+                orderSummaryJson = response.body();
                 //测试，用完删除
                 Gson gson = new Gson();
                 String s = gson.toJson(orderSummaryJson);
@@ -196,12 +198,37 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     }
 
     //打印汇总小票
-    public void countprint(View view) {
+    public void countPrint(View view) {
         Button btn_count_print = view.findViewById(R.id.btn_sum_print);
         btn_count_print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                long timeStamp = new Date().getTime();
+                StringBuilder content = new StringBuilder();
+                content.append("油站名称:" + "北京测试公司测试站" + "\n");
+                content.append("当前时间:").append(Tools.StampToTime(timeStamp)).append("\n");
+                content.append("开始时间:").append(sStart).append("\n");
+                content.append("结束时间:").append(sEnd).append("\n");
+                content.append("分油品的加油金额和笔数").append("\n");
+                content.append("总加油金额:").append(orderSummaryJson.getData().getTodayMoney())
+                        .append("\n");
+                content.append("总笔数:").append(orderSummaryJson.getData().getTodayCount())
+                        .append("\n");
+                for (OilOrderList t : oilCountLists) {
+                    content.append(t.getOilName()).append("  ").append("加油金额:")
+                            .append(t.getOilMoney()).append("  ").append("笔数:")
+                            .append(t.getOilCount()).append("\n");
+                }
 
+                Log.e(TAG, "onClick: " + content);
+
+                float size = 24;
+                String testFont = null;
+                boolean isBold = true;
+                boolean isUnderLine = true;
+                SunmiPrintHelper.getInstance().printText(content.toString(), size
+                        , isBold, isUnderLine, testFont);
+                SunmiPrintHelper.getInstance().feedPaper();
             }
         });
     }
@@ -209,6 +236,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     public void setEdit(long startTimeStamp, long endTimeStamp){
         sStart = StampToTime(startTimeStamp);
         sEnd = StampToTime(endTimeStamp);
+        Log.e(TAG, "setEdit: " + sEnd);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行

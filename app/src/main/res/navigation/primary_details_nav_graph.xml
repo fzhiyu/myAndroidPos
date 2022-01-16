@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/item_list_fragment"
         android:name="com.cuse.myandroidpos.fragment.ItemListFragment"
-        android:label="登录"
+        android:label=""
         tools:layout="@layout/fragment_item_list">
         <action
             android:id="@+id/show_item_detail"

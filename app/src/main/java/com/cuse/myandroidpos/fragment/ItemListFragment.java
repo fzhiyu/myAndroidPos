@@ -154,6 +154,8 @@ public class ItemListFragment extends Fragment {
         //初始化语音engine
         initSpeech();
 
+
+
         return binding.getRoot();
     }
 
@@ -263,6 +265,12 @@ public class ItemListFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume: " );
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -340,6 +348,9 @@ public class ItemListFragment extends Fragment {
 //                Log.i(TAG, "onResponse: " + s);
 
                 if (response.body().getCode() == 0) {
+                    ((MainActivity)getActivity()).getSupportActionBar()
+                        .setTitle(orderLastJson.getData().getStationName());
+
                     //设置显示总金钱和总订单
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");

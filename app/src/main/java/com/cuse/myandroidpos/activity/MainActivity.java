@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,11 +23,20 @@ import android.widget.Button;
 
 
 import com.cuse.myandroidpos.MyListData;
+import com.cuse.myandroidpos.Post.HttpBinService;
+import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.ActivityItemDetailBinding;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<MyListData> myListData;
@@ -35,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btn;
 
     private String token;
+    private String TAG = "mainActivity";
+    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         //得到loginActivity传过来的token
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
+        orderLastPost();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_item);
@@ -57,8 +70,37 @@ public class MainActivity extends AppCompatActivity {
                 Builder(navController.getGraph())
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+    }
 
-        getSupportActionBar().setTitle("首页");
+    public void orderLastPost() {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
+        long timeStamp = new Date().getTime();
+        String stringBuffer = "timestamp" +
+                timeStamp / 1000 +
+                "token" +
+                token +
+                LoginActivity.interferenceCode;
+        String signature = Tools.md5.md5(stringBuffer);
+        Call<OrderLastJson> call = httpBinService.orderLast(token, timeStamp / 1000 + "", signature);
+        call.enqueue(new Callback<OrderLastJson>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
+                OrderLastJson orderLastJson = response.body();
+                if (response.body().getCode() == 0) {
+                    title = orderLastJson.getData().getStationName();
+//                    Log.e(TAG, "onResponse: " + title);
+                    getSupportActionBar().setTitle(title);
+                }
+            }
+            @Override
+            public void onFailure(Call<OrderLastJson> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

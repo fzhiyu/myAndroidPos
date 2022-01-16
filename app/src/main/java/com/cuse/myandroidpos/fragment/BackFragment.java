@@ -84,7 +84,7 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                              @NonNull Bundle savedInstanceState) {
 
-        token = ((MainActivity)getActivity()).getToken();
+        token = getArguments().getString("token");
         binding = FragmentBackBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }

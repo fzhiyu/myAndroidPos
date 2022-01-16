@@ -94,7 +94,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentCountBinding.inflate(inflater, container, false);
 //        System.out.println("binding.getRoot() Search: " + binding.getRoot())
-        token = ((MainActivity)getActivity()).getToken();
+        token = getArguments().getString("token");
         return binding.getRoot();
     }
 
@@ -167,13 +167,13 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
             @Override
             public void onResponse(Call<OrderSummaryJson> call, Response<OrderSummaryJson> response) {
                 orderSummaryJson = response.body();
-                //测试，用完删除
-                Gson gson = new Gson();
-                String s = gson.toJson(orderSummaryJson);
+//                //测试，用完删除
+//                Gson gson = new Gson();
+//                String s = gson.toJson(orderSummaryJson);
                 Log.i(TAG, "stringBuffer: " + stringBuffer);
-                Log.i(TAG, "signature: " + signature);
-                Log.i(TAG, "response.code: " + response.code());
-                Log.i(TAG, "orderSummaryJson: " + s);
+//                Log.i(TAG, "signature: " + signature);
+//                Log.i(TAG, "response.code: " + response.code());
+//                Log.i(TAG, "orderSummaryJson: " + s);
 
                 if(orderSummaryJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
@@ -203,32 +203,33 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
         btn_count_print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long timeStamp = new Date().getTime();
-                StringBuilder content = new StringBuilder();
-                content.append("油站名称:" + "北京测试公司测试站" + "\n");
-                content.append("当前时间:").append(Tools.StampToTime(timeStamp)).append("\n");
-                content.append("开始时间:").append(sStart).append("\n");
-                content.append("结束时间:").append(sEnd).append("\n");
-                content.append("分油品的加油金额和笔数").append("\n");
-                content.append("总加油金额:").append(orderSummaryJson.getData().getTodayMoney())
-                        .append("\n");
-                content.append("总笔数:").append(orderSummaryJson.getData().getTodayCount())
-                        .append("\n");
-                for (OilOrderList t : oilCountLists) {
-                    content.append(t.getOilName()).append("  ").append("加油金额:")
-                            .append(t.getOilMoney()).append("  ").append("笔数:")
-                            .append(t.getOilCount()).append("\n");
+                if (orderSummaryJson != null && oilCountLists != null) {
+                    long timeStamp = new Date().getTime();
+                    StringBuilder content = new StringBuilder();
+                    content.append("油站名称:" + "北京测试公司测试站" + "\n");
+                    content.append("当前时间:").append(Tools.StampToTime(timeStamp)).append("\n");
+                    content.append("开始时间:").append(sStart).append("\n");
+                    content.append("结束时间:").append(sEnd).append("\n");
+                    content.append("分油品的加油金额和笔数").append("\n");
+                    content.append("总加油金额:").append(orderSummaryJson.getData().getTodayMoney())
+                            .append("\n");
+                    content.append("总笔数:").append(orderSummaryJson.getData().getTodayCount())
+                            .append("\n");
+                    for (OilOrderList t : oilCountLists) {
+                        content.append(t.getOilName()).append("  ").append("加油金额:")
+                                .append(t.getOilMoney()).append("  ").append("笔数:")
+                                .append(t.getOilCount()).append("\n");
+                    }
+                    Log.e(TAG, "onClick: " + content);
+
+                    float size = 24;
+                    String testFont = null;
+                    boolean isBold = true;
+                    boolean isUnderLine = true;
+                    SunmiPrintHelper.getInstance().printText(content.toString(), size
+                            , isBold, isUnderLine, testFont);
+                    SunmiPrintHelper.getInstance().feedPaper();
                 }
-
-                Log.e(TAG, "onClick: " + content);
-
-                float size = 24;
-                String testFont = null;
-                boolean isBold = true;
-                boolean isUnderLine = true;
-                SunmiPrintHelper.getInstance().printText(content.toString(), size
-                        , isBold, isUnderLine, testFont);
-                SunmiPrintHelper.getInstance().feedPaper();
             }
         });
     }
@@ -294,6 +295,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                                 .append(":")
                                 .append("00");//填入时分
 
+                        Log.e(TAG, "onClick: " + sb1);
                         startTimeStamp = TimeToStamp(sb1);//得到startTime的时间戳
 //                        Log.i(TAG, "onClick: " + startTimeStamp);
 

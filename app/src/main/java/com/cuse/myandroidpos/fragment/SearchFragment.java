@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -81,7 +82,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
-        token = ((MainActivity)getActivity()).getToken();
+        token = getArguments().getString("token");
         return binding.getRoot();
     }
 
@@ -199,6 +200,17 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
 
 
     public void setButton (View view) {
+        //设置返回
+        ImageButton btn_back = view.findViewById(R.id.back);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("token", token);
+                Navigation.findNavController(getView())
+                        .navigate(R.id.action_item_search_fragment_to_item_list_fragment, bundle);
+            }
+        });
         //功能按钮的点击事件
         btnPastHour.setOnClickListener(new View.OnClickListener() {
             @Override

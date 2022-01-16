@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/item_list_fragment">
+    app:startDestination="@id/fragment_login">
 
     <fragment
         android:id="@+id/item_list_fragment"
@@ -26,6 +26,9 @@
         <action
             android:id="@+id/show_back"
             app:destination="@+id/backing_fragment"/>
+        <action
+            android:id="@+id/action_list_to_login"
+            app:destination="@id/fragment_login" />
     </fragment>
 
     <fragment
@@ -36,7 +39,20 @@
         <action
             android:id="@+id/process_to_back"
             app:destination="@+id/backing_fragment"/>
+        <action
+            android:id="@+id/action_backProcess_fragment_to_item_detail_fragment"
+            app:destination="@id/item_detail_fragment" />
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_login"
+        tools:layout="@layout/fragment_login"
+        android:name="com.cuse.myandroidpos.fragment.LoginFragment"
+        android:label="登录">
+        <action
+            android:id="@+id/action_login_to_list"
+            app:destination="@id/item_list_fragment" />
     </fragment>
 
     <fragment
@@ -47,6 +63,9 @@
         <action
             android:id="@+id/back_to_backDetail"
             app:destination="@+id/back_detail_fragment"/>
+        <action
+            android:id="@+id/action_backing_fragment_to_item_list_fragment"
+            app:destination="@id/item_list_fragment" />
 
     </fragment>
 
@@ -55,6 +74,9 @@
         android:name="com.cuse.myandroidpos.fragment.SettingsFragment"
         android:label="设置">
 
+        <action
+            android:id="@+id/action_setting_fragment_to_item_list_fragment"
+            app:destination="@id/item_list_fragment" />
     </fragment>
 
     <fragment
@@ -62,6 +84,9 @@
         tools:layout="@layout/fragment_count"
         android:name="com.cuse.myandroidpos.fragment.CountFragment"
         android:label="统计">
+        <action
+            android:id="@+id/action_item_count_fragment_to_item_list_fragment"
+            app:destination="@id/item_list_fragment" />
     </fragment>
 
     <fragment
@@ -76,6 +101,9 @@
         <action
             android:id="@+id/search_to_detail"
             app:destination="@id/item_detail_fragment" />
+        <action
+            android:id="@+id/action_item_search_fragment_to_item_list_fragment"
+            app:destination="@id/item_list_fragment" />
     </fragment>
 
     <fragment
@@ -86,6 +114,12 @@
         <action
             android:id="@+id/detail_to_backProcess"
             app:destination="@+id/backProcess_fragment"/>
+        <action
+            android:id="@+id/action_item_detail_fragment_to_item_list_fragment"
+            app:destination="@id/item_list_fragment" />
+        <action
+            android:id="@+id/action_item_detail_fragment_to_item_search_fragment"
+            app:destination="@id/item_search_fragment" />
     </fragment>
 
     <fragment
@@ -93,5 +127,8 @@
         android:name="com.cuse.myandroidpos.fragment.BackDetailFragment"
         android:label="退单详情"
         tools:layout="@layout/fragment_back_detail">
+        <action
+            android:id="@+id/action_back_detail_fragment_to_backing_fragment"
+            app:destination="@id/backing_fragment" />
     </fragment>
 </navigation>

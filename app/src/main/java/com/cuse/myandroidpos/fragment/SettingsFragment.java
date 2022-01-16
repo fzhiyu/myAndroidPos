@@ -49,7 +49,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         Preference sync = findPreference("sync");
-        token = ((MainActivity)getActivity()).getToken();
+        token = getArguments().getString("token");
 
         try {
             PackageManager pm = getContext().getPackageManager();
@@ -66,7 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 dialog = ProgressDialog.show(getContext(),"","正在测试");
                 //测试，用完删除
-                token = "test123";
+//                token = "test123";
 
                 //得到字符串并加密
                 timeStamp = new Date().getTime();

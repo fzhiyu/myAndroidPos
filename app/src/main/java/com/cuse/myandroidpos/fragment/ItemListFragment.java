@@ -3,7 +3,9 @@ package com.cuse.myandroidpos.fragment;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.preference.Preference;
@@ -148,9 +151,6 @@ public class ItemListFragment extends Fragment {
 
         mContext = getContext();
 
-        //得到login传来的intent
-        token = ((MainActivity) getActivity()).getToken();
-
         //初始化语音engine
         initSpeech();
 
@@ -163,6 +163,20 @@ public class ItemListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         sView = view;
         oilOrderLists = new LinkedList<>();
+
+        //设置toolbar
+        binding.myToolbar.inflateMenu(R.menu.navigation_menu);
+
+        //设置点击事件
+        toolbarClick();
+
+        //隐藏状态栏
+
+
+//        Log.e(TAG, "onViewCreated: " + getArguments().getString("token"));
+//        token = "test123";
+        token = getArguments().getString("token");
+
         //总金钱和总订单数
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
         tvTotalOrder = view.findViewById(R.id.tv_home_TodayTotalOrder);
@@ -188,6 +202,38 @@ public class ItemListFragment extends Fragment {
 
         //连接webSocket
         ws_connect();
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.myToolbar);
+
+        toolbar.setTitle("New Title");
+
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private void toolbarClick() {
+        binding.myToolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.refresh:
+                    // Navigate to settings screen
+                    orderLastPost();
+                    return true;
+                case R.id.back:
+                    // Save profile changes
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Really Exit?")
+                            .setMessage("Are you sure you want to exit?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    Navigation.findNavController(getView())
+                                            .navigate(R.id.action_list_to_login, null);
+                                }
+                            }).create().show();
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
 
     private void ws_connect() {
@@ -266,6 +312,7 @@ public class ItemListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -337,7 +384,7 @@ public class ItemListFragment extends Fragment {
 //                Log.i("应答编码", "" + orderLastJson.getCode());
 //                Log.i("stringBuffer", "" + stringBuffer);
 //                Log.i("签名", "" + signature);
-//                Log.i(TAG, "onResponse: " + s);
+                Log.i(TAG, "onResponse: " + s);
 
                 if (response.body().getCode() == 0) {
                     //设置显示总金钱和总订单
@@ -475,7 +522,9 @@ public class ItemListFragment extends Fragment {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getView()).navigate(R.id.show_search, null);
+                Bundle bundle = new Bundle();
+                bundle.putString("token", token);
+                Navigation.findNavController(getView()).navigate(R.id.show_search, bundle);
             }
         });
 
@@ -483,7 +532,9 @@ public class ItemListFragment extends Fragment {
         btnAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getView()).navigate(R.id.show_count, null);
+                Bundle bundle = new Bundle();
+                bundle.putString("token", token);
+                Navigation.findNavController(getView()).navigate(R.id.show_count, bundle);
             }
         });
 
@@ -491,7 +542,9 @@ public class ItemListFragment extends Fragment {
         btnRefund.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getView()).navigate(R.id.show_back, null);
+                Bundle bundle = new Bundle();
+                bundle.putString("token", token);
+                Navigation.findNavController(getView()).navigate(R.id.show_back, bundle);
             }
         });
 
@@ -499,7 +552,9 @@ public class ItemListFragment extends Fragment {
         btnSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
+                Bundle bundle = new Bundle();
+                bundle.putString("token", token);
+                Navigation.findNavController(getView()).navigate(R.id.show_setting, bundle);
             }
         });
 
@@ -527,6 +582,7 @@ public class ItemListFragment extends Fragment {
                 // 就可以把bundle.putString换成，bundle.putSerializable
                 //详情界面可以用oilOrder = (OilOrderList) bundle.getSerializable("LastOilOrder");来得到对象
                 bundle.putSerializable("LastOilOrder", oilOrderLists.get(position));
+                bundle.putString("token", token);
 
                 Navigation.findNavController(getView()).navigate(R.id.show_item_detail, bundle);
             }

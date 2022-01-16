@@ -294,6 +294,9 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                                 .append(":")
                                 .append("00");//填入时分
 
+                        //将String时间填入sStart
+                        sStart = sb1.toString();
+
                         startTimeStamp = TimeToStamp(sb1);//得到startTime的时间戳
 //                        Log.i(TAG, "onClick: " + startTimeStamp);
 
@@ -327,6 +330,8 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                                 .append(":")
                                 .append("00");//填入时分
 
+                        //将String时间填入sEnd
+                        sEnd = sb.toString();
 
                         endTimeStamp = TimeToStamp(sb);
 //                        Log.i(TAG, "onClick: " + endTimeStamp);

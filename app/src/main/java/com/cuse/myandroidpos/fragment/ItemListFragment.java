@@ -138,7 +138,6 @@ public class ItemListFragment extends Fragment {
     private View sView;
     private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
 
-    private TextView tvStationName;
     private TextView tvRefreshView;
 
     @Override
@@ -154,8 +153,6 @@ public class ItemListFragment extends Fragment {
         //初始化语音engine
         initSpeech();
 
-
-
         return binding.getRoot();
     }
 
@@ -168,8 +165,7 @@ public class ItemListFragment extends Fragment {
         //总金钱和总订单数
         tvTotalMoney = view.findViewById(R.id.tv_home_TodayTotalMoney);
         tvTotalOrder = view.findViewById(R.id.tv_home_TodayTotalOrder);
-        //刷新时间和油站名称
-        tvStationName = view.findViewById(R.id.tv_home_stationName);
+        //刷新时间
         tvRefreshView = view.findViewById(R.id.tv_home_refreshView);
         //下拉刷新
         swipeRefreshLayout = view.findViewById(R.id.swipe_home);
@@ -348,6 +344,7 @@ public class ItemListFragment extends Fragment {
 //                Log.i(TAG, "onResponse: " + s);
 
                 if (response.body().getCode() == 0) {
+                    //设置油站名称
                     ((MainActivity)getActivity()).getSupportActionBar()
                         .setTitle(orderLastJson.getData().getStationName());
 
@@ -355,12 +352,10 @@ public class ItemListFragment extends Fragment {
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
 
-                    //设置刷新时间和油站名称
-                    if (orderLastJson.getData().getStationName() != null || orderLastJson.getData().getStationName().equals(""))
-                        tvStationName.setText(orderLastJson.getData().getStationName());
+                    //设置刷新时间
                     Date d = new Date();
-                    SimpleDateFormat sim = new SimpleDateFormat("HH:mm:ss");
-                    tvRefreshView.setText("刷新时间: " + sim.format(d));
+                    SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    tvRefreshView.setText(sim.format(d));
 
                     //加入新订单
                     addOrder();

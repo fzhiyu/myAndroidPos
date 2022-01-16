@@ -317,6 +317,9 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                                 .append(":")
                                 .append("00");//填入时分
 
+                        //将String时间填入sStart
+                        sStart = sb1.toString();
+
                         startTimeStamp = Tools.TimeToStamp(sb1);//得到startTime的时间戳
 //                        Log.i(TAG, "onClick: " + startTimeStamp);
 
@@ -350,6 +353,8 @@ public class BackFragment extends Fragment implements View.OnTouchListener{
                                 .append(":")
                                 .append("00");//填入时分
 
+                        //将String时间填入sEnd
+                        sEnd = sb.toString();
 
                         endTimeStamp = Tools.TimeToStamp(sb);
 //                        Log.i(TAG, "onClick: " + endTimeStamp);

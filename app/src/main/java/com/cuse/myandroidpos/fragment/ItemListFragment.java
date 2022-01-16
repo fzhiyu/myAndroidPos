@@ -345,8 +345,18 @@ public class ItemListFragment extends Fragment {
 
                 if (response.body().getCode() == 0) {
                     //设置油站名称
-                    ((MainActivity)getActivity()).getSupportActionBar()
-                        .setTitle(orderLastJson.getData().getStationName());
+                    if (orderLastJson.getData().getStationName() == null || orderLastJson.getData().getStationName().equals(""))
+                        //如果为空，显示首页
+                        ((MainActivity)getActivity()).getSupportActionBar().setTitle("首页");
+                    else{
+                        //油站名称长度大于10，后面的显示"..."
+                        StringBuffer stationName = new StringBuffer(orderLastJson.getData().getStationName());
+//                        if (stationName.length() >= 10)
+//                            stationName.replace(10, stationName.length() - 1 ,"...");
+                        ((MainActivity)getActivity()).getSupportActionBar()
+                                .setTitle(stationName);
+                    }
+
 
                     //设置显示总金钱和总订单
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");

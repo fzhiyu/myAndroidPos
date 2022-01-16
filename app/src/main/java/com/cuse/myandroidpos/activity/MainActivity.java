@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String token;
     private String TAG = "mainActivity";
-    private String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         //得到loginActivity传过来的token
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
-        orderLastPost();
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_item);
@@ -70,38 +68,9 @@ public class MainActivity extends AppCompatActivity {
                 Builder(navController.getGraph())
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
     }
 
-    public void orderLastPost() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        HttpBinService httpBinService = retrofit.create(HttpBinService.class);
-        long timeStamp = new Date().getTime();
-        String stringBuffer = "timestamp" +
-                timeStamp / 1000 +
-                "token" +
-                token +
-                LoginActivity.interferenceCode;
-        String signature = Tools.md5.md5(stringBuffer);
-        Call<OrderLastJson> call = httpBinService.orderLast(token, timeStamp / 1000 + "", signature);
-        call.enqueue(new Callback<OrderLastJson>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(Call<OrderLastJson> call, Response<OrderLastJson> response) {
-                OrderLastJson orderLastJson = response.body();
-                if (response.body().getCode() == 0) {
-                    title = orderLastJson.getData().getStationName();
-//                    Log.e(TAG, "onResponse: " + title);
-                    getSupportActionBar().setTitle(title);
-                }
-            }
-            @Override
-            public void onFailure(Call<OrderLastJson> call, Throwable t) {
-
-            }
-        });
-    }
 
     @Override
     protected void onPause() {
@@ -133,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.back){
 //            logout();
             new AlertDialog.Builder(this)
-                    .setTitle("Really Exit?")
-                    .setMessage("Are you sure you want to exit?")
+//                    .setTitle("确认退出")
+                    .setMessage("确认退出登录吗？")
                     .setNegativeButton(android.R.string.no, null)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 

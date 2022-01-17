@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+
     }
 
     //屏蔽多任务键

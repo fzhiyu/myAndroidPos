@@ -5,6 +5,8 @@ import static android.content.ContentValues.TAG;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -421,22 +423,24 @@ public class ItemListFragment extends Fragment {
     //新订单语音播报
     private void newOrderSpeech() {
         if (oilOrderLists != null && newOrderNum != 0) {
-            String phone = oilOrderLists.get(0).getUser();
-            String subPhone = phone.substring(phone.length() - 4);
-            String aPhone = subPhone.charAt(0) + "_"
-                    + subPhone.charAt(1) + "_"
-                    + subPhone.charAt(2) + "_"
-                    + subPhone.charAt(3);
-            String oilName = oilOrderLists.get(0).getOilName();
-            String[] aOilName = oilName.split("-");
-            StringBuilder speechOilName = new StringBuilder();
-            for (String s : aOilName) {
-                speechOilName.append(s);
-            }
-            String oilMoney = String.valueOf(oilOrderLists.get(0).getMoney());
-            Log.e(TAG, "newOrderSpeech: " + phone);
-            String data = "新订单，手机尾号" + aPhone + "," + speechOilName + oilMoney + "元";
-            textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+//            String phone = oilOrderLists.get(0).getUser();
+//            String subPhone = phone.substring(phone.length() - 4);
+//            String aPhone = subPhone.charAt(0) + "-"
+//                    + subPhone.charAt(1) + "-"
+//                    + subPhone.charAt(2) + "-"
+//                    + subPhone.charAt(3);
+//            String oilName = oilOrderLists.get(0).getOilName();
+//            String[] aOilName = oilName.split("-");
+//            StringBuilder speechOilName = new StringBuilder();
+//            for (String s : aOilName) {
+//                speechOilName.append(s);
+//            }
+//            String oilMoney = String.valueOf(oilOrderLists.get(0).getMoney());
+//            Log.e(TAG, "newOrderSpeech: " + phone);
+//            String data = "新订单，手机尾号" + aPhone + "," + speechOilName + oilMoney + "元";
+//            textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+            MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
+            mediaPlayer.start();
         }
 
     }

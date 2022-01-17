@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         this.setTitle("登录");
+
 
         //找到对应的ID
         editStationId = findViewById(R.id.editText_sign_stationID);
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         String imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         //测试
-        imei = "testImei1";
+        imei = "testImei2";
 
         //得到字符串并加密编码
         long timeStamp = new Date().getTime();

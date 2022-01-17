@@ -48,7 +48,7 @@
                 android:id="@+id/newOrderSign"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="new"
+                android:text="新"
                 android:textSize="15sp"
                 android:textColor="#07C160"
                 android:layout_gravity="right"

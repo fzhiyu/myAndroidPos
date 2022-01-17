@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btn;
 
     private String token;
+    private String stationId;
     private String TAG = "mainActivity";
 
     @Override
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         //得到loginActivity传过来的token
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
+        stationId = intent.getStringExtra("stationId");
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_item);
@@ -99,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //stationId
+    public String getStationId() {
+        return stationId;
+    }
     //向fragment传递token
     public String getToken(){
         return token;

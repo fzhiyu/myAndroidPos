@@ -289,7 +289,7 @@ public class ItemListFragment extends Fragment {
 
     //初始发送数据
     private void initData() {
-        stationId = "BJ001001";
+        stationId = ((MainActivity)getActivity()).getStationId();
         wsInfo_login = new wsInfo(stationId, "login");
         json_login = JSON.toJSONString(wsInfo_login);
 
@@ -408,6 +408,7 @@ public class ItemListFragment extends Fragment {
                     "会员账户支付金额:" + oilOrderLists.get(0).getBalance() + "\n" +
                     "微信支付金额:" + oilOrderLists.get(0).getCash();
 
+            Log.e(TAG, "newOrderPrint: " + content);
             float size = 24;
             String testFont = null;
             boolean isBold = true;
@@ -422,9 +423,9 @@ public class ItemListFragment extends Fragment {
         if (oilOrderLists != null && newOrderNum != 0) {
             String phone = oilOrderLists.get(0).getUser();
             String subPhone = phone.substring(phone.length() - 4);
-            String aPhone = subPhone.charAt(0) + "-"
-                    + subPhone.charAt(1) + "-"
-                    + subPhone.charAt(2) + "-"
+            String aPhone = subPhone.charAt(0) + "_"
+                    + subPhone.charAt(1) + "_"
+                    + subPhone.charAt(2) + "_"
                     + subPhone.charAt(3);
             String oilName = oilOrderLists.get(0).getOilName();
             String[] aOilName = oilName.split("-");

@@ -137,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                                     MainActivity.class);
                             //传递token
                             intent.putExtra("token",loginJson.getData().getToken());
+                            intent.putExtra("stationId",stationId);
                             startActivity(intent);
                         }else
                             Toast.makeText(LoginActivity.this,loginJson.getData().getMessage(),Toast.LENGTH_SHORT).show();

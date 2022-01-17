@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     public  static String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
 
     private boolean isBold, isUnderLine;
+    private String passWord;
+    private String imei;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +100,19 @@ public class LoginActivity extends AppCompatActivity {
 
         //得到需要的传送的值
         String stationId = editStationId.getText().toString();
-        String passWord = editPassWord.getText().toString();
-        //得到imei
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-        String imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        //测试
-        imei = "testImei2";
+        if(stationId.equals("BJ001001")) {
+            passWord = "e10adc3949ba59abbe56e057f20f883e";
+            imei = "testImei1";
+        } else if(stationId.equals("BJ001002")) {
+            passWord = "e10adc3949ba59abbe56e057f20f883e";
+            imei = "testImei2";
+        }
+//        String passWord = editPassWord.getText().toString();
+        //得到imei
+//        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+//        String imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
 
         //得到字符串并加密编码
         long timeStamp = new Date().getTime();

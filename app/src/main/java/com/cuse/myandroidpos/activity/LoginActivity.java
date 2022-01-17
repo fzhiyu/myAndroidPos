@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.cuse.myandroidpos.Tools;
 import com.google.gson.Gson;
 
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     private HttpBinService httpBinService;
     private Retrofit retrofit;
+    private TextToSpeech textToSpeech;
 
     public  static String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
 
@@ -74,6 +77,23 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }else
                     postLogin(view);
+            }
+        });
+
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS) {
+                    textToSpeech.setLanguage(Locale.CHINESE);
+                }
+            }
+        });
+        Button btn_speech = findViewById(R.id.btn_speech);
+        btn_speech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String data = "您有新订单";
+                textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
 

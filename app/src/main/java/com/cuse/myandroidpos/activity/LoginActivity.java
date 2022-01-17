@@ -81,7 +81,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
+        Button btn_exit = findViewById(R.id.btn_exit);
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishAndRemoveTask();
+            }
+        });
     }
 
     //post login

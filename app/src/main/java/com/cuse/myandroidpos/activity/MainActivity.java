@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.cuse.myandroidpos.MyListData;
@@ -77,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         ActivityManager activityManager = (ActivityManager) getApplicationContext()
                 .getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -128,4 +128,14 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_HOME) {
+            Toast.makeText(getApplicationContext(), "测试", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

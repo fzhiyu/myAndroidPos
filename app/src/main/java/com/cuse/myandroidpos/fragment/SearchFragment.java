@@ -34,7 +34,10 @@ import com.cuse.myandroidpos.adapter.HomeAdapter;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.databinding.FragmentSearchBinding;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -181,7 +184,10 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                         if (orderAllJson.getData().getOilOrder().size() == 0)
                             Toast.makeText(getContext(), "无订单", Toast.LENGTH_SHORT).show();
                         else {
-                            oilOrderLists = orderAllJson.getData().getOilOrder();
+                            ArrayList<OilOrderList> arrayList =
+                                    new ArrayList<>(orderAllJson.getData().getOilOrder());
+                            Collections.reverse(arrayList);
+                            oilOrderLists = arrayList;
                             setRecyclerView();
                         }
 

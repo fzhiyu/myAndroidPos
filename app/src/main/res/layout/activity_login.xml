@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100dp"
-        android:src="@mipmap/ic_pos"/>
+        android:src="@drawable/posicon"/>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

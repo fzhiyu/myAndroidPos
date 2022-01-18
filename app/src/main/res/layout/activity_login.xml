@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,8 +34,7 @@
                 android:hint="油站ID"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-                android:background="@null"
-                android:text="BJ001002"/>
+                android:background="@null" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -49,27 +49,55 @@
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:padding="2dp">
-            <ImageView
-                android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerInParent="true">
+                <ImageButton
+                    android:id="@+id/imgBt_login_visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_password_invisible"
+                    android:layout_gravity="center"
+                    android:background="@null"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_key"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"/>
-            <EditText
-                android:id="@+id/editText_sign_passWord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="密码"
-                android:layout_gravity="center"
-                android:layout_marginStart="20dp"
-                android:background="@null"
-                android:text="e10adc3949ba59abbe56e057f20f883e"/>
-        </LinearLayout>
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="2dp">
+
+                <ImageView
+                    android:id="@+id/img_login_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_key" />
+
+                <EditText
+                    android:id="@+id/editText_sign_passWord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@null"
+                    android:hint="密码" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -91,5 +119,24 @@
             android:text="退出"
             android:id="@+id/btn_exit"/>
     </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_login_androidID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_horizontal"
+            android:text="id:"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
+
+
 
 </LinearLayout>

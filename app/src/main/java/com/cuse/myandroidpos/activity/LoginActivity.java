@@ -10,11 +10,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cuse.myandroidpos.Post.HttpBinService;
@@ -38,14 +42,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editStationId;
     private EditText editPassWord;
+    private TextView tvAndroidId;
     private Button btnLogin;
+    private ImageButton imgBtPswShow;
     private ProgressDialog dialog;
     private HttpBinService httpBinService;
     private Retrofit retrofit;
 
     public  static String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
 
-    private boolean isBold, isUnderLine;
+    private boolean isPswVisible = false;
     private String passWord;
     private String imei;
 
@@ -64,6 +70,21 @@ public class LoginActivity extends AppCompatActivity {
         editStationId = findViewById(R.id.editText_sign_stationID);
         editPassWord = findViewById(R.id.editText_sign_passWord);
         btnLogin = findViewById(R.id.btn_sign_login);
+        tvAndroidId = findViewById(R.id.tv_login_androidID);
+        imgBtPswShow = findViewById(R.id.imgBt_login_visible);
+        //设置隐藏密码
+        PasswordTransformationMethod method2 = PasswordTransformationMethod.getInstance();
+        editPassWord.setTransformationMethod(method2);
+
+        //得到android id
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        //设置底部的textView，显示android id
+        if (imei != null || !imei.equals(""))
+            tvAndroidId.setText("id: " + imei);
+        else
+            tvAndroidId.setText("id: " + 0000000000000000);
 
         retrofit = new Retrofit.Builder().baseUrl("https://paas.u-coupon.cn/pos_api/v1/")
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -90,6 +111,14 @@ public class LoginActivity extends AppCompatActivity {
                 finishAndRemoveTask();
             }
         });
+
+        imgBtPswShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setPawVisible();
+            }
+        });
+
     }
 
     //post login
@@ -100,19 +129,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //得到需要的传送的值
         String stationId = editStationId.getText().toString();
-
-        if(stationId.equals("BJ001001")) {
-            passWord = "e10adc3949ba59abbe56e057f20f883e";
-            imei = "testImei1";
-        } else if(stationId.equals("BJ001002")) {
-            passWord = "e10adc3949ba59abbe56e057f20f883e";
-            imei = "testImei2";
-        }
-//        String passWord = editPassWord.getText().toString();
-        //得到imei
-//        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-//        String imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
+        String passWord = editPassWord.getText().toString();
 
         //得到字符串并加密编码
         long timeStamp = new Date().getTime();
@@ -172,6 +189,26 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"连接失败",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //密码输入框是否可见
+    private void setPawVisible(){
+        isPswVisible = !isPswVisible;
+        if (isPswVisible){
+            //设置可见图片
+            imgBtPswShow.setImageResource(R.drawable.ic_password_visible);
+            //显示密码
+            HideReturnsTransformationMethod method1 = HideReturnsTransformationMethod.getInstance();
+            editPassWord.setTransformationMethod(method1);
+        }else {
+            //设置不可见图片
+            imgBtPswShow.setImageResource(R.drawable.ic_password_invisible);
+            //隐藏密码
+            PasswordTransformationMethod method2 = PasswordTransformationMethod.getInstance();
+            editPassWord.setTransformationMethod(method2);
+        }
+
+        editPassWord.setSelection(editPassWord.getText().toString().length());
     }
 
 

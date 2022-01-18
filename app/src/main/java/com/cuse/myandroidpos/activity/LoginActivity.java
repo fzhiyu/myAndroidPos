@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         //得到android id
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        Log.i(TAG, "imei: " + imei);
 
         //设置底部的textView，显示android id
         if (imei != null || !imei.equals(""))

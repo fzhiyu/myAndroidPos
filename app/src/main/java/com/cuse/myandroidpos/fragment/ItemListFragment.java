@@ -444,6 +444,7 @@ public class ItemListFragment extends Fragment {
                     //新订单打印
                     if (getPrintValue())
                         newOrderPrint();
+                    Log.i(TAG, "getPrintValue(): " + getPrintValue());
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter

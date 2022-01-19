@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    <Button
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tv_setting_versionName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ws_test"
-        android:text="测试websockets"/>
-</LinearLayout>
-<!--<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">-->
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:textSize="15sp" />
+    <fragment
+        android:id="@+id/setting_preferences"
+        android:name="com.cuse.myandroidpos.fragment.SettingPreferences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-<!--    <Preference-->
-<!--        app:key="sync"-->
-<!--        app:title="推送设置"-->
-<!--        app:summary="进行终端推送功能测试"/>-->
-<!--    <SwitchPreferenceCompat-->
-<!--        app:key="voice"-->
-<!--        app:title="语音播报"-->
-<!--        app:summary="点击关闭自动语音播报"-->
-<!--        app:defaultValue="true"/>-->
-<!--    <SwitchPreference-->
-<!--        app:key="print"-->
-<!--        app:title="自动打印"-->
-<!--        app:summary="点击关闭自动打印小票"-->
-<!--        app:defaultValue="true"/>-->
-
-
-
-<!--</PreferenceScreen>-->
+</RelativeLayout>

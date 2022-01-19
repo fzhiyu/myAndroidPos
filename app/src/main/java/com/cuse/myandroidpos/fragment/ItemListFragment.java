@@ -141,6 +141,9 @@ public class ItemListFragment extends Fragment {
     private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
 
     private TextView tvRefreshView;
+    private int flag = 0;
+    private int leave_newOrderNum = 0;
+    private TextView btn_wsStatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -176,11 +179,15 @@ public class ItemListFragment extends Fragment {
         btnAll = view.findViewById(R.id.btn_home_all);
         btnRefund = view.findViewById(R.id.btn_home_refund);
         btnSet = view.findViewById(R.id.btn_home_set);
+        btn_wsStatus = view.findViewById(R.id.ws_status);
 
         //网络不好时弹出未连接网络的框
         setInternetLayout();
 
-        orderLastPost();
+        if (leave_newOrderNum == 0) {
+            orderLastPost();
+        }
+
         //按钮功能
         setButton(view);
         //下拉刷新
@@ -213,8 +220,10 @@ public class ItemListFragment extends Fragment {
             public void onMessage(String message) {
                 super.onMessage(message);
                 Log.e(TAG, "连接: " + message);
-                if(message.contains("{")) {
+                if(message.contains("{") && flag == 0) {
                     orderLastPost();
+                } else if (message.contains("{") && flag == 1) {
+                    leave_newOrderNum++;
                 }
             }
 
@@ -225,12 +234,14 @@ public class ItemListFragment extends Fragment {
             }
         };
         try {
+            btn_wsStatus.setText("正在连接");
             client.connectBlocking();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         if (client != null && client.isOpen()) {
+            btn_wsStatus.setText("已连接");
             client.send(json_login);
             client.send(json_checkOnline);
         }
@@ -244,9 +255,11 @@ public class ItemListFragment extends Fragment {
             public void run() {
                 if (client != null ) {
                     if (client.isOpen()) {
+                        btn_wsStatus.setText("正常");
                         client.send(json_heart);
                         handler.postDelayed(this, 20000);
                     } else {
+                        btn_wsStatus.setText("未连接");
                         reconnectWs();
                         client.send(json_login);
                     }
@@ -265,6 +278,7 @@ public class ItemListFragment extends Fragment {
             @Override
             public void run() {
                 try {
+                    btn_wsStatus.setText("正在连接");
                     Log.e("JWebSocketClientService", "开启重连");
                     client.reconnectBlocking();
                 } catch (InterruptedException e) {
@@ -280,6 +294,7 @@ public class ItemListFragment extends Fragment {
         super.onDestroy();
         handler.removeCallbacks(runnable);
         client.send(json_logout);
+        client.close();
     }
 
     @Override
@@ -291,14 +306,17 @@ public class ItemListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        handler.removeCallbacks(runnable);
-        client.close();
+        flag = 1;
+        leave_newOrderNum = 0;
+//        handler.removeCallbacks(runnable);
+//        client.close();
         Log.e(TAG, "onStop: ");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        flag = 0;
         Log.e(TAG, "onResume: " );
     }
 
@@ -328,6 +346,9 @@ public class ItemListFragment extends Fragment {
         stationId = ((MainActivity)getActivity()).getStationId();
         wsInfo_login = new wsInfo(stationId, "login");
         json_login = JSON.toJSONString(wsInfo_login);
+
+        wsInfo_logout = new wsInfo(stationId, "logout");
+        json_logout = JSON.toJSONString(wsInfo_logout);
 
         wsInfo_checkOnline = new wsInfo("", "check_online");
         json_checkOnline = JSON.toJSONString(wsInfo_checkOnline);
@@ -444,7 +465,7 @@ public class ItemListFragment extends Fragment {
                     "会员账户支付金额:" + oilOrderLists.get(0).getBalance() + "\n" +
                     "微信支付金额:" + oilOrderLists.get(0).getCash();
 
-            Log.e(TAG, "newOrderPrint: " + content);
+//            Log.e(TAG, "newOrderPrint: " + content);
             float size = 24;
             String testFont = null;
             boolean isBold = true;
@@ -487,6 +508,10 @@ public class ItemListFragment extends Fragment {
         if (oilOrderLists.size() == 0) {
             //判读是否有新订单
             oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
+            if (leave_newOrderNum != 0) {
+                newOrderNum = leave_newOrderNum;
+                leave_newOrderNum = 0;
+            }
         } else {
             newOrderNum = judgeNewOrder(orderLastJson.getData().getOilOrderList());
         }

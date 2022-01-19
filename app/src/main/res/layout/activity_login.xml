@@ -41,7 +41,8 @@
                 android:hint="油站ID"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-                android:background="@null" />
+                android:background="@null"
+                android:text="BJ001001"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -83,7 +84,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:background="@null"
-                    android:hint="密码" />
+                    android:hint="密码"
+                    android:text="123456"/>
 
             </LinearLayout>
 

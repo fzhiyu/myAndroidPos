@@ -112,8 +112,20 @@
             android:id="@+id/tv_home_refreshView"
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="推送:"
+            android:layout_alignParentStart="true"
+            android:id="@+id/send_status"
+            android:layout_marginStart="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ws_status"
+            android:layout_toEndOf="@+id/send_status" />
     </RelativeLayout>
 
     <LinearLayout

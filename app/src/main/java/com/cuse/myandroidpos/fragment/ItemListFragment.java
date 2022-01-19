@@ -208,6 +208,7 @@ public class ItemListFragment extends Fragment {
     }
 
     private void initWebSocketClient() {
+        btn_wsStatus.setText("未连接");
         URI uri;
         try {
             uri = new URI("ws://paas.u-coupon.cn/wss");
@@ -261,7 +262,9 @@ public class ItemListFragment extends Fragment {
                     } else {
                         btn_wsStatus.setText("未连接");
                         reconnectWs();
-                        client.send(json_login);
+                        if (client.isOpen()) {
+                            client.send(json_login);
+                        }
                     }
                 } else {
                     initWebSocketClient();

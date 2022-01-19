@@ -234,18 +234,31 @@ public class ItemListFragment extends Fragment {
         runnable = new Runnable() {
             @Override
             public void run() {
-                client.send(json_heart);
-                handler.postDelayed(this, 20000);
+                if (client != null && client.isOpen()) {
+                    client.send(json_heart);
+                    handler.postDelayed(this, 20000);
+                } else {
+                    try {
+                        assert client != null;
+                        client.connectBlocking();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (client != null && client.isOpen()) {
+                        client.send(json_login);
+                    }
+                }
             }
         };
         handler.postDelayed(runnable, 20000);
     }
 
-    //关闭定时器
+    //关闭定时器 退出登录
     @Override
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
+        client.send(json_logout);
     }
 
     @Override

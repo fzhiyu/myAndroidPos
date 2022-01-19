@@ -1,6 +1,8 @@
 
 package com.cuse.myandroidpos.Post.OrderAllJson;
 
+import com.cuse.myandroidpos.Tools;
+
 public class OilOrder {
 
     private String oilOrderId;
@@ -23,7 +25,8 @@ public class OilOrder {
         this.oilOrderTime = oilOrderTime;
     }
     public String getOilOrderTime() {
-        return oilOrderTime;
+
+        return Tools.NoT(this.oilOrderTime);
     }
 
     public void setOilName(String oilName) {
@@ -37,7 +40,13 @@ public class OilOrder {
         this.user = user;
     }
     public String getUser() {
-        return user;
+        //隐藏手机号的中间四位
+        if (user != null || !user.equals("")){
+            StringBuffer sb = new StringBuffer(this.user);
+            sb.replace(3,7,"****");
+            return sb.toString();
+        }else
+            return user;
     }
 
     public void setMoney(float money) {

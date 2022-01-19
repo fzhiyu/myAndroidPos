@@ -2,6 +2,7 @@ package com.cuse.myandroidpos.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +131,7 @@ public class ItemDetailFragment extends Fragment {
                         "优惠卷金额:" + oilOrder.getCoupon() + "\n" +
                         "会员账户支付金额:" + oilOrder.getBalance() + "\n" +
                         "微信支付金额:" + oilOrder.getCash();
-
+                Log.i("detail", "onClick: " + content);
                 float size = 24;
                 String testFont = null;
                 boolean isBold = true;

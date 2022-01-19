@@ -1,6 +1,8 @@
 
 package com.cuse.myandroidpos.Post.RefundAllJson;
 
+import com.cuse.myandroidpos.Tools;
+
 import java.io.Serializable;
 
 
@@ -25,7 +27,7 @@ public class OilOrder implements Serializable {
     public String getRefundId() { return refundId;}
 
     public void setRefundRequestTime(String refundRequestTime) { this.refundRequestTime = refundRequestTime; }
-    public String getRefundRequestTime() { return refundRequestTime; }
+    public String getRefundRequestTime() { return Tools.NoT(refundRequestTime); }
 
     public void setRefundStatus(String refundStatus) { this.refundStatus = refundStatus; }
     public String getRefundStatus() { return refundStatus; }
@@ -34,7 +36,7 @@ public class OilOrder implements Serializable {
     public String getRefundReason() { return refundReason; }
 
     public void setRefundTime(String refundTime) { this.refundTime = refundTime; }
-    public String getRefundTime() { return refundTime; }
+    public String getRefundTime() { return Tools.NoT(refundTime); }
 
     public void setOilOrderId(String oilOrderId) {
          this.oilOrderId = oilOrderId;
@@ -47,7 +49,7 @@ public class OilOrder implements Serializable {
          this.oilOrderTime = oilOrderTime;
      }
      public String getOilOrderTime() {
-         return oilOrderTime;
+         return Tools.NoT(this.oilOrderTime);
      }
 
     public void setOilName(String oilName) {
@@ -60,9 +62,17 @@ public class OilOrder implements Serializable {
     public void setUser(String user) {
          this.user = user;
      }
-     public String getUser() {
-         return user;
-     }
+
+    public String getUser() {
+        //隐藏手机号的中间四位
+        if (user != null || !user.equals("")){
+            StringBuffer sb = new StringBuffer(this.user);
+            sb.replace(3,7,"****");
+            return sb.toString();
+        }else
+            return user;
+
+    }
 
     public void setMoney(int money) {
          this.money = money;

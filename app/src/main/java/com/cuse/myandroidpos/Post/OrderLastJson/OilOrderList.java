@@ -35,7 +35,7 @@ public class OilOrderList implements Serializable, Comparable<OilOrderList> {
          this.oilOrderTime = oilOrderTime;
      }
      public String getOilOrderTime() {
-         return oilOrderTime;
+         return Tools.NoT(this.oilOrderTime);
      }
 
     public void setOilName(String oilName) {
@@ -49,7 +49,13 @@ public class OilOrderList implements Serializable, Comparable<OilOrderList> {
          this.user = user;
      }
      public String getUser() {
-         return user;
+         //隐藏手机号的中间四位
+         if (user != null || !user.equals("")){
+             StringBuffer sb = new StringBuffer(this.user);
+             sb.replace(3,7,"****");
+             return sb.toString();
+         }else
+             return user;
      }
 
     public void setMoney(float money) {

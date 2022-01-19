@@ -53,6 +53,7 @@ import com.google.gson.Gson;
 
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -145,6 +146,8 @@ public class ItemListFragment extends Fragment {
     private int leave_newOrderNum = 0;
     private TextView btn_wsStatus;
 
+    private MediaPlayer mediaPlayer;//音频播放器
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -184,6 +187,9 @@ public class ItemListFragment extends Fragment {
         //网络不好时弹出未连接网络的框
         setInternetLayout();
 
+        //音频初始化
+        mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
+
         if (leave_newOrderNum == 0) {
             orderLastPost();
         }
@@ -196,6 +202,7 @@ public class ItemListFragment extends Fragment {
         //连接webSocket
         ws_connect();
     }
+
 
     private void ws_connect() {
         initData();
@@ -497,7 +504,6 @@ public class ItemListFragment extends Fragment {
 //            Log.e(TAG, "newOrderSpeech: " + phone);
 //            String data = "新订单，手机尾号" + aPhone + "," + speechOilName + oilMoney + "元";
 //            textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-            MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
             mediaPlayer.start();
         }
 
@@ -539,7 +545,7 @@ public class ItemListFragment extends Fragment {
     private int judgeNewOrder(List<OilOrderList> newOrderList) {
         for (int i = 0; i < newOrderList.size(); i++) {
 //            if(t.getOilOrderTime())
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
                 Date oldDate = sdf.parse(oilOrderLists.get(0).getOilOrderTime());
                 Date newDate = sdf.parse(newOrderList.get(i).getOilOrderTime());
@@ -647,6 +653,13 @@ public class ItemListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        //释放MediaPlayer
+        if (mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     private void initSpeech() {
@@ -671,4 +684,6 @@ public class ItemListFragment extends Fragment {
         Boolean voice = prefs.getBoolean("voice",false);
         return voice;
     }
+
+
 }

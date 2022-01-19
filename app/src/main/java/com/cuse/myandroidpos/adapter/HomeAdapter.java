@@ -40,11 +40,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         holder.oilOrderId.setText(homeOilOrderList.get(position).getOilOrderId());
         holder.oil.setText(homeOilOrderList.get(position).getOilName());
         holder.money.setText("¥ " + homeOilOrderList.get(position).getMoney());
-        holder.oilOrderTime.setText(Tools.NoT(homeOilOrderList.get(position).getOilOrderTime()));
-        //隐藏手机号的中间四位
-        StringBuffer sb = new StringBuffer(homeOilOrderList.get(position).getUser());
-        sb.replace(3,7,"****");
-        holder.user.setText(sb);
+//        holder.oilOrderTime.setText(Tools.NoT(homeOilOrderList.get(position).getOilOrderTime()));
+        holder.oilOrderTime.setText(homeOilOrderList.get(position).getOilOrderTime());
+//        //隐藏手机号的中间四位
+//        StringBuffer sb = new StringBuffer(homeOilOrderList.get(position).getUser());
+//        sb.replace(3,7,"****");
+        holder.user.setText(homeOilOrderList.get(position).getUser());
         //取消之前的标记
         for (int i = 0; i < homeOilOrderList.size(); i++)
             holder.newOrderSign.setVisibility(View.GONE);

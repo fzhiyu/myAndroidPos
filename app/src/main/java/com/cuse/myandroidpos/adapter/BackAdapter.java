@@ -32,13 +32,13 @@ public class BackAdapter extends RecyclerView.Adapter<BackAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.refundTime.setText(Tools.NoT(refundOilOrderList.get(position).getOilOrderTime()));
-        holder.oilOrderTime.setText(Tools.NoT(refundOilOrderList.get(position).getOilOrderTime()));
+        holder.refundTime.setText(refundOilOrderList.get(position).getOilOrderTime());
+        holder.oilOrderTime.setText(refundOilOrderList.get(position).getOilOrderTime());
         holder.state.setText(refundOilOrderList.get(position).getRefundStatus());
-        //隐藏手机号的中间四位
-        StringBuffer sb = new StringBuffer(refundOilOrderList.get(position).getUser());
-        sb.replace(3,7,"****");
-        holder.phoneNumber.setText(sb);
+//        //隐藏手机号的中间四位
+//        StringBuffer sb = new StringBuffer(refundOilOrderList.get(position).getUser());
+//        sb.replace(3,7,"****");
+        holder.phoneNumber.setText(refundOilOrderList.get(position).getUser());
     }
 
     @Override

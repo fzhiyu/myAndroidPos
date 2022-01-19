@@ -26,7 +26,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_homeItem_oilOrderId"
+                android:id="@+id/tv_homeItem_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -86,7 +86,7 @@
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
-            android:id="@+id/tv_homeItem_user"
+            android:id="@+id/tv_homeItem_oilOrderId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tv_homeItem_oilOrderTime"

@@ -192,6 +192,15 @@ public class ItemListFragment extends Fragment {
 
     private void ws_connect() {
         initData();
+
+        //初始化webSocket连接
+        initWebSocketClient();
+
+        //心跳
+        heartBeat();
+    }
+
+    private void initWebSocketClient() {
         URI uri;
         try {
             uri = new URI("ws://paas.u-coupon.cn/wss");
@@ -220,12 +229,11 @@ public class ItemListFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         if (client != null && client.isOpen()) {
             client.send(json_login);
             client.send(json_checkOnline);
         }
-        //心跳
-        heartBeat();
     }
 
     //每隔20s发送心跳
@@ -234,23 +242,36 @@ public class ItemListFragment extends Fragment {
         runnable = new Runnable() {
             @Override
             public void run() {
-                if (client != null && client.isOpen()) {
-                    client.send(json_heart);
-                    handler.postDelayed(this, 20000);
-                } else {
-                    try {
-                        assert client != null;
-                        client.connectBlocking();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (client != null && client.isOpen()) {
+                if (client != null ) {
+                    if (client.isOpen()) {
+                        client.send(json_heart);
+                        handler.postDelayed(this, 20000);
+                    } else {
+                        reconnectWs();
                         client.send(json_login);
                     }
+                } else {
+                    initWebSocketClient();
                 }
             }
         };
         handler.postDelayed(runnable, 20000);
+    }
+
+    //开启重连
+    private void reconnectWs() {
+        handler.removeCallbacks(runnable);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Log.e("JWebSocketClientService", "开启重连");
+                    client.reconnectBlocking();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     //关闭定时器 退出登录

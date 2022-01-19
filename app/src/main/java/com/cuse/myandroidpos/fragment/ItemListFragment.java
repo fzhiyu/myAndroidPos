@@ -187,8 +187,8 @@ public class ItemListFragment extends Fragment {
         //网络不好时弹出未连接网络的框
         setInternetLayout();
 
-        //音频初始化
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
+//        //音频初始化
+//        mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
 
         if (leave_newOrderNum == 0) {
             orderLastPost();
@@ -305,6 +305,13 @@ public class ItemListFragment extends Fragment {
         handler.removeCallbacks(runnable);
         client.send(json_logout);
         client.close();
+
+        //释放MediaPlayer
+        if (mediaPlayer != null){
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     @Override
@@ -334,6 +341,9 @@ public class ItemListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        //音频初始化
+        mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
     }
 
     @Override
@@ -654,13 +664,6 @@ public class ItemListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-
-        //释放MediaPlayer
-        if (mediaPlayer != null){
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
     }
 
     private void initSpeech() {

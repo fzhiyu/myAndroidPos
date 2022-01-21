@@ -3,10 +3,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:key="sync"
-        app:summary="进行终端推送功能测试"
-        app:title="推送设置" />
     <SwitchPreferenceCompat
         app:defaultValue="true"
         app:key="voice"
@@ -14,7 +10,7 @@
         app:summaryOn="自动语音播报已打开"
         app:title="语音播报" />
     <SwitchPreference
-        app:defaultValue="true"
+        app:defaultValue="false"
         app:key="print"
         app:summaryOff="自动打印已关闭"
         app:summaryOn="自动打印已打开"

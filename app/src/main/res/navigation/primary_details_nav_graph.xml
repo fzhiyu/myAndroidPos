@@ -52,7 +52,7 @@
 
     <fragment
         android:id="@+id/setting_fragment"
-        android:name="com.cuse.myandroidpos.fragment.SettingsFragment"
+        android:name="com.cuse.myandroidpos.fragment.SettingFragment"
         android:label="设置">
 
     </fragment>

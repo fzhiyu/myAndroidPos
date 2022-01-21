@@ -475,7 +475,7 @@ public class ItemListFragment extends Fragment {
                     "会员账户支付金额:" + oilOrderLists.get(0).getBalance() + "\n" +
                     "微信支付金额:" + oilOrderLists.get(0).getCash();
 
-//            Log.e(TAG, "newOrderPrint: " + content);
+            Log.e(TAG, "newOrderPrint: " + content);
             float size = 24;
             String testFont = null;
             boolean isBold = true;
@@ -653,6 +653,7 @@ public class ItemListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        Log.e(TAG, "onDestroyView: ");
 
         //释放MediaPlayer
         if (mediaPlayer != null){

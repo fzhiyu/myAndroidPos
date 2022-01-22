@@ -51,6 +51,7 @@ import com.cuse.myandroidpos.databinding.FragmentItemListBinding;
 import com.cuse.myandroidpos.utils.SunmiPrintHelper;
 import com.google.gson.Gson;
 
+import org.java_websocket.enums.ReadyState;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.IOException;
@@ -249,7 +250,7 @@ public class ItemListFragment extends Fragment {
         }
 
         if (client != null && client.isOpen()) {
-            btn_wsStatus.setText("已连接");
+            btn_wsStatus.setText("正常");
             client.send(json_login);
             client.send(json_checkOnline);
         }
@@ -269,9 +270,6 @@ public class ItemListFragment extends Fragment {
                     } else {
                         btn_wsStatus.setText("未连接");
                         reconnectWs();
-                        if (client.isOpen()) {
-                            client.send(json_login);
-                        }
                     }
                 } else {
                     initWebSocketClient();
@@ -287,12 +285,23 @@ public class ItemListFragment extends Fragment {
         new Thread() {
             @Override
             public void run() {
-                try {
-                    btn_wsStatus.setText("正在连接");
-                    Log.e("JWebSocketClientService", "开启重连");
-                    client.reconnectBlocking();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(client.getReadyState().equals(ReadyState.NOT_YET_CONNECTED)) {
+                    try {
+                        btn_wsStatus.setText("正在连接");
+                        Log.e("JWebSocketClientService", "未连接，开启重连");
+                        client.connectBlocking();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else if (client.getReadyState().equals(ReadyState.CLOSING) ||
+                        client.getReadyState().equals(ReadyState.CLOSED)) {
+                    try {
+                        btn_wsStatus.setText("正在连接");
+                        Log.e("JWebSocketClientService", "关闭后开启重连");
+                        client.reconnectBlocking();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }.start();

@@ -271,10 +271,10 @@ public class ItemListFragment extends Fragment {
                         btn_wsStatus.setText("未连接");
                         reconnectWs();
                     }
-                    handler.postDelayed(this, 20000);
                 } else {
                     initWebSocketClient();
                 }
+                handler.postDelayed(this, 20000);
             }
         };
         handler.postDelayed(runnable, 20000);

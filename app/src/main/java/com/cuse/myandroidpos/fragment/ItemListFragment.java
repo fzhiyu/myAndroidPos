@@ -148,6 +148,7 @@ public class ItemListFragment extends Fragment {
     private TextView btn_wsStatus;
 
     private MediaPlayer mediaPlayer;//音频播放器
+    Thread wsThread;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -266,11 +267,11 @@ public class ItemListFragment extends Fragment {
                     if (client.isOpen()) {
                         btn_wsStatus.setText("正常");
                         client.send(json_heart);
-                        handler.postDelayed(this, 20000);
                     } else {
                         btn_wsStatus.setText("未连接");
                         reconnectWs();
                     }
+                    handler.postDelayed(this, 20000);
                 } else {
                     initWebSocketClient();
                 }
@@ -282,7 +283,8 @@ public class ItemListFragment extends Fragment {
     //开启重连
     private void reconnectWs() {
         handler.removeCallbacks(runnable);
-        new Thread() {
+
+        wsThread = new Thread() {
             @Override
             public void run() {
                 if(client.getReadyState().equals(ReadyState.NOT_YET_CONNECTED)) {
@@ -304,7 +306,9 @@ public class ItemListFragment extends Fragment {
                     }
                 }
             }
-        }.start();
+        };
+
+        wsThread.start();
     }
 
     //关闭定时器 退出登录

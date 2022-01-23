@@ -266,14 +266,15 @@ public class ItemListFragment extends Fragment {
                 if (client != null ) {
                     if (client.isOpen()) {
                         btn_wsStatus.setText("正常");
-                        client.send(json_heart);
                     } else {
                         btn_wsStatus.setText("未连接");
                         reconnectWs();
+                        client.send(json_login);
                     }
                 } else {
                     initWebSocketClient();
                 }
+                client.send(json_heart);
                 handler.postDelayed(this, 20000);
             }
         };

@@ -240,7 +240,7 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onClose(int code, String reason, boolean remote) {
                 super.onClose(code, reason, remote);
-                Log.e(TAG, "onClose: ");
+                Log.e(TAG, "onClose: " + "code:" + code + "reason" + reason + "remote" + remote);
             }
         };
         try {
@@ -263,13 +263,15 @@ public class ItemListFragment extends Fragment {
         runnable = new Runnable() {
             @Override
             public void run() {
+//                client.close();
                 if (client != null ) {
                     if (client.isOpen()) {
                         btn_wsStatus.setText("正常");
                     } else {
                         btn_wsStatus.setText("未连接");
-                        reconnectWs();
-                        client.send(json_login);
+//                        reconnectWs();
+//                        client.send(json_login);
+                        initWebSocketClient();
                     }
                 } else {
                     initWebSocketClient();
@@ -301,7 +303,7 @@ public class ItemListFragment extends Fragment {
                     try {
                         btn_wsStatus.setText("正在连接");
                         Log.e("JWebSocketClientService", "关闭后开启重连");
-                        client.reconnectBlocking();
+                        client.connectBlocking();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

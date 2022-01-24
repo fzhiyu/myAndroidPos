@@ -128,6 +128,12 @@
             android:layout_toEndOf="@+id/send_status" />
     </RelativeLayout>
 
+<!--    <Button-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/tesWs"-->
+<!--        android:text="断开webSocket"/>-->
+
     <LinearLayout
         android:id="@+id/search_button_bar"
         android:layout_width="match_parent"

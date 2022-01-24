@@ -203,6 +203,14 @@ public class ItemListFragment extends Fragment {
 
         //连接webSocket
         ws_connect();
+
+//        Button btn_test = view.findViewById(R.id.tesWs);
+//        btn_test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                client.close();
+//            }
+//        });
     }
 
 
@@ -269,6 +277,7 @@ public class ItemListFragment extends Fragment {
                         btn_wsStatus.setText("正常");
                     } else {
                         btn_wsStatus.setText("未连接");
+                        Log.e(TAG, "run: 重连" );
 //                        reconnectWs();
 //                        client.send(json_login);
                         initWebSocketClient();

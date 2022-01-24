@@ -3,10 +3,14 @@ package com.cuse.myandroidpos.fragment;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -149,6 +153,7 @@ public class ItemListFragment extends Fragment {
 
     private MediaPlayer mediaPlayer;//音频播放器
     Thread wsThread;
+    private int wsConnectFlag = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -187,7 +192,7 @@ public class ItemListFragment extends Fragment {
         btn_wsStatus = view.findViewById(R.id.ws_status);
 
         //网络不好时弹出未连接网络的框
-        setInternetLayout();
+//        setInternetLayout();
 
 //        //音频初始化
 //        mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
@@ -213,6 +218,31 @@ public class ItemListFragment extends Fragment {
 //        });
     }
 
+//    public static class NetworkChangeReceiver extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Log.e(TAG, "Receieved notification about network status");
+//            isNetworkAvailable(context);
+//        }
+//
+//        private boolean isNetworkAvailable(Context context) {
+//            ConnectivityManager connectivityManager = (ConnectivityManager)
+//                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//            if (connectivityManager != null) {
+//                NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
+//                if (info != null) {
+//                    for (int i=0; i < info.length; i++) {
+//                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+//                            if(!)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
 
     private void ws_connect() {
         initData();
@@ -233,36 +263,53 @@ public class ItemListFragment extends Fragment {
             e.printStackTrace();
             return;
         }
-        client = new com.cuse.myandroidpos.PosWebSocket.WebSocketClient(uri) {
+        new Thread() {
             @Override
-            public void onMessage(String message) {
-                super.onMessage(message);
-                Log.e(TAG, "message: " + message);
-                if(message.contains("{") && flag == 0) {
-                    orderLastPost();
-                } else if (message.contains("{") && flag == 1) {
-                    leave_newOrderNum++;
+            public void run() {
+                client = new com.cuse.myandroidpos.PosWebSocket.WebSocketClient(uri) {
+                    @Override
+                    public void onMessage(String message) {
+                        super.onMessage(message);
+                        Log.e(TAG, "message: " + message);
+                        if(message.contains("{") && flag == 0) {
+                            orderLastPost();
+                        } else if (message.contains("{") && flag == 1) {
+                            leave_newOrderNum++;
+                        }
+                    }
+
+                    @Override
+                    public void onClose(int code, String reason, boolean remote) {
+                        super.onClose(code, reason, remote);
+                        Log.e(TAG, "onClose: " + "code:" + code + " reason:" + reason + " remote:" + remote);
+                    }
+                };
+
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            btn_wsStatus.setText("正在连接");
+                        }
+                    });
+
+                    client.connectBlocking();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (client != null && client.isOpen()) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            btn_wsStatus.setText("正常");
+                        }
+                    });
+                    client.send(json_login);
+                    client.send(json_checkOnline);
                 }
             }
-
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-                super.onClose(code, reason, remote);
-                Log.e(TAG, "onClose: " + "code:" + code + "reason" + reason + "remote" + remote);
-            }
-        };
-        try {
-            btn_wsStatus.setText("正在连接");
-            client.connectBlocking();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (client != null && client.isOpen()) {
-            btn_wsStatus.setText("正常");
-            client.send(json_login);
-            client.send(json_checkOnline);
-        }
+        }.start();
     }
 
     //每隔20s发送心跳
@@ -283,6 +330,7 @@ public class ItemListFragment extends Fragment {
                         initWebSocketClient();
                     }
                 } else {
+                    Log.e(TAG, "run: client为空");
                     initWebSocketClient();
                 }
                 if (client != null && client.isOpen()) {
@@ -331,8 +379,15 @@ public class ItemListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
-        client.send(json_logout);
-        client.close();
+        if(client != null) {
+            if (client.isOpen()) {
+                client.send(json_logout);
+            }
+            client.close();
+        }
+
+        Log.e(TAG, "onDestroy: " + Thread.currentThread());
+        Thread.currentThread().interrupt();
 
         //释放MediaPlayer
         if (mediaPlayer != null){
@@ -681,12 +736,12 @@ public class ItemListFragment extends Fragment {
 
 
     //网络不好时弹出未连接网络的框
-    public void setInternetLayout() {
-        if (internet == 1) {
-            TextView internet = getView().findViewById(R.id.tv_home_internet);
-            internet.setVisibility(View.VISIBLE);
-        }
-    }
+//    public void setInternetLayout() {
+//        if (client != null && !client.isOpen()) {
+//            TextView internet = getView().findViewById(R.id.tv_home_internet);
+//            internet.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     @Override
     public void onDestroyView() {

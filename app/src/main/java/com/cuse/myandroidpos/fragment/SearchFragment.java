@@ -171,7 +171,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                 //取消正在查询的弹窗
                 dialog.cancel();
                 OrderAllJson orderAllJson = response.body();
-                Log.e(TAG, "onResponse: " + response.raw());
+//                Log.e(TAG, "onResponse: " + response.raw());
 
                 //测试，用完删除
                 Gson gson = new Gson();

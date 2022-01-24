@@ -237,7 +237,7 @@ public class ItemListFragment extends Fragment {
             @Override
             public void onMessage(String message) {
                 super.onMessage(message);
-                Log.e(TAG, "连接: " + message);
+                Log.e(TAG, "message: " + message);
                 if(message.contains("{") && flag == 0) {
                     orderLastPost();
                 } else if (message.contains("{") && flag == 1) {
@@ -285,7 +285,10 @@ public class ItemListFragment extends Fragment {
                 } else {
                     initWebSocketClient();
                 }
-                client.send(json_heart);
+                if (client != null && client.isOpen()) {
+                    btn_wsStatus.setText("正常");
+                    client.send(json_heart);
+                }
                 handler.postDelayed(this, 20000);
             }
         };
@@ -479,7 +482,7 @@ public class ItemListFragment extends Fragment {
                     //新订单打印
                     if (getPrintValue())
                         newOrderPrint();
-                    Log.i(TAG, "getPrintValue(): " + getPrintValue());
+//                    Log.i(TAG, "getPrintValue(): " + getPrintValue());
                     //列表
                     recyclerView = binding.itemList;
                     //recycleView,适配器单独写在了HomeAdapter
@@ -560,7 +563,7 @@ public class ItemListFragment extends Fragment {
         } else {
             newOrderNum = judgeNewOrder(orderLastJson.getData().getOilOrderList());
         }
-        Log.e("oilOrderLists.size", "onResponse: " + tmp.get(0).getOilOrderTime());
+//        Log.e("oilOrderLists.size", "onResponse: " + tmp.get(0).getOilOrderTime());
 //                    Log.e(TAG, "onResponse: " + newOrderNum);
 
         for (int i = newOrderNum - 1; i >= 0; i--) {

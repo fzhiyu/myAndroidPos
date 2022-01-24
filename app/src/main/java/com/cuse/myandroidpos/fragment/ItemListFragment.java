@@ -6,11 +6,16 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -154,6 +159,8 @@ public class ItemListFragment extends Fragment {
     private MediaPlayer mediaPlayer;//音频播放器
     Thread wsThread;
     private int wsConnectFlag = 0;
+    private boolean isConnected = false;
+    private NetworkChangeReceiver receiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -216,32 +223,62 @@ public class ItemListFragment extends Fragment {
 //                client.close();
 //            }
 //        });
+        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                // network available
+                Log.e(TAG, "onAvailable: ");
+            }
+
+            @Override
+            public void onLost(Network network) {
+                // network unavailable
+                Log.e(TAG, "onLost: ");
+            }
+        };
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        connectivityManager.registerDefaultNetworkCallback(networkCallback);
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver();
+        ((MainActivity)getActivity()).registerReceiver(receiver, filter);
+
     }
 
-//    public static class NetworkChangeReceiver extends BroadcastReceiver {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.e(TAG, "Receieved notification about network status");
-//            isNetworkAvailable(context);
-//        }
-//
-//        private boolean isNetworkAvailable(Context context) {
-//            ConnectivityManager connectivityManager = (ConnectivityManager)
-//                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//            if (connectivityManager != null) {
-//                NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
-//                if (info != null) {
-//                    for (int i=0; i < info.length; i++) {
-//                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-//                            if(!)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    public class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "Receieved notification about network status");
+            isNetworkAvailable(context);
+        }
+
+        private boolean isNetworkAvailable(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager)
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            if (connectivityManager != null) {
+                NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
+                if (info != null) {
+                    for (int i=0; i < info.length; i++) {
+                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                            if(!isConnected) {
+                                Log.e(TAG, "Now you are connected to Internet!");
+                                isConnected = true;
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+            Log.e(TAG, "You are not connected to Internet!");
+            isConnected = false;
+            return false;
+        }
+    }
 
 
     private void ws_connect() {
@@ -286,12 +323,14 @@ public class ItemListFragment extends Fragment {
                 };
 
                 try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            btn_wsStatus.setText("正在连接");
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btn_wsStatus.setText("正在连接");
+                            }
+                        });
+                    }
 
                     client.connectBlocking();
                 } catch (InterruptedException e) {
@@ -299,12 +338,14 @@ public class ItemListFragment extends Fragment {
                 }
 
                 if (client != null && client.isOpen()) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            btn_wsStatus.setText("正常");
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btn_wsStatus.setText("正常");
+                            }
+                        });
+                    }
                     client.send(json_login);
                     client.send(json_checkOnline);
                 }

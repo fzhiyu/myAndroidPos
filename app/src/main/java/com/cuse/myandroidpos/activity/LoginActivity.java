@@ -65,7 +65,6 @@ public class LoginActivity extends AppCompatActivity {
 
         this.setTitle("登录");
 
-
         //找到对应的ID
         editStationId = findViewById(R.id.editText_sign_stationID);
         editPassWord = findViewById(R.id.editText_sign_passWord);

@@ -160,7 +160,6 @@ public class ItemListFragment extends Fragment {
     Thread wsThread;
     private int wsConnectFlag = 0;
     private boolean isConnected = false;
-    private NetworkChangeReceiver receiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -242,44 +241,7 @@ public class ItemListFragment extends Fragment {
 
         connectivityManager.registerDefaultNetworkCallback(networkCallback);
 
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver();
-        ((MainActivity)getActivity()).registerReceiver(receiver, filter);
-
     }
-
-    public class NetworkChangeReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "Receieved notification about network status");
-            isNetworkAvailable(context);
-        }
-
-        private boolean isNetworkAvailable(Context context) {
-            ConnectivityManager connectivityManager = (ConnectivityManager)
-                    context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            if (connectivityManager != null) {
-                NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
-                if (info != null) {
-                    for (int i=0; i < info.length; i++) {
-                        if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-                            if(!isConnected) {
-                                Log.e(TAG, "Now you are connected to Internet!");
-                                isConnected = true;
-                            }
-                            return true;
-                        }
-                    }
-                }
-            }
-            Log.e(TAG, "You are not connected to Internet!");
-            isConnected = false;
-            return false;
-        }
-    }
-
 
     private void ws_connect() {
         initData();

@@ -1,7 +1,6 @@
 package com.cuse.myandroidpos;
 
 
-
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
@@ -14,12 +13,12 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Tools {
-    public static String NoT(String time){
-        return time.replace("T"," ");
+    public static String NoT(String time) {
+        return time.replace("T", " ");
     }
 
     //时间转成unix秒
-    public static long TimeToStamp(StringBuffer sb){
+    public static long TimeToStamp(StringBuffer sb) {
         long unixTimestamp = 0l;
         try {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -32,14 +31,55 @@ public class Tools {
     }
 
     //unix秒转化为"yyyy-MM-dd HH:mm:ss"格式字符串
-    public static String StampToTime(long stamp){
+    public static String StampToTime(long stamp) {
         String s;
 
-        SimpleDateFormat df =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
         s = df.format(new Date(stamp));
 
         return s;
+    }
+
+    //将手机号转化为汉字
+    public static String numberToChineseNumber(String number) {
+        StringBuffer sb = new StringBuffer(number);
+        for (int i = 0; i < sb.length(); i++) {
+            switch (sb.charAt(i)) {
+                case '0':
+                    sb.setCharAt(i, '零');
+                    break;
+                case '1':
+                    sb.setCharAt(i, '一');
+                    break;
+                case '2':
+                    sb.setCharAt(i, '二');
+                    break;
+                case '3':
+                    sb.setCharAt(i, '三');
+                    break;
+                case '4':
+                    sb.setCharAt(i, '四');
+                    break;
+                case '5':
+                    sb.setCharAt(i, '五');
+                    break;
+                case '6':
+                    sb.setCharAt(i, '六');
+                    break;
+                case '7':
+                    sb.setCharAt(i, '七');
+                    break;
+                case '8':
+                    sb.setCharAt(i, '八');
+                    break;
+                case '9':
+                    sb.setCharAt(i, '九');
+                    break;
+            }
+        }
+
+        return sb.toString();
     }
 
     //显示code不为0时候的错误
@@ -83,16 +123,16 @@ public class Tools {
         } else if (Build.VERSION.SDK_INT >= 19) {
             //for new api versions.
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY ;
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             v.setSystemUiVisibility(uiOptions);
         }
 
     }
 
     //调起输入法 用于隐藏输入法后隐藏导航栏
-    public static void hideWhenSystemUiVisible(View v){
+    public static void hideWhenSystemUiVisible(View v) {
         v.setOnSystemUiVisibilityChangeListener(visibility -> {
-            if(visibility==View.SYSTEM_UI_FLAG_VISIBLE){
+            if (visibility == View.SYSTEM_UI_FLAG_VISIBLE) {
                 hideBottomUIMenu(v);
             }
         });

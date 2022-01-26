@@ -168,7 +168,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Log.i(TAG, "onClick: ");
-                textToSpeech.speak("新订单，用户9999汽油95号300.00元", TextToSpeech.QUEUE_FLUSH, null);
+                String s = "新订单,    用户" + Tools.numberToChineseNumber("4572") + "汽油95号300.00元";
+                textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
             }
         });
     }
@@ -270,6 +271,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
                     textToSpeech.setLanguage(Locale.CHINESE);
+                    textToSpeech.setSpeechRate(0.9f);
+                    textToSpeech.setPitch(1f);
                 }
             }
         });

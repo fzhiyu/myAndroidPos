@@ -47,8 +47,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
 //        sb.replace(3,7,"****");
         holder.user.setText(homeOilOrderList.get(position).getUser());
         //取消之前的标记
-        for (int i = 0; i < homeOilOrderList.size(); i++)
-            holder.newOrderSign.setVisibility(View.GONE);
+//        for (int i = 0; i < homeOilOrderList.size(); i++)
+        //holder.newOrderSign.setVisibility(View.GONE);
         //订单的位置小于newOrderNum，显示新订单标识
         if (position < newOrderNum){
             holder.newOrderSign.setVisibility(View.VISIBLE);
@@ -59,10 +59,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
     public int getItemCount() {
         if (homeOilOrderList == null)
             return 0;
-        else if (homeOilOrderList.size() <= 20)
-            return homeOilOrderList.size();
         else
-            return 20;
+            return homeOilOrderList.size();
          }
 
     public  class MyViewHolder extends RecyclerView.ViewHolder {

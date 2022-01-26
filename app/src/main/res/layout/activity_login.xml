@@ -129,6 +129,12 @@
             android:id="@+id/btn_exit"/>
     </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_login_testTTs"
+        android:text="测试语音"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

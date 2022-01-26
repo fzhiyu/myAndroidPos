@@ -89,12 +89,13 @@ public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
     private long currentTimeStamp;//订单刷新时间
-    //private OrderLastJson orderLastJson;//储存得到的订单数据
+    private OrderLastJson orderLastJson;//储存得到的订单数据
+    private String orderLastJsonToString;//储存得到的的订单数据的字符串
 
     private LinkedList<OilOrderList> oilOrderLists;
     private HomeAdapter homeAdapter;
 
-    private int internet = 0;//网络连接参量，0代表连上，1代表断开
+    private boolean internet = true;//网络连接参量
 
     private TextView tvOilOrderId;
     private TextView tvOil;
@@ -145,8 +146,8 @@ public class ItemListFragment extends Fragment {
     private String signature;
     private Handler handler;
     private Runnable runnable;
-    private OrderLastJson orderLastJson;
-    private int newOrderNum;
+
+    private int newOrderNum = 0;
     private TextToSpeech textToSpeech;
     private View sView;
     private com.cuse.myandroidpos.PosWebSocket.WebSocketClient client;
@@ -157,6 +158,8 @@ public class ItemListFragment extends Fragment {
     private TextView btn_wsStatus;
 
     private MediaPlayer mediaPlayer;//音频播放器
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
     Thread wsThread;
     private int wsConnectFlag = 0;
     private boolean isConnected = false;
@@ -164,12 +167,16 @@ public class ItemListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        Log.e(TAG, "onCreateView: " );
+
         binding = FragmentItemListBinding.inflate(inflater, container, false);
 
         mContext = getContext();
 
         //得到login传来的intent
-        token = ((MainActivity) getActivity()).getToken();
+        if (getActivity() != null) {
+            token = ((MainActivity) getActivity()).getToken();
+        }
 
         //初始化语音engine
         initSpeech();
@@ -197,15 +204,28 @@ public class ItemListFragment extends Fragment {
         btnSet = view.findViewById(R.id.btn_home_set);
         btn_wsStatus = view.findViewById(R.id.ws_status);
 
-        //网络不好时弹出未连接网络的框
-//        setInternetLayout();
+        //列表
+        recyclerView = binding.itemList;
+        //设置竖直
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        //每个item的高度一定
+        recyclerView.setHasFixedSize(true);
+        Log.e(TAG, "onViewCreated: " );
 
-//        //音频初始化
-//        mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
-
-        if (leave_newOrderNum == 0) {
-            orderLastPost();
+        //读取preference
+        orderLastJsonToString = sharedPref.getString("orderLatJson", "");
+        //Log.e(TAG, "onViewCreated: " + orderLastJsonToString);
+        if (orderLastJsonToString != null && !orderLastJsonToString.equals("")) {
+            Gson gson = new Gson();
+            orderLastJson = gson.fromJson(orderLastJsonToString, OrderLastJson.class);
+            oilOrderLists.addAll(orderLastJson.getData().getOilOrderList());
+            showInformation();
         }
+
+//        if (leave_newOrderNum == 0) {
+//            orderLastPost();
+//        }
 
         //按钮功能
         setButton(view);
@@ -215,24 +235,22 @@ public class ItemListFragment extends Fragment {
         //连接webSocket
         ws_connect();
 
-//        Button btn_test = view.findViewById(R.id.tesWs);
-//        btn_test.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                client.close();
-//            }
-//        });
+        //检查网络连接状态
         ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
                 // network available
                 Log.e(TAG, "onAvailable: ");
+                internet = true;
+                setInternetLayout();
             }
 
             @Override
             public void onLost(Network network) {
                 // network unavailable
                 Log.e(TAG, "onLost: ");
+                internet = false;
+                setInternetLayout();
             }
         };
 
@@ -240,6 +258,7 @@ public class ItemListFragment extends Fragment {
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         connectivityManager.registerDefaultNetworkCallback(networkCallback);
+
 
     }
 
@@ -269,8 +288,13 @@ public class ItemListFragment extends Fragment {
                     @Override
                     public void onMessage(String message) {
                         super.onMessage(message);
-                        Log.e(TAG, "message: " + message);
-                        if(message.contains("{") && flag == 0) {
+                        //测试
+                        Date date = new Date();
+                        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String s = sim.format(date);
+                        Log.e(TAG, "message: " + message + " " + s);
+
+                        if (message.contains("{") && flag == 0) {
                             orderLastPost();
                         } else if (message.contains("{") && flag == 1) {
                             leave_newOrderNum++;
@@ -322,12 +346,12 @@ public class ItemListFragment extends Fragment {
             @Override
             public void run() {
 //                client.close();
-                if (client != null ) {
+                if (client != null) {
                     if (client.isOpen()) {
                         btn_wsStatus.setText("正常");
                     } else {
                         btn_wsStatus.setText("未连接");
-                        Log.e(TAG, "run: 重连" );
+                        Log.e(TAG, "run: 重连");
 //                        reconnectWs();
 //                        client.send(json_login);
                         initWebSocketClient();
@@ -353,7 +377,7 @@ public class ItemListFragment extends Fragment {
         wsThread = new Thread() {
             @Override
             public void run() {
-                if(client.getReadyState().equals(ReadyState.NOT_YET_CONNECTED)) {
+                if (client.getReadyState().equals(ReadyState.NOT_YET_CONNECTED)) {
                     try {
                         btn_wsStatus.setText("正在连接");
                         Log.e("JWebSocketClientService", "未连接，开启重连");
@@ -382,7 +406,7 @@ public class ItemListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
-        if(client != null) {
+        if (client != null) {
             if (client.isOpen()) {
                 client.send(json_logout);
             }
@@ -393,7 +417,7 @@ public class ItemListFragment extends Fragment {
         Thread.currentThread().interrupt();
 
         //释放MediaPlayer
-        if (mediaPlayer != null){
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
@@ -414,13 +438,27 @@ public class ItemListFragment extends Fragment {
 //        handler.removeCallbacks(runnable);
 //        client.close();
         Log.e(TAG, "onStop: ");
+
+        //储存数据
+        editor.putString("orderLatJson", orderLastJsonToString);
+        //Log.i(TAG, "onDestroyView: " + orderLastJsonToString);
+        editor.commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         flag = 0;
-        Log.e(TAG, "onResume: " );
+        Log.e(TAG, "onResume: ");
+
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //
+        binding = null;
     }
 
     @Override
@@ -430,6 +468,10 @@ public class ItemListFragment extends Fragment {
 
         //音频初始化
         mediaPlayer = MediaPlayer.create(getContext(), R.raw.order_notify);
+        //储存初始化
+        sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
     }
 
     @Override
@@ -449,7 +491,7 @@ public class ItemListFragment extends Fragment {
 
     //初始发送数据
     private void initData() {
-        stationId = ((MainActivity)getActivity()).getStationId();
+        stationId = ((MainActivity) getActivity()).getStationId();
         wsInfo_login = new wsInfo(stationId, "login");
         json_login = JSON.toJSONString(wsInfo_login);
 
@@ -499,7 +541,7 @@ public class ItemListFragment extends Fragment {
                 orderLastJson = response.body();
                 //
                 Gson gson = new Gson();
-                String s = gson.toJson(orderLastJson);
+                orderLastJsonToString = gson.toJson(orderLastJson);
                 assert orderLastJson != null;
 //                Log.i("应答编码", "" + orderLastJson.getCode());
 //                Log.i("stringBuffer", "" + stringBuffer);
@@ -507,19 +549,19 @@ public class ItemListFragment extends Fragment {
 //                Log.i(TAG, "onResponse: " + s);
 
                 if (response.body().getCode() == 0) {
+
                     //设置油站名称
                     if (orderLastJson.getData().getStationName() == null || orderLastJson.getData().getStationName().equals(""))
                         //如果为空，显示首页
-                        ((MainActivity)getActivity()).getSupportActionBar().setTitle("首页");
-                    else{
+                        ((MainActivity) getActivity()).getSupportActionBar().setTitle("首页");
+                    else {
                         //油站名称长度大于10，后面的显示"..."
                         StringBuffer stationName = new StringBuffer(orderLastJson.getData().getStationName());
-//                        if (stationName.length() >= 10)
-//                            stationName.replace(10, stationName.length() - 1 ,"...");
-                        ((MainActivity)getActivity()).getSupportActionBar()
+//                      if (stationName.length() >= 10)
+//                      stationName.replace(10, stationName.length() - 1 ,"...");
+                        ((MainActivity) getActivity()).getSupportActionBar()
                                 .setTitle(stationName);
                     }
-
 
                     //设置显示总金钱和总订单
                     tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
@@ -540,13 +582,13 @@ public class ItemListFragment extends Fragment {
                     //新订单打印
                     if (getPrintValue())
                         newOrderPrint();
-//                    Log.i(TAG, "getPrintValue(): " + getPrintValue());
-                    //列表
-                    recyclerView = binding.itemList;
-                    //recycleView,适配器单独写在了HomeAdapter
-                    setRecyclerView(recyclerView);
 
-// 列表刷新                   homeAdapter.notifyDataSetChanged();
+
+//                    //recycleView,适配器单独写在了HomeAdapter
+//                    setRecyclerView(recyclerView);
+//              列表刷新
+                    Log.i(TAG, "onResponse: " + newOrderNum);
+                    setRecyclerView(recyclerView);
                 } else
                     Tools.codeError(getContext(), orderLastJson.getCode());
             }
@@ -559,9 +601,42 @@ public class ItemListFragment extends Fragment {
         });
     }
 
+    //信息显示
+    private void showInformation() {
+
+        //设置油站名称
+        if (orderLastJson.getData().getStationName() == null || orderLastJson.getData().getStationName().equals("")){
+            //如果为空，显示首页
+            if (getActivity() != null) {
+                ((MainActivity) getActivity()).getSupportActionBar().setTitle("首页");
+            }
+        } else {
+                //油站名称长度大于10，后面的显示"..."
+                StringBuffer stationName = new StringBuffer(orderLastJson.getData().getStationName());
+//            if (stationName.length() >= 10)
+//                stationName.replace(10, stationName.length() - 1 ,"...");
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).getSupportActionBar()
+                            .setTitle(stationName);
+                }
+
+            }
+
+        //设置显示总金钱和总订单
+        tvTotalMoney.setText(orderLastJson.getData().getTodayMoney() + "");
+        tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
+
+        //设置刷新时间
+        Date d = new Date();
+        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        tvRefreshView.setText(sim.format(d));
+
+        setRecyclerView(recyclerView);
+    }
+
     //新订单打印
     private void newOrderPrint() {
-        if (oilOrderLists != null && newOrderNum !=0) {
+        if (oilOrderLists != null && newOrderNum != 0) {
             String content = "加油ID:" + oilOrderLists.get(0).getOilOrderId() + "\n" +
                     "加油时间:" + oilOrderLists.get(0).getOilOrderTime() + "\n" +
                     "用户手机号:" + oilOrderLists.get(0).getUser() + "\n" +
@@ -692,17 +767,12 @@ public class ItemListFragment extends Fragment {
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
-        //设置竖直
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        //每个item的高度一定
-        recyclerView.setHasFixedSize(true);
 
         //将数据填入homeAdapt
         homeAdapter = new HomeAdapter(oilOrderLists, newOrderNum, getActivity());
         recyclerView.setAdapter(homeAdapter);
-        //默认添加动画
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        //默认添加动画
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //设置点击事件，点击事件的接口定义HomeAdapter
         homeAdapter.setHomeRecyclerItemClickListener(new HomeAdapter.OnHomeRecyclerItemClickListener() {
@@ -725,32 +795,28 @@ public class ItemListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //下拉刷新操作
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        swipeRefreshLayout.setRefreshing(false);
-//                    }
-//                },3000);
-                orderLastPost();
+                if (internet)
+                    orderLastPost();
+                else {
+                    Toast.makeText(getContext(), "网络未连接", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
             }
         });
     }
 
 
     //网络不好时弹出未连接网络的框
-//    public void setInternetLayout() {
-//        if (client != null && !client.isOpen()) {
-//            TextView internet = getView().findViewById(R.id.tv_home_internet);
-//            internet.setVisibility(View.VISIBLE);
-//        }
-//    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void setInternetLayout() {
+        TextView showInternet = getView().findViewById(R.id.tv_home_internet);
+        //internet为false控件出现
+        if (!internet) {
+            showInternet.setVisibility(View.VISIBLE);
+        } else
+            showInternet.setVisibility(View.GONE);
     }
+
 
     private void initSpeech() {
         textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
@@ -765,13 +831,13 @@ public class ItemListFragment extends Fragment {
 
     private boolean getPrintValue() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Boolean print = prefs.getBoolean("print",false);
+        Boolean print = prefs.getBoolean("print", false);
         return print;
     }
 
-    private Boolean getVoiceValue(){
+    private Boolean getVoiceValue() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Boolean voice = prefs.getBoolean("voice",false);
+        Boolean voice = prefs.getBoolean("voice", false);
         return voice;
     }
 

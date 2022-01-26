@@ -1,10 +1,15 @@
 package com.cuse.myandroidpos.activity;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -55,6 +60,9 @@ public class LoginActivity extends AppCompatActivity {
     private String passWord;
     private String imei;
 
+    private boolean internet = true;//网络连接参量
+    private TextToSpeech textToSpeech;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_sign_login);
         tvAndroidId = findViewById(R.id.tv_login_androidID);
         imgBtPswShow = findViewById(R.id.imgBt_login_visible);
+
         //设置隐藏密码
         PasswordTransformationMethod method2 = PasswordTransformationMethod.getInstance();
         editPassWord.setTransformationMethod(method2);
@@ -90,20 +99,52 @@ public class LoginActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create()).build();
         httpBinService = retrofit.create(HttpBinService.class);
 
+        //得到网络是否连接
+        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                // network available
+                Log.e(TAG, "onAvailable: ");
+                internet = true;
+            }
+
+            @Override
+            public void onLost(Network network) {
+                // network unavailable
+                Log.e(TAG, "onLost: ");
+                internet = false;
+            }
+        };
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        connectivityManager.registerDefaultNetworkCallback(networkCallback);
+
+        //登录按钮
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editStationId.getText() == null || editStationId.getText().toString().equals("")){
-                    Toast.makeText(view.getContext(),"用户名不能为空",Toast.LENGTH_SHORT).show();
+                //网络无连接
+                if (internet){
+                    //密码用户名不能为空
+                    if (editStationId.getText() == null || editStationId.getText().toString().equals("")){
+                        Toast.makeText(view.getContext(),"用户名不能为空",Toast.LENGTH_SHORT).show();
+                        return;
+                    }else if (editPassWord.getText() == null || editPassWord.getText().toString().equals("")){
+                        Toast.makeText(view.getContext(),"密码不能为空",Toast.LENGTH_SHORT).show();
+                        return;
+                    }else
+                        postLogin(view);
+                }else{
+                    Toast.makeText(LoginActivity.this,"网络无连接", Toast.LENGTH_SHORT).show();
                     return;
-                }else if (editPassWord.getText() == null || editPassWord.getText().toString().equals("")){
-                    Toast.makeText(view.getContext(),"密码不能为空",Toast.LENGTH_SHORT).show();
-                    return;
-                }else
-                    postLogin(view);
+                }
+
+
             }
         });
 
+        //退出按钮
         Button btn_exit = findViewById(R.id.btn_exit);
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //密码是否可见按钮
         imgBtPswShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,6 +161,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        initSpeech();
+        Button btnTestTTs = findViewById(R.id.btn_login_testTTs);
+        btnTestTTs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Log.i(TAG, "onClick: ");
+                textToSpeech.speak("新订单，用户9999汽油95号300.00元", TextToSpeech.QUEUE_FLUSH, null);
+            }
+        });
     }
 
     //post login
@@ -209,6 +261,18 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         editPassWord.setSelection(editPassWord.getText().toString().length());
+    }
+
+    //初始化语音
+    private void initSpeech() {
+        textToSpeech = new TextToSpeech(LoginActivity.this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i == TextToSpeech.SUCCESS) {
+                    textToSpeech.setLanguage(Locale.CHINESE);
+                }
+            }
+        });
     }
 
 

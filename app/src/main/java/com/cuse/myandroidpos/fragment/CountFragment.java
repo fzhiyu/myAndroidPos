@@ -94,7 +94,9 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentCountBinding.inflate(inflater, container, false);
 //        System.out.println("binding.getRoot() Search: " + binding.getRoot())
-        token = ((MainActivity)getActivity()).getToken();
+        if (getActivity() != null){
+            token = ((MainActivity)getActivity()).getToken();
+        }
         return binding.getRoot();
     }
 

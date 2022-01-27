@@ -88,7 +88,7 @@ import tech.gusavila92.websocketclient.WebSocketClient;
 public class ItemListFragment extends Fragment {
 
     private FragmentItemListBinding binding;
-    private long currentTimeStamp;//订单刷新时间
+    private Date date = new Date();//订单刷新时间
     private OrderLastJson orderLastJson;//储存得到的订单数据
     private String orderLastJsonToString;//储存得到的的订单数据的字符串
 
@@ -215,7 +215,11 @@ public class ItemListFragment extends Fragment {
 
         //读取preference
         orderLastJsonToString = sharedPref.getString("orderLatJson", "");
-        //Log.e(TAG, "onViewCreated: " + orderLastJsonToString);
+        //得到上次刷新的时间
+        long i = sharedPref.getLong("reFreshTime", 0l);
+        if (i != 0 && i != date.getTime()){
+            date = new Date(i);
+        }
         if (orderLastJsonToString != null && !orderLastJsonToString.equals("")) {
             Gson gson = new Gson();
             orderLastJson = gson.fromJson(orderLastJsonToString, OrderLastJson.class);
@@ -437,11 +441,11 @@ public class ItemListFragment extends Fragment {
         leave_newOrderNum = 0;
 //        handler.removeCallbacks(runnable);
 //        client.close();
-        Log.e(TAG, "onStop: ");
 
         //储存数据
         editor.putString("orderLatJson", orderLastJsonToString);
-        //Log.i(TAG, "onDestroyView: " + orderLastJsonToString);
+        editor.putLong("reFreshTime", date.getTime());
+        Log.e(TAG, "onStop: " + date.getTime());
         editor.commit();
     }
 
@@ -458,6 +462,7 @@ public class ItemListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         //
+        Log.e(TAG, "onDestroyView: ");
         binding = null;
     }
 
@@ -568,9 +573,9 @@ public class ItemListFragment extends Fragment {
                     tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
 
                     //设置刷新时间
-                    Date d = new Date();
+                    date = new Date();
                     SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    tvRefreshView.setText(sim.format(d));
+                    tvRefreshView.setText(sim.format(date));
 
                     //加入新订单
                     addOrder();
@@ -603,7 +608,6 @@ public class ItemListFragment extends Fragment {
 
     //信息显示
     private void showInformation() {
-
         //设置油站名称
         if (orderLastJson.getData().getStationName() == null || orderLastJson.getData().getStationName().equals("")){
             //如果为空，显示首页
@@ -627,9 +631,8 @@ public class ItemListFragment extends Fragment {
         tvTotalOrder.setText(orderLastJson.getData().getTodayCount() + "");
 
         //设置刷新时间
-        Date d = new Date();
         SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        tvRefreshView.setText(sim.format(d));
+        tvRefreshView.setText(sim.format(date));
 
         setRecyclerView(recyclerView);
     }
@@ -660,23 +663,24 @@ public class ItemListFragment extends Fragment {
     //新订单语音播报
     private void newOrderSpeech() {
         if (oilOrderLists != null && newOrderNum != 0) {
-//            String phone = oilOrderLists.get(0).getUser();
-//            String subPhone = phone.substring(phone.length() - 4);
+            String phone = oilOrderLists.get(0).getUser();
+            String subPhone = phone.substring(phone.length() - 4);
 //            String aPhone = subPhone.charAt(0) + "-"
 //                    + subPhone.charAt(1) + "-"
 //                    + subPhone.charAt(2) + "-"
 //                    + subPhone.charAt(3);
-//            String oilName = oilOrderLists.get(0).getOilName();
-//            String[] aOilName = oilName.split("-");
-//            StringBuilder speechOilName = new StringBuilder();
-//            for (String s : aOilName) {
-//                speechOilName.append(s);
-//            }
-//            String oilMoney = String.valueOf(oilOrderLists.get(0).getMoney());
-//            Log.e(TAG, "newOrderSpeech: " + phone);
-//            String data = "新订单，手机尾号" + aPhone + "," + speechOilName + oilMoney + "元";
-//            textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-            mediaPlayer.start();
+            String aPhone = Tools.numberToChineseNumber(subPhone);
+            String oilName = oilOrderLists.get(0).getOilName();
+            String[] aOilName = oilName.split("-");
+            StringBuilder speechOilName = new StringBuilder();
+            for (String s : aOilName) {
+                speechOilName.append(s);
+            }
+            String oilMoney = String.valueOf(oilOrderLists.get(0).getMoney());
+            Log.e(TAG, "newOrderSpeech: " + phone);
+            String data = "新订单，手机尾号" + aPhone + "," + speechOilName + oilMoney + "元";
+            textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+//            mediaPlayer.start();
         }
 
     }
@@ -824,6 +828,8 @@ public class ItemListFragment extends Fragment {
             public void onInit(int i) {
                 if (i == TextToSpeech.SUCCESS) {
                     textToSpeech.setLanguage(Locale.CHINESE);
+                    textToSpeech.setSpeechRate(0.9f);
+                    textToSpeech.setPitch(1f);
                 }
             }
         });

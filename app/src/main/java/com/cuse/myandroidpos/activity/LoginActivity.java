@@ -161,17 +161,17 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        initSpeech();
-        Button btnTestTTs = findViewById(R.id.btn_login_testTTs);
-        btnTestTTs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Log.i(TAG, "onClick: ");
-                String s = "新订单,    用户" + Tools.numberToChineseNumber("4572") + "汽油95号300.00元";
-                textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        });
+//        initSpeech();
+//        Button btnTestTTs = findViewById(R.id.btn_login_testTTs);
+//        btnTestTTs.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Log.i(TAG, "onClick: ");
+//                String s = "新订单,    用户" + Tools.numberToChineseNumber("4572") + "汽油95号300.00元";
+//                textToSpeech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+//            }
+//        });
     }
 
     //post login

@@ -816,9 +816,26 @@ public class ItemListFragment extends Fragment {
         TextView showInternet = getView().findViewById(R.id.tv_home_internet);
         //internet为false控件出现
         if (!internet) {
-            showInternet.setVisibility(View.VISIBLE);
-        } else
-            showInternet.setVisibility(View.GONE);
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showInternet.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+
+        } else {
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showInternet.setVisibility(View.GONE);
+                    }
+                });
+            }
+        }
+
     }
 
 

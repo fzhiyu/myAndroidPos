@@ -35,10 +35,10 @@ public class CountAdapter extends RecyclerView.Adapter<CountAdapter.MyViewHolder
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.oilId.setText(homeOilOrderList.get(position).getOilId());
+//        holder.oilId.setText(homeOilOrderList.get(position).getOilId());
         holder.oilName.setText(homeOilOrderList.get(position).getOilName());
-        holder.oilCount.setText(homeOilOrderList.get(position).getStringOilCount() + "");
-        holder.oilMoney.setText("¥ " + homeOilOrderList.get(position).getStringOilMoney());
+        holder.oilCount.setText("订单数：" + homeOilOrderList.get(position).getStringOilCount());
+        holder.oilMoney.setText("金额： " + homeOilOrderList.get(position).getStringOilMoney());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CountAdapter extends RecyclerView.Adapter<CountAdapter.MyViewHolder
 
     public  class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView oilId;
+//        private final TextView oilId;
         private final TextView oilName;
         private TextView oilCount;
         private TextView oilMoney;
@@ -55,7 +55,7 @@ public class CountAdapter extends RecyclerView.Adapter<CountAdapter.MyViewHolder
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            oilId = itemView.findViewById(R.id.count_oil_Id);
+//            oilId = itemView.findViewById(R.id.count_oil_Id);
             oilName = itemView.findViewById(R.id.count_oil_Name);
             oilCount = itemView.findViewById(R.id.oil_Count);
             oilMoney = itemView.findViewById(R.id.count_item_Money);

@@ -180,8 +180,8 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                 if(orderSummaryJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
                 } else if (orderSummaryJson.getCode() == 0) {
-                    sum_money.setText("加油总额：" + orderSummaryJson.getData().getTodayMoney());
-                    sum_orderNumber.setText("订单数：" + orderSummaryJson.getData().getTodayCount());
+                    sum_money.setText("加油总额：" + orderSummaryJson.getData().getTotalMoney());
+                    sum_orderNumber.setText("订单数：" + orderSummaryJson.getData().getTotalCount());
                     oilCountLists.addAll(orderSummaryJson.getData().getOilOrderList());
                 } else {
                     Tools.codeError(getContext(), orderSummaryJson.getCode());
@@ -212,9 +212,9 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                 content.append("开始时间:").append(sStart).append("\n");
                 content.append("结束时间:").append(sEnd).append("\n");
                 content.append("分油品的加油金额和笔数").append("\n");
-                content.append("总加油金额:").append(orderSummaryJson.getData().getTodayMoney())
+                content.append("总加油金额:").append(orderSummaryJson.getData().getTotalMoney())
                         .append("\n");
-                content.append("总笔数:").append(orderSummaryJson.getData().getTodayCount())
+                content.append("总笔数:").append(orderSummaryJson.getData().getTotalCount())
                         .append("\n");
                 for (OilOrderList t : oilCountLists) {
                     content.append(t.getOilName()).append("  ").append("加油金额:")
@@ -222,7 +222,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                             .append(t.getOilCount()).append("\n");
                 }
 
-                Log.e(TAG, "onClick: " + content);
+                Log.i(TAG, "onClick: " + content);
 
                 float size = 24;
                 String testFont = null;

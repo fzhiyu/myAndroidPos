@@ -5,22 +5,22 @@ import java.util.List;
 
 public class Data {
 
-    private float todayMoney;
-    private int todayCount;
+    private float totalMoney;
+    private int totalCount;
     private int size;
     private List<OilOrderList> oilOrderList;
-    public void setTodayMoney(float todayMoney) {
-         this.todayMoney = todayMoney;
+    public void setTotalMoney(float totalMoney) {
+         this.totalMoney = totalMoney;
      }
-     public float getTodayMoney() {
-         return todayMoney;
+     public float getTotalMoney() {
+         return totalMoney;
      }
 
-    public void setTodayCount(int todayCount) {
-         this.todayCount = todayCount;
+    public void setTotalCount(int totalCount) {
+         this.totalCount = totalCount;
      }
-     public int getTodayCount() {
-         return todayCount;
+     public int getTotalCount() {
+         return totalCount;
      }
 
     public void setSize(int size) {

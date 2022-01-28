@@ -170,12 +170,12 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
             public void onResponse(Call<OrderSummaryJson> call, Response<OrderSummaryJson> response) {
                 orderSummaryJson = response.body();
                 //测试，用完删除
-                Gson gson = new Gson();
-                String s = gson.toJson(orderSummaryJson);
-                Log.i(TAG, "stringBuffer: " + stringBuffer);
-                Log.i(TAG, "signature: " + signature);
-                Log.i(TAG, "response.code: " + response.code());
-                Log.i(TAG, "orderSummaryJson: " + s);
+//                Gson gson = new Gson();
+//                String s = gson.toJson(orderSummaryJson);
+//                Log.i(TAG, "stringBuffer: " + stringBuffer);
+//                Log.i(TAG, "signature: " + signature);
+//                Log.i(TAG, "response.code: " + response.code());
+//                Log.i(TAG, "orderSummaryJson: " + s);
 
                 if(orderSummaryJson == null) {
                     Toast.makeText(getContext(),"null",Toast.LENGTH_SHORT).show();
@@ -222,7 +222,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
                             .append(t.getOilCount()).append("\n");
                 }
 
-                Log.i(TAG, "onClick: " + content);
+//                Log.i(TAG, "onClick: " + content);
 
                 float size = 24;
                 String testFont = null;
@@ -238,7 +238,7 @@ public class CountFragment extends Fragment implements View.OnTouchListener {
     public void setEdit(long startTimeStamp, long endTimeStamp){
         sStart = StampToTime(startTimeStamp);
         sEnd = StampToTime(endTimeStamp);
-        Log.e(TAG, "setEdit: " + sEnd);
+//        Log.e(TAG, "setEdit: " + sEnd);
 
         searStartTime.setText(sStart);//开始时间显示
         searEndTime.requestFocus();//输入焦点放在下一行

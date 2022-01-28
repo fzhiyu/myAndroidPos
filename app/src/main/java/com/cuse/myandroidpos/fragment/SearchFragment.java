@@ -73,8 +73,8 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
     private long endTimeStamp;
     private String sStart;
     private String sEnd;
-    private int start = 1;
-    private int count = 200;
+    private int start = 0;
+    private int count = (int)Double.POSITIVE_INFINITY;
     private String interferenceCode = "24bD5w1af2bC616fc677cAe6If44F3q5";
     private String token;
 
@@ -177,7 +177,7 @@ public class SearchFragment extends Fragment implements View.OnTouchListener{
                 Gson gson = new Gson();
                 String s = gson.toJson(orderAllJson);
 //                Log.i(TAG, "response.code: " + response.code());
-//                Log.i(TAG, "response.json: " + s);
+                Log.i(TAG, "response.json: " + s);
 
                 if (response.isSuccessful() && orderAllJson != null) {
                     if (orderAllJson.getCode() == 0) {

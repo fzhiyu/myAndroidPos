@@ -163,6 +163,8 @@ public class ItemListFragment extends Fragment {
     Thread wsThread;
     private int wsConnectFlag = 0;
     private boolean isConnected = false;
+    private ConnectivityManager connectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -240,7 +242,7 @@ public class ItemListFragment extends Fragment {
         ws_connect();
 
         //检查网络连接状态
-        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+        networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
                 // network available
@@ -258,11 +260,10 @@ public class ItemListFragment extends Fragment {
             }
         };
 
-        ConnectivityManager connectivityManager =
+        connectivityManager =
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         connectivityManager.registerDefaultNetworkCallback(networkCallback);
-
 
     }
 
@@ -417,6 +418,8 @@ public class ItemListFragment extends Fragment {
             client.close();
         }
 
+        connectivityManager.unregisterNetworkCallback(networkCallback);
+
         Log.e(TAG, "onDestroy: " + Thread.currentThread());
         Thread.currentThread().interrupt();
 
@@ -547,7 +550,6 @@ public class ItemListFragment extends Fragment {
                 //
                 Gson gson = new Gson();
                 orderLastJsonToString = gson.toJson(orderLastJson);
-                assert orderLastJson != null;
 //                Log.i("应答编码", "" + orderLastJson.getCode());
 //                Log.i("stringBuffer", "" + stringBuffer);
 //                Log.i("签名", "" + signature);
@@ -813,27 +815,31 @@ public class ItemListFragment extends Fragment {
 
     //网络不好时弹出未连接网络的框
     public void setInternetLayout() {
-        TextView showInternet = getView().findViewById(R.id.tv_home_internet);
-        //internet为false控件出现
-        if (!internet) {
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showInternet.setVisibility(View.VISIBLE);
-                    }
-                });
+        TextView showInternet;
+        if (getView() != null) {
+            showInternet = getView().findViewById(R.id.tv_home_internet);
+            //internet为false控件出现
+            if (!internet) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showInternet.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+
+            } else {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showInternet.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
 
-        } else {
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showInternet.setVisibility(View.GONE);
-                    }
-                });
-            }
         }
 
     }

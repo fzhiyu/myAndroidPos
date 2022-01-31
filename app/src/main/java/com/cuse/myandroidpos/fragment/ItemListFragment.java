@@ -359,6 +359,7 @@ public class ItemListFragment extends Fragment {
                         Log.e(TAG, "run: 重连");
 //                        reconnectWs();
 //                        client.send(json_login);
+                        client.close();
                         initWebSocketClient();
                     }
                 } else {

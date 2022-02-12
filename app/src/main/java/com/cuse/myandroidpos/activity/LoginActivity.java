@@ -2,11 +2,13 @@ package com.cuse.myandroidpos.activity;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -18,6 +20,8 @@ import android.telephony.TelephonyManager;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -26,8 +30,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cuse.myandroidpos.CustomPopDialog2;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.LoginJson.LoginJson;
+import com.cuse.myandroidpos.QRCodeUtil;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.google.gson.Gson;
@@ -278,5 +284,31 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_login, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.QRCode){
+            if (imei == null ){
+                imei = "0000000000000000";
+            }
+            //获取图片Bitmap
+            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(imei, 360,360);
+            //创建自定义的dialog  CustomPopDialog2
+            CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(LoginActivity.this);
+            //设置图像
+            dialogBuild.setImage(mBitmap);
+            CustomPopDialog2 dialog = dialogBuild.create();
+            dialog.setCanceledOnTouchOutside(true);// 点击外部区域关闭
+            dialog.show();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
+    }
 }

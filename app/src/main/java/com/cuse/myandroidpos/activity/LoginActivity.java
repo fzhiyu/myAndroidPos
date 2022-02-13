@@ -283,32 +283,32 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.QRCode){
-            if (imei == null ){
-                imei = "0000000000000000";
-            }
-            //获取图片Bitmap
-            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(imei, 360,360);
-            //创建自定义的dialog  CustomPopDialog2
-            CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(LoginActivity.this);
-            //设置图像
-            dialogBuild.setImage(mBitmap);
-            CustomPopDialog2 dialog = dialogBuild.create();
-            dialog.setCanceledOnTouchOutside(true);// 点击外部区域关闭
-            dialog.show();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-
-    }
+//    //actionMenu
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_login, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        if (item.getItemId() == R.id.QRCode){
+//            if (imei == null ){
+//                imei = "0000000000000000";
+//            }
+//            //获取图片Bitmap
+//            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(imei, 360,360);
+//            //创建自定义的dialog  CustomPopDialog2
+//            CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(LoginActivity.this);
+//            //设置图像
+//            dialogBuild.setImage(mBitmap);
+//            CustomPopDialog2 dialog = dialogBuild.create();
+//            dialog.setCanceledOnTouchOutside(true);// 点击外部区域关闭
+//            dialog.show();
+//            return true;
+//        } else {
+//            return super.onOptionsItemSelected(item);
+//        }
+//
+//    }
 }

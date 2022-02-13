@@ -7,15 +7,22 @@
 
     <!-- action button for refresh -->
     <item
-        android:title="refresh"
+        android:title="刷新"
         android:id="@+id/refresh"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_refresh2"/>
+    <item
+        android:title="本机ID"
+        android:id="@+id/QRCode"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_qrcode"/>
     <item
         android:title="登出"
         android:id="@+id/back"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_logout5" />
+
 </menu>

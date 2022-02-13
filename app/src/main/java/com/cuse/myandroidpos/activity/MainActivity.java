@@ -14,8 +14,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -25,9 +28,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
+import com.cuse.myandroidpos.CustomPopDialog2;
 import com.cuse.myandroidpos.MyListData;
 import com.cuse.myandroidpos.Post.HttpBinService;
 import com.cuse.myandroidpos.Post.OrderLastJson.OrderLastJson;
+import com.cuse.myandroidpos.QRCodeUtil;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.ActivityItemDetailBinding;
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private String token;
     private String stationId;
     private String TAG = "mainActivity";
+    private String imei;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +131,28 @@ public class MainActivity extends AppCompatActivity {
                             MainActivity.super.onBackPressed();
                         }
                     }).create().show();
+            return true;
+        } else if (item.getItemId() == R.id.QRCode){
+            //尝试得到android id
+            try {
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            }catch (Exception ex){
+                imei = "0000000000000000";
+            }
+            //imei为空
+            if (imei == null ){
+                imei = "0000000000000000";
+            }
+            //获取图片Bitmap
+            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(imei, 360,360);
+            //创建自定义的dialog  CustomPopDialog2
+            CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(MainActivity.this);
+            //设置图像
+            dialogBuild.setImage(mBitmap);
+            CustomPopDialog2 dialog = dialogBuild.create();
+            dialog.setCanceledOnTouchOutside(true);// 点击外部区域关闭
+            dialog.show();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

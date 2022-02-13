@@ -17,5 +17,5 @@
         android:id="@+id/back"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_logout2" />
+        android:icon="@drawable/ic_logout3" />
 </menu>

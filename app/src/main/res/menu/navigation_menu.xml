@@ -13,7 +13,7 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_refresh2"/>
     <item
-        android:title="本机ID"
+        android:title="油站ID"
         android:id="@+id/QRCode"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"

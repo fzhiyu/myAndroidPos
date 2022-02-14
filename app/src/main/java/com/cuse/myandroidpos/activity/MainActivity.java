@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private String token;
     private String stationId;
     private String TAG = "mainActivity";
-    private String imei;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 Builder(navController.getGraph())
                 .build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
 
     }
 
@@ -133,19 +131,13 @@ public class MainActivity extends AppCompatActivity {
                     }).create().show();
             return true;
         } else if (item.getItemId() == R.id.QRCode){
-            //尝试得到android id
-            try {
-                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-                imei = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            }catch (Exception ex){
-                imei = "0000000000000000";
-            }
-            //imei为空
-            if (imei == null ){
-                imei = "0000000000000000";
+
+            //stationID
+            if (stationId == null ){
+                stationId = "Error";
             }
             //获取图片Bitmap
-            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(imei, 360,360);
+            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(stationId, 360,360);
             //创建自定义的dialog  CustomPopDialog2
             CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(MainActivity.this);
             //设置图像

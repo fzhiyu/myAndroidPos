@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 stationId = "Error";
             }
             //获取图片Bitmap
-            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap("油站ID: " + stationId, 360,360);
+            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(stationId, 360,360);
             //创建自定义的dialog  CustomPopDialog2
             CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(MainActivity.this);
             //设置图像

@@ -175,7 +175,7 @@ public class ItemListFragment extends Fragment {
 
         mContext = getContext();
 
-        //得到login传来的intent
+        //得到login传来的Token
         if (getActivity() != null) {
             token = ((MainActivity) getActivity()).getToken();
         }
@@ -493,6 +493,10 @@ public class ItemListFragment extends Fragment {
         if (item.getItemId() == R.id.refresh) {
             orderLastPost();
             return true;
+        } else if (item.getItemId() == R.id.QRCode) {
+            //跳转到QR
+            Navigation.findNavController(getView()).navigate(R.id.home_to_QR, null);
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -767,6 +771,7 @@ public class ItemListFragment extends Fragment {
         btnSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Navigation.findNavController(getView()).navigate(R.id.show_setting, null);
             }
         });

@@ -67,6 +67,7 @@
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable-anydpi/ic_refund.xml" value="1.1583333333333334" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable-anydpi/ic_setting.xml" value="0.2574074074074074" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable-anydpi/ic_user.xml" value="0.2796296296296296" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable/gray_radius.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable/ic_password_invisible.xml" value="0.2574074074074074" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable/ic_password_visible.xml" value="0.2611111111111111" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/drawable/ic_refund.xml" value="1.1583333333333334" />
@@ -80,11 +81,16 @@
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_home_item_content.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_item_detail.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_item_list.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_qr.xml" value="0.3625" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_qr_pager.xml" value="0.3625" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_search.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/fragment_setting.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/layout/setting_versionname.xml" value="0.2859375" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/menu/navigation_menu.xml" value="0.2859375" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/mipmap-anydpi-v26/ic_miniprog_qr.xml" value="0.1" />
+        <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/mipmap-anydpi-v26/ic_miniprog_qr_round.xml" value="0.1" />
         <entry key="..\:/Soft/Projects/MyAndroidPos_3/myAndroidPos/app/src/main/res/xml/root_preferences.xml" value="0.2859375" />
+        <entry key="..\:/Users/hejun/.gradle/caches/transforms-3/40d2eb27202958bd48898f7b21dcdb43/transformed/jetified-circleindicator-2.1.6/res/drawable/white_radius.xml" value="0.1" />
       </map>
     </option>
   </component>

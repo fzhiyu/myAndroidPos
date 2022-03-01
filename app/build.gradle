@@ -74,4 +74,9 @@ dependencies {
 
     //二维码依赖ZXing
     implementation 'com.google.zxing:core:3.4.1'
+
+    //viewPaper
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    //滑动时的小圆点
+    implementation 'me.relex:circleindicator:2.1.6'
 }

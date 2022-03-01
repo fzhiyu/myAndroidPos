@@ -36,6 +36,7 @@ import com.cuse.myandroidpos.QRCodeUtil;
 import com.cuse.myandroidpos.R;
 import com.cuse.myandroidpos.Tools;
 import com.cuse.myandroidpos.databinding.ActivityItemDetailBinding;
+import com.cuse.myandroidpos.fragment.ItemListFragment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         token = intent.getStringExtra("token");
         stationId = intent.getStringExtra("stationId");
+
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_item);
@@ -130,23 +132,25 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }).create().show();
             return true;
-        } else if (item.getItemId() == R.id.QRCode){
-
-            //stationID
-            if (stationId == null ){
-                stationId = "Error";
-            }
-            //获取图片Bitmap
-            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(stationId, 360,360);
-            //创建自定义的dialog  CustomPopDialog2
-            CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(MainActivity.this);
-            //设置图像
-            dialogBuild.setImage(mBitmap);
-            CustomPopDialog2 dialog = dialogBuild.create();
-            dialog.setCanceledOnTouchOutside(true);// 点击外部区域关闭
-            dialog.show();
-            return true;
-        } else {
+        }
+//        else if (item.getItemId() == R.id.QRCode){
+//
+////            //stationID
+////            if (stationId == null ){
+////                stationId = "Error";
+////            }
+////            //获取图片Bitmap
+////            Bitmap mBitmap = QRCodeUtil.createQRCodeBitmap(stationId, 360,360);
+////            //创建自定义的dialog  CustomPopDialog2
+////            CustomPopDialog2.Builder dialogBuild = new CustomPopDialog2.Builder(MainActivity.this);
+////            //设置图像
+////            dialogBuild.setImage(mBitmap);
+////            CustomPopDialog2 dialog = dialogBuild.create();
+////            dialog.setCanceledOnTouchOutside(true);// 点击外部区域关闭
+////            dialog.show();
+//            return true;
+//        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }
